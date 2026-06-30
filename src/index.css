@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+@theme {
+  /* Light theme color palette */
+  --color-theme-cream: #F5F1E8;
+  --color-theme-coffee: #4A3628;
+  --color-theme-orange: #C26A32;
+  --color-theme-beige: #E8DDC7;
+  --color-theme-coffee-light: #6E523E;
+  --color-theme-orange-light: #D67E43;
+  
+  /* Dark theme color palette */
+  --color-theme-darkBg: #120C08;
+  --color-theme-darkCard: #1F150F;
+  --color-theme-darkBorder: #38271C;
+  --color-theme-darkText: #FAF8F5;
+
+  /* Border Radius */
+  --radius-premium: 18px;
+  --radius-premium-lg: 24px;
+
+  /* Custom shadows */
+  --shadow-retro: 0 4px 10px rgba(74, 54, 40, 0.08);
+  --shadow-retro-hover: 0 10px 25px rgba(74, 54, 40, 0.15);
+  --shadow-glass: 0 4px 30px rgba(0, 0, 0, 0.1);
+
+  /* Custom Animations & Keyframes */
+  --animate-carousel-fade: carouselFade 0.8s ease-in-out;
+  --animate-crt-flicker: crtFlicker 0.15s infinite;
+  --animate-float: float 3s ease-in-out infinite;
+
+  @keyframes carouselFade {
+    0% { opacity: 0; transform: scale(1.02); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes crtFlicker {
+    0% { opacity: 0.985; }
+    50% { opacity: 0.995; }
+    100% { opacity: 0.985; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+}
+
+@layer base {
+  :root {
+    --bg-primary: #F5F1E8;
+    --bg-secondary: #E8DDC7;
+    --text-primary: #4A3628;
+    --text-secondary: #6E523E;
+    --border-color: #D9C3B0;
+    --accent-orange: #C26A32;
+    --card-bg: #FAF8F5;
+  }
+
+  .dark {
+    --bg-primary: #120C08;
+    --bg-secondary: #1F150F;
+    --text-primary: #FAF8F5;
+    --text-secondary: #D9C3B0;
+    --border-color: #38271C;
+    --accent-orange: #D97E4A;
+    --card-bg: #1F150F;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    @apply font-sans antialiased;
+  }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Retro Glassmorphism */
+.glass-nav {
+  background: rgba(245, 241, 232, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(74, 54, 40, 0.08);
+}
+
+.dark .glass-nav {
+  background: rgba(18, 12, 8, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(250, 248, 245, 0.08);
+}
+
+/* Hide Scrollbar for Horizontal rows */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* CRT Screen Effect Overlay */
+.crt-screen-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.12) 50%),
+              linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  background-size: 100% 4px, 4px 100%;
+  pointer-events: none;
+  z-index: 10;
+  border-radius: inherit;
+}
+
+/* Retro CRT Curve Frame */
+.crt-frame {
+  position: relative;
+  border: 12px solid #4A3628;
+  border-radius: 32px;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 10px 30px rgba(74, 54, 40, 0.3);
+}
+.dark .crt-frame {
+  border-color: #1F150F;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.9), 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Floating Retro TV static animation */
+.crt-static {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  pointer-events: none;
+}
+.dark .crt-static {
+  opacity: 0.08;
+}
