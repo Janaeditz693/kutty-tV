@@ -12,18 +12,17 @@ const Logo = ({ size = 'md' }) => {
 
   return (
     <div className={`flex items-center ${currentSize.container} select-none group cursor-pointer`}>
-      {/* Retro TV Icon Casing */}
-      <div className="relative flex items-center justify-center p-1.5 rounded-xl bg-theme-coffee dark:bg-theme-orange text-theme-cream dark:text-theme-darkBg shadow-md transform transition-all duration-300 group-hover:scale-115 group-hover:rotate-3">
-        {/* Antennas */}
-        <div className="absolute -top-2 left-1/2 -translate-x-1/2 flex gap-2 w-full justify-between px-1 pointer-events-none transition-transform duration-300 group-hover:-translate-y-1">
-          <div className="w-1.5 h-3 bg-theme-coffee dark:bg-theme-orange rounded-full origin-bottom rotate-[-30deg]"></div>
-          <div className="w-1.5 h-3 bg-theme-coffee dark:bg-theme-orange rounded-full origin-bottom rotate-[30deg]"></div>
-        </div>
-        
-        {/* Tiny power LED dot */}
-        <div className="absolute bottom-1 right-1 w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
-        
-        <Tv size={currentSize.icon} className="stroke-[2.5]" />
+      {/* Custom Branded Logo Image */}
+      <div className="relative flex items-center justify-center overflow-hidden rounded-xl bg-theme-cream border border-theme-coffee/10 dark:border-theme-darkBorder shadow-inner transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-2">
+        <img 
+          src="/logo.jpg" 
+          alt="Kutty TV Logo" 
+          className="object-contain"
+          style={{
+            width: currentSize.icon * 1.8,
+            height: currentSize.icon * 1.8
+          }}
+        />
       </div>
       
       {/* Brand Text */}
