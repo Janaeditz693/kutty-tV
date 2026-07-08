@@ -4,8 +4,7 @@ import Hero from '../components/Hero';
 import Carousel from '../components/Carousel';
 import CartoonCard from '../components/CartoonCard';
 import ContinueWatchingCard from '../components/ContinueWatchingCard';
-import CollectionCard from '../components/CollectionCard';
-import { getAllCatalogItems, getCollections } from '../services/db';
+import { getAllCatalogItems } from '../services/db';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -16,19 +15,13 @@ const Home = () => {
   
   const [loading, setLoading] = useState(true);
   const [catalogItems, setCatalogItems] = useState([]);
-  const [collections, setCollections] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // Fetch collections and shows/movies concurrently
-        const [itemsResult, collectionsResult] = await Promise.all([
-          getAllCatalogItems(),
-          getCollections()
-        ]);
+        const itemsResult = await getAllCatalogItems();
         setCatalogItems(itemsResult);
-        setCollections(collectionsResult);
       } catch (err) {
         console.error("Error loading homepage catalogs:", err);
       } finally {
@@ -79,12 +72,7 @@ const Home = () => {
           ))}
         </Carousel>
 
-        {/* 4. Curated Collections Shelf */}
-        <Carousel title={t('home.collectionsTitle')} loading={loading}>
-          {collections.map((col) => (
-            <CollectionCard key={col.id} collection={col} />
-          ))}
-        </Carousel>
+
 
         {/* 5. Cartoon Series Catalog */}
         <Carousel title={t('common.shows')} loading={loading}>

@@ -10,7 +10,6 @@ import { useAuth } from './context/AuthContext';
 const Home = lazy(() => import('./pages/Home'));
 const Shows = lazy(() => import('./pages/Shows'));
 const Movies = lazy(() => import('./pages/Movies'));
-const Collections = lazy(() => import('./pages/Collections'));
 const Watch = lazy(() => import('./pages/Watch'));
 const Search = lazy(() => import('./pages/Search'));
 const Favorites = lazy(() => import('./pages/Favorites'));
@@ -59,7 +58,6 @@ function App() {
               <Route path="/" element={<AnimatedPage><Home /></AnimatedPage>} />
               <Route path="/shows" element={<AnimatedPage><Shows /></AnimatedPage>} />
               <Route path="/movies" element={<AnimatedPage><Movies /></AnimatedPage>} />
-              <Route path="/collections" element={<AnimatedPage><Collections /></AnimatedPage>} />
               <Route path="/search" element={<AnimatedPage><Search /></AnimatedPage>} />
               <Route path="/login" element={<AnimatedPage><Auth /></AnimatedPage>} />
               

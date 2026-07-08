@@ -68,7 +68,6 @@ const Navbar = () => {
     { name: t('common.home'), path: '/', icon: Home },
     { name: t('common.shows'), path: '/shows', icon: Tv },
     { name: t('common.movies'), path: '/movies', icon: Film },
-    { name: t('common.collections'), path: '/collections', icon: Grid },
   ];
 
   return (
