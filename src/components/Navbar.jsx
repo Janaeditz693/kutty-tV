@@ -483,7 +483,7 @@ const Navbar = () => {
                     <div className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-white border border-theme-coffee/10 shadow-md">
                       <img
                         src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
-                          `upi://pay?pa=vjana0640@okaxis&pn=Kutty%20TV&am=${coffeeAmount}&cu=INR&tn=Coffee%20Support`
+                          `upi://pay?pa=janaeditz693@okicici&pn=Jana%20v&am=${coffeeAmount}&cu=INR&tn=Coffee%20Support`
                         )}`}
                         alt="UPI Payment QR Code"
                         className="w-44 h-44 object-contain"
@@ -494,8 +494,17 @@ const Navbar = () => {
                       </div>
                     </div>
 
+                    {/* Pay via UPI App for Mobile */}
+                    <a
+                      href={`upi://pay?pa=janaeditz693@okicici&pn=Jana%20v&am=${coffeeAmount}&cu=INR&tn=Coffee%20Support`}
+                      className="w-full py-2.5 bg-[#FF5A1F] hover:bg-[#FF7A47] text-white text-center font-bold text-sm rounded-xl shadow-md transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <Coffee size={15} className="fill-white stroke-none" />
+                      <span>Pay via UPI App (Mobile)</span>
+                    </a>
+
                     <p className="text-xs text-theme-coffee/60 dark:text-theme-darkText/50">
-                      UPI ID: <span className="font-mono font-bold select-all bg-theme-coffee/5 px-2 py-0.5 rounded border border-theme-coffee/10 dark:bg-theme-darkBorder">vjana0640@okaxis</span>
+                      UPI ID: <span className="font-mono font-bold select-all bg-theme-coffee/5 px-2 py-0.5 rounded border border-theme-coffee/10 dark:bg-theme-darkBorder">janaeditz693@okicici</span>
                     </p>
 
                     {/* Back button */}
