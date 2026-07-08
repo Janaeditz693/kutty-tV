@@ -47,6 +47,7 @@ const AdminDashboard = () => {
   const [showGenres, setShowGenres] = useState('Comedy, Adventure');
   const [showCollections, setShowCollections] = useState('kids2000s');
   const [showFeatured, setShowFeatured] = useState(false);
+  const [movieVideoUrl, setMovieVideoUrl] = useState('');
 
   // CRUD Episode form state
   const [epFormOpen, setEpFormOpen] = useState(false);
@@ -141,15 +142,14 @@ const AdminDashboard = () => {
       if (existing) {
         itemObj.episodes = existing.episodes || [];
         if (showType === 'movie') {
-          // If changed to movie, it has a video url directly
-          itemObj.videoUrl = existing.videoUrl || 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+          itemObj.videoUrl = movieVideoUrl.trim() || existing.videoUrl || 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
         }
       }
     } else {
       // New item
       itemObj.episodes = [];
       if (showType === 'movie') {
-        itemObj.videoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+        itemObj.videoUrl = movieVideoUrl.trim() || 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
       }
     }
 
@@ -166,6 +166,7 @@ const AdminDashboard = () => {
     setShowThumbnail('');
     setShowBanner('');
     setShowFeatured(false);
+    setMovieVideoUrl('');
 
     loadData();
   };
@@ -185,6 +186,7 @@ const AdminDashboard = () => {
     setShowGenres(item.genres?.join(', ') || 'Comedy, Adventure');
     setShowCollections(item.collections?.join(', ') || 'kids2000s');
     setShowFeatured(item.featured || false);
+    setMovieVideoUrl(item.videoUrl || '');
     
     setShowFormOpen(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -592,6 +594,21 @@ const AdminDashboard = () => {
                           className="px-3 py-2 rounded-xl text-sm bg-theme-cream border border-theme-coffee/15 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none"
                         />
                       </div>
+
+                      {/* Movie Video URL (Only shown if Type is Cartoon Movie) */}
+                      {showType === 'movie' && (
+                        <div className="flex flex-col gap-1 md:col-span-2">
+                          <label className="text-xs font-bold uppercase tracking-wider text-theme-orange dark:text-theme-orange">Movie Video URL * (YouTube / HTML5 / HLS .m3u8)</label>
+                          <input
+                            type="text"
+                            required={showType === 'movie'}
+                            value={movieVideoUrl}
+                            onChange={(e) => setMovieVideoUrl(e.target.value)}
+                            placeholder="e.g. https://www.youtube.com/watch?v=... or Cloudflare R2 .mp4 or Bunny.net .m3u8"
+                            className="px-3 py-2 rounded-xl text-sm bg-theme-cream border border-theme-coffee/15 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none ring-2 ring-theme-orange/10 focus:ring-theme-orange/30 transition-all"
+                          />
+                        </div>
+                      )}
 
                       {/* Rating */}
                       <div className="flex flex-col gap-1">
