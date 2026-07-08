@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Loader from './components/Loader';
@@ -30,6 +31,18 @@ const AdminRoute = ({ children }) => {
   return currentUser && isAdmin ? children : <Navigate to="/" replace />;
 };
 
+// Reusable page transition wrapper
+const AnimatedPage = ({ children }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 8 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -8 }}
+    transition={{ duration: 0.2, ease: "easeOut" }}
+  >
+    {children}
+  </motion.div>
+);
+
 function App() {
   return (
     <Router>
@@ -43,23 +56,23 @@ function App() {
           <Suspense fallback={<Loader />}>
             <Routes>
               {/* Public Views */}
-              <Route path="/" element={<Home />} />
-              <Route path="/shows" element={<Shows />} />
-              <Route path="/movies" element={<Movies />} />
-              <Route path="/collections" element={<Collections />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/login" element={<Auth />} />
+              <Route path="/" element={<AnimatedPage><Home /></AnimatedPage>} />
+              <Route path="/shows" element={<AnimatedPage><Shows /></AnimatedPage>} />
+              <Route path="/movies" element={<AnimatedPage><Movies /></AnimatedPage>} />
+              <Route path="/collections" element={<AnimatedPage><Collections /></AnimatedPage>} />
+              <Route path="/search" element={<AnimatedPage><Search /></AnimatedPage>} />
+              <Route path="/login" element={<AnimatedPage><Auth /></AnimatedPage>} />
               
               {/* Watch pages (support optional episode param) */}
-              <Route path="/watch/:showId" element={<Watch />} />
-              <Route path="/watch/:showId/:episodeId" element={<Watch />} />
+              <Route path="/watch/:showId" element={<AnimatedPage><Watch /></AnimatedPage>} />
+              <Route path="/watch/:showId/:episodeId" element={<AnimatedPage><Watch /></AnimatedPage>} />
 
               {/* Protected Member Views */}
               <Route 
                 path="/favorites" 
                 element={
                   <ProtectedRoute>
-                    <Favorites />
+                    <AnimatedPage><Favorites /></AnimatedPage>
                   </ProtectedRoute>
                 } 
               />
@@ -67,7 +80,7 @@ function App() {
                 path="/profile" 
                 element={
                   <ProtectedRoute>
-                    <Profile />
+                    <AnimatedPage><Profile /></AnimatedPage>
                   </ProtectedRoute>
                 } 
               />
@@ -77,7 +90,7 @@ function App() {
                 path="/admin" 
                 element={
                   <AdminRoute>
-                    <AdminDashboard />
+                    <AnimatedPage><AdminDashboard /></AnimatedPage>
                   </AdminRoute>
                 } 
               />
