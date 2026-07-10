@@ -197,7 +197,7 @@ const Navbar = () => {
 
               {/* Sign In / Profile dropdown */}
               {currentUser ? (
-                <div className="relative" ref={profileMenuRef}>
+                <div className="relative hidden sm:block" ref={profileMenuRef}>
                   <button
                     onClick={() => setIsOpenProfile(!isOpenProfile)}
                     className="flex items-center gap-1.5 p-1 rounded-xl hover:bg-theme-coffee/5 dark:hover:bg-theme-darkCard transition-all duration-200 focus:outline-none cursor-pointer"
@@ -278,7 +278,7 @@ const Navbar = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="text-sm font-semibold text-theme-coffee/80 dark:text-theme-darkText/80 hover:text-[#FF5A1F] transition-colors duration-200"
+                  className="text-sm font-semibold text-theme-coffee/80 dark:text-theme-darkText/80 hover:text-[#FF5A1F] transition-colors duration-200 hidden sm:block"
                 >
                   Sign In
                 </Link>
@@ -362,16 +362,28 @@ const Navbar = () => {
                     {isDark ? <Sun size={15} /> : <Moon size={15} />}
                   </button>
 
-                  {/* User Profile */}
+                  {/* User Profile & Logout on Mobile */}
                   {currentUser && (
-                    <Link
-                      to="/profile"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-theme-coffee/5 dark:bg-theme-darkCard text-theme-coffee dark:text-theme-darkText"
-                    >
-                      <User size={13} />
-                      <span>{currentUser.displayName || 'Profile'}</span>
-                    </Link>
+                    <>
+                      <Link
+                        to="/profile"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-theme-coffee/5 dark:bg-theme-darkCard text-theme-coffee dark:text-theme-darkText"
+                      >
+                        <User size={13} />
+                        <span>{currentUser.displayName || 'Profile'}</span>
+                      </Link>
+                      <button
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          logout();
+                        }}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-red-500/10 text-red-500 hover:bg-red-500/20 cursor-pointer"
+                      >
+                        <LogOut size={13} />
+                        <span>Logout</span>
+                      </button>
+                    </>
                   )}
                 </div>
 

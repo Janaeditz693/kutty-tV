@@ -26,7 +26,7 @@ const Logo = ({ size = 'md' }) => {
       </div>
       
       {/* Brand Text */}
-      <span className={`font-extrabold ${currentSize.text} tracking-tight font-sans transition-colors duration-300`}>
+      <span className={`font-extrabold ${currentSize.text} tracking-tight font-sans transition-colors duration-300 hidden sm:inline`}>
         <span className="text-theme-coffee dark:text-theme-darkText">Kutty</span>
         <span className="text-theme-orange ml-0.5">TV</span>
       </span>

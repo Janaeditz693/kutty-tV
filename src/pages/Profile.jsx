@@ -227,7 +227,7 @@ const Profile = () => {
                     return (
                       <div
                         key={idx}
-                        onClick={() => navigate(`/watch/${item.showId}/${item.episodeId}`)}
+                        onClick={() => navigate(item.episodeNumber ? `/watch/${item.showId}/${item.episodeId}` : `/watch/${item.showId}`)}
                         className="flex gap-4 p-3 rounded-xl hover:bg-theme-coffee/5 dark:hover:bg-theme-darkBg border border-theme-coffee/5 dark:border-theme-darkBorder transition-all duration-200 cursor-pointer group shrink-0"
                       >
                         {/* Thumbnail */}
@@ -243,11 +243,17 @@ const Profile = () => {
                           <h4 className="font-extrabold text-sm text-theme-coffee dark:text-theme-darkText truncate group-hover:text-theme-orange transition-colors">
                             {item.showTitle}
                           </h4>
-                          <p className="text-[11px] text-theme-orange font-bold uppercase tracking-wider">
-                            {t('common.episodes')} {item.episodeNumber}
-                          </p>
+                          {item.episodeNumber ? (
+                            <p className="text-[11px] text-theme-orange font-bold uppercase tracking-wider">
+                              {t('common.episodes')} {item.episodeNumber}
+                            </p>
+                          ) : (
+                            <p className="text-[11px] text-theme-orange font-bold uppercase tracking-wider">
+                              Movie
+                            </p>
+                          )}
                           <p className="text-xs text-theme-coffee/50 dark:text-theme-darkText/40 truncate font-semibold">
-                            {item.episodeTitle}
+                            {item.episodeNumber ? item.episodeTitle : 'Full Movie'}
                           </p>
                           
                           {/* Progress bar inside log */}

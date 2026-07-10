@@ -21,7 +21,7 @@ const ContinueWatchingCard = ({ record }) => {
   const handleResume = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    navigate(`/watch/${record.showId}/${record.episodeId}`);
+    navigate(record.episodeNumber ? `/watch/${record.showId}/${record.episodeId}` : `/watch/${record.showId}`);
   };
 
   return (
@@ -30,7 +30,7 @@ const ContinueWatchingCard = ({ record }) => {
       transition={{ duration: 0.25 }}
       className="relative flex-none w-56 sm:w-64 rounded-premium bg-theme-cream border border-theme-coffee/10 dark:bg-theme-darkCard dark:border-theme-darkBorder shadow-retro overflow-hidden group select-none cursor-pointer"
     >
-      <Link to={`/watch/${record.showId}/${record.episodeId}`}>
+      <Link to={record.episodeNumber ? `/watch/${record.showId}/${record.episodeId}` : `/watch/${record.showId}`}>
         {/* Thumbnail Area */}
         <div className="relative aspect-[16/10] overflow-hidden bg-theme-coffee/5">
           <img
@@ -74,11 +74,17 @@ const ContinueWatchingCard = ({ record }) => {
           <h3 className="font-extrabold text-sm text-theme-coffee dark:text-theme-darkText truncate">
             {record.showTitle}
           </h3>
-          <p className="text-[11px] text-theme-orange font-bold uppercase tracking-wider">
-            {t('common.episodes')} {record.episodeNumber}
-          </p>
+          {record.episodeNumber ? (
+            <p className="text-[11px] text-theme-orange font-bold uppercase tracking-wider">
+              {t('common.episodes')} {record.episodeNumber}
+            </p>
+          ) : (
+            <p className="text-[11px] text-theme-orange font-bold uppercase tracking-wider">
+              Movie
+            </p>
+          )}
           <p className="text-[11px] text-theme-coffee/50 dark:text-theme-darkText/40 truncate font-semibold">
-            {record.episodeTitle}
+            {record.episodeNumber ? record.episodeTitle : 'Resume Movie'}
           </p>
         </div>
       </Link>
