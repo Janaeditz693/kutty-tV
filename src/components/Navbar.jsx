@@ -115,7 +115,7 @@ const Navbar = () => {
               </div>
 
               {/* Desktop Navigation Links */}
-              <div className="hidden md:flex space-x-1 lg:space-x-4">
+              <div className="hidden lg:flex space-x-1 lg:space-x-4">
                 {menuItems.map((item) => (
                   <NavLink
                     key={item.path}
@@ -138,7 +138,7 @@ const Navbar = () => {
             <div className="flex items-center gap-3 sm:gap-4">
               
               {/* Search Bar (Desktop - Magnifying Glass icon on the right to match layout) */}
-              <form onSubmit={handleSearchSubmit} className="relative hidden md:block">
+              <form onSubmit={handleSearchSubmit} className="relative hidden lg:block">
                 <input
                   type="text"
                   placeholder={t('common.search')}
@@ -152,7 +152,7 @@ const Navbar = () => {
               </form>
 
               {/* Mobile Search Bar (Directly in header next to Hamburger) */}
-              <form onSubmit={handleSearchSubmit} className="relative md:hidden flex-grow max-w-[150px] xs:max-w-[200px]">
+              <form onSubmit={handleSearchSubmit} className="relative lg:hidden flex-grow max-w-[150px] xs:max-w-[200px]">
                 <input
                   type="text"
                   placeholder="Search..."
@@ -185,7 +185,7 @@ const Navbar = () => {
               {/* Favorites (Desktop Only) */}
               <Link
                 to="/favorites"
-                className="relative hidden md:flex p-2 rounded-xl bg-theme-coffee/5 dark:bg-theme-darkCard text-theme-coffee dark:text-theme-darkText hover:scale-110 transition-transform duration-200"
+                className="relative hidden lg:flex p-2 rounded-xl bg-theme-coffee/5 dark:bg-theme-darkCard text-theme-coffee dark:text-theme-darkText hover:scale-110 transition-transform duration-200"
               >
                 <Heart size={18} className={favorites.length > 0 ? 'fill-theme-orange stroke-theme-orange' : ''} />
                 {favorites.length > 0 && (
@@ -301,7 +301,7 @@ const Navbar = () => {
               {/* Mobile Hamburger Toggle */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 rounded-xl text-theme-coffee dark:text-theme-darkText hover:bg-theme-coffee/5 dark:hover:bg-theme-darkCard transition-all duration-200 cursor-pointer"
+                className="lg:hidden p-2 rounded-xl text-theme-coffee dark:text-theme-darkText hover:bg-theme-coffee/5 dark:hover:bg-theme-darkCard transition-all duration-200 cursor-pointer"
               >
                 {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
@@ -317,7 +317,7 @@ const Navbar = () => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden border-t border-theme-coffee/10 dark:border-theme-darkBorder bg-theme-cream dark:bg-theme-darkBg transition-colors duration-300 overflow-hidden"
+              className="lg:hidden border-t border-theme-coffee/10 dark:border-theme-darkBorder bg-theme-cream dark:bg-theme-darkBg transition-colors duration-300 overflow-hidden"
             >
               <div className="px-4 py-4 flex flex-col gap-4">
                 {menuItems.map((item) => (
