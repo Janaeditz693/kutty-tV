@@ -984,7 +984,7 @@ const AdminDashboard = () => {
                         usersList.map((user) => (
                           <tr key={user.uid} className="border-b border-theme-coffee/10 dark:border-theme-darkBorder hover:bg-theme-coffee/5 dark:hover:bg-theme-darkBg transition-colors font-medium">
                             <td className="p-4 font-bold text-theme-coffee dark:text-theme-darkText">{user.displayName || 'Viewer'}</td>
-                            <td className="p-4 text-xs font-mono text-theme-coffee/70 dark:text-theme-darkText/60">{user.email}</td>
+                            <td className="p-4 text-xs font-mono text-theme-coffee/70 dark:text-theme-darkText/60">{user.email || 'Awaiting login sync'}</td>
                             <td className="p-4">
                               <span className={`px-2 py-0.5 rounded-md font-bold text-[10px] uppercase ${
                                 user.role === 'admin' ? 'bg-theme-orange/15 text-theme-orange' : 'bg-theme-coffee/10 text-theme-coffee/60 dark:bg-theme-darkCard dark:text-theme-darkText/50'

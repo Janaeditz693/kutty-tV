@@ -222,7 +222,6 @@ export const deleteCatalogItem = async (id) => {
   return true;
 };
 
-// Sync user profile to Firestore or localStorage (handles promotion roles dynamically)
 export const syncUserProfile = async (user) => {
   if (!user) return null;
   const defaultAdminEmail = 'vjana0640@gmail.com';
@@ -231,25 +230,27 @@ export const syncUserProfile = async (user) => {
     try {
       const userRef = doc(firestore, 'users', user.uid);
       const userSnap = await getDoc(userRef);
+      let role = user.email === defaultAdminEmail ? 'admin' : 'user';
+      let displayName = user.displayName || 'Viewer';
+      let email = user.email || '';
+      
       if (userSnap.exists()) {
         const data = userSnap.data();
-        return {
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName || data.displayName || 'Viewer',
-          role: data.role || (user.email === defaultAdminEmail ? 'admin' : 'user'),
-        };
-      } else {
-        const role = user.email === defaultAdminEmail ? 'admin' : 'user';
-        const profile = {
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName || 'Viewer',
-          role: role
-        };
-        await setDoc(userRef, profile);
-        return profile;
+        role = data.role || role;
+        displayName = data.displayName || displayName;
+        email = data.email || email;
       }
+      
+      const profile = {
+        uid: user.uid,
+        email: email,
+        displayName: displayName,
+        role: role
+      };
+      
+      // Merge user data to guarantee Firestore has email, displayName, and role fields
+      await setDoc(userRef, profile, { merge: true });
+      return profile;
     } catch (err) {
       console.error("Error syncing user profile to Firestore:", err);
     }

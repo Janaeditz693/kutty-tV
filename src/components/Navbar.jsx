@@ -342,6 +342,18 @@ const Navbar = () => {
                   <span>{t('common.favorites')} ({favorites.length})</span>
                 </Link>
 
+                {/* Mobile Admin Link if Admin */}
+                {isAdmin && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 text-sm font-semibold text-red-600 dark:text-theme-orange hover:text-theme-orange transition-colors duration-150"
+                  >
+                    <ShieldAlert size={16} />
+                    <span>{t('common.admin')}</span>
+                  </Link>
+                )}
+
                 <hr className="border-theme-coffee/10 dark:border-theme-darkBorder" />
 
                 {/* Mobile Quick Controls */}
