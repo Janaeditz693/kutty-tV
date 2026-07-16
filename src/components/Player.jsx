@@ -342,7 +342,7 @@ const Player = ({
           />
           {/* CRT Filter Overlay on top of Iframe */}
           {isCrtFilter && (
-            <div className="crt-screen-overlay opacity-5 pointer-events-none" />
+            <div className="crt-screen-overlay pointer-events-none" />
           )}
         </div>
       ) : (
@@ -372,12 +372,12 @@ const Player = ({
 
           {/* CRT scanlines visual overlay */}
           {isCrtFilter && (
-            <div className="crt-screen-overlay opacity-6 pointer-events-none" />
+            <div className="crt-screen-overlay pointer-events-none" />
           )}
 
           {/* CRT Static noise visual overlay (when paused/loading) */}
           {isCrtFilter && !isPlaying && (
-            <div className="crt-static absolute inset-0 z-10 pointer-events-none" />
+            <div className="crt-static" />
           )}
 
           {/* Auto-play next episode countdown banner overlay */}

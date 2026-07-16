@@ -66,7 +66,7 @@ const Hero = ({ items = [] }) => {
           />
 
           {/* Retro TV scanlines overlay (light opacity) */}
-          <div className="crt-screen-overlay opacity-5"></div>
+          <div className="crt-screen-overlay"></div>
           
           {/* Gradient Overlay bottom to top */}
           <div className="absolute inset-0 bg-gradient-to-t from-theme-cream via-theme-cream/45 to-transparent dark:from-theme-darkBg dark:via-theme-darkBg/50 dark:to-transparent transition-all duration-300" />
