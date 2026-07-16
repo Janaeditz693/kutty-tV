@@ -120,11 +120,11 @@ const AdminDashboard = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'opim30hn';
+    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'x0wour7b';
 
     if (!cloudName || !uploadPreset) {
-      alert("Cloudinary credentials are not configured in your .env file!\nPlease add VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET to your .env file, then restart the local server.");
+      alert("Cloudinary credentials are not configured!");
       return;
     }
 
