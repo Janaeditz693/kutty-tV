@@ -13,7 +13,9 @@ import {
   Check, 
   PlusCircle, 
   X,
-  FileText
+  FileText,
+  Upload,
+  Loader2
 } from 'lucide-react';
 import { getAllCatalogItems, saveCatalogItem, deleteCatalogItem, getAllUsers, updateUserRole } from '../services/db';
 import Skeleton from '../components/Skeleton';
@@ -48,6 +50,11 @@ const AdminDashboard = () => {
   const [showCollections, setShowCollections] = useState('kids2000s');
   const [showFeatured, setShowFeatured] = useState(false);
   const [movieVideoUrl, setMovieVideoUrl] = useState('');
+
+  // Upload loading states for Cloudinary
+  const [uploadingShowThumb, setUploadingShowThumb] = useState(false);
+  const [uploadingShowBanner, setUploadingShowBanner] = useState(false);
+  const [uploadingEpThumb, setUploadingEpThumb] = useState(false);
 
   // CRUD Episode form state
   const [epFormOpen, setEpFormOpen] = useState(false);
@@ -107,6 +114,45 @@ const AdminDashboard = () => {
   const triggerToast = (msg) => {
     setSuccessMsg(msg);
     setTimeout(() => setSuccessMsg(''), 4000);
+  };
+
+  const handleImageUpload = async (e, setUrl, setLoading) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
+    if (!cloudName || !uploadPreset) {
+      alert("Cloudinary credentials are not configured in your .env file!\nPlease add VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET to your .env file, then restart the local server.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', uploadPreset);
+
+    try {
+      setLoading(true);
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (data.secure_url) {
+        setUrl(data.secure_url);
+        triggerToast("Image uploaded successfully!");
+      } else {
+        console.error("Cloudinary error:", data);
+        alert(data.error?.message || "Upload failed. Please check your Cloudinary configuration.");
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("Upload failed due to connection error.");
+    } finally {
+      setLoading(false);
+      e.target.value = ''; // Reset file input
+    }
   };
 
   // -------------------------------------------------------------
@@ -572,27 +618,75 @@ const AdminDashboard = () => {
                       {/* Thumbnail URL */}
                       <div className="flex flex-col gap-1">
                         <label className="text-xs font-bold uppercase tracking-wider text-theme-coffee/60 dark:text-theme-darkText/50">Thumbnail URL *</label>
-                        <input
-                          type="text"
-                          required
-                          value={showThumbnail}
-                          onChange={(e) => setShowThumbnail(e.target.value)}
-                          placeholder="https://images.unsplash.com/photo-..."
-                          className="px-3 py-2 rounded-xl text-sm bg-theme-cream border border-theme-coffee/15 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none"
-                        />
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            required
+                            value={showThumbnail}
+                            onChange={(e) => setShowThumbnail(e.target.value)}
+                            placeholder="https://images.unsplash.com/photo-..."
+                            className="flex-grow px-3 py-2 rounded-xl text-sm bg-theme-cream border border-theme-coffee/15 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none"
+                          />
+                          <label className={`flex items-center justify-center px-4 rounded-xl text-theme-cream text-xs font-bold cursor-pointer shadow gap-1.5 shrink-0 transition-colors ${
+                            uploadingShowThumb ? 'bg-zinc-600 cursor-not-allowed opacity-70' : 'bg-theme-orange hover:bg-theme-orange-light'
+                          }`}>
+                            {uploadingShowThumb ? (
+                              <>
+                                <Loader2 size={14} className="animate-spin" />
+                                <span>Uploading...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Upload size={14} />
+                                <span>Upload</span>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  disabled={uploadingShowThumb}
+                                  className="hidden"
+                                  onChange={(e) => handleImageUpload(e, setShowThumbnail, setUploadingShowThumb)}
+                                />
+                              </>
+                            )}
+                          </label>
+                        </div>
                       </div>
 
                       {/* Banner URL */}
                       <div className="flex flex-col gap-1">
                         <label className="text-xs font-bold uppercase tracking-wider text-theme-coffee/60 dark:text-theme-darkText/50">Widescreen Banner URL *</label>
-                        <input
-                          type="text"
-                          required
-                          value={showBanner}
-                          onChange={(e) => setShowBanner(e.target.value)}
-                          placeholder="https://images.unsplash.com/photo-..."
-                          className="px-3 py-2 rounded-xl text-sm bg-theme-cream border border-theme-coffee/15 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none"
-                        />
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            required
+                            value={showBanner}
+                            onChange={(e) => setShowBanner(e.target.value)}
+                            placeholder="https://images.unsplash.com/photo-..."
+                            className="flex-grow px-3 py-2 rounded-xl text-sm bg-theme-cream border border-theme-coffee/15 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none"
+                          />
+                          <label className={`flex items-center justify-center px-4 rounded-xl text-theme-cream text-xs font-bold cursor-pointer shadow gap-1.5 shrink-0 transition-colors ${
+                            uploadingShowBanner ? 'bg-zinc-600 cursor-not-allowed opacity-70' : 'bg-theme-orange hover:bg-theme-orange-light'
+                          }`}>
+                            {uploadingShowBanner ? (
+                              <>
+                                <Loader2 size={14} className="animate-spin" />
+                                <span>Uploading...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Upload size={14} />
+                                <span>Upload</span>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  disabled={uploadingShowBanner}
+                                  className="hidden"
+                                  onChange={(e) => handleImageUpload(e, setShowBanner, setUploadingShowBanner)}
+                                />
+                              </>
+                            )}
+                          </label>
+                        </div>
                       </div>
 
                       {/* Movie Video URL (Only shown if Type is Cartoon Movie) */}
@@ -858,14 +952,38 @@ const AdminDashboard = () => {
                       {/* Thumbnail URL */}
                       <div className="flex flex-col gap-1">
                         <label className="text-xs font-bold uppercase tracking-wider text-theme-coffee/60 dark:text-theme-darkText/50">Thumbnail URL *</label>
-                        <input
-                          type="text"
-                          required
-                          value={epThumbnail}
-                          onChange={(e) => setEpThumbnail(e.target.value)}
-                          placeholder="https://images.unsplash.com/photo-..."
-                          className="px-3 py-2 rounded-xl text-sm bg-theme-cream border border-theme-coffee/15 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none"
-                        />
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            required
+                            value={epThumbnail}
+                            onChange={(e) => setEpThumbnail(e.target.value)}
+                            placeholder="https://images.unsplash.com/photo-..."
+                            className="flex-grow px-3 py-2 rounded-xl text-sm bg-theme-cream border border-theme-coffee/15 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none"
+                          />
+                          <label className={`flex items-center justify-center px-4 rounded-xl text-theme-cream text-xs font-bold cursor-pointer shadow gap-1.5 shrink-0 transition-colors ${
+                            uploadingEpThumb ? 'bg-zinc-600 cursor-not-allowed opacity-70' : 'bg-theme-orange hover:bg-theme-orange-light'
+                          }`}>
+                            {uploadingEpThumb ? (
+                              <>
+                                <Loader2 size={14} className="animate-spin" />
+                                <span>Uploading...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Upload size={14} />
+                                <span>Upload</span>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  disabled={uploadingEpThumb}
+                                  className="hidden"
+                                  onChange={(e) => handleImageUpload(e, setEpThumbnail, setUploadingEpThumb)}
+                                />
+                              </>
+                            )}
+                          </label>
+                        </div>
                       </div>
 
                       {/* Video URL */}
