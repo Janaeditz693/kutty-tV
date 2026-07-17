@@ -33,11 +33,7 @@ const Profile = () => {
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  
-  // Custom global CRT static toggle
-  const [crtEnabled, setCrtEnabled] = useState(() => {
-    return localStorage.getItem('kuttytv_global_crt') === 'true';
-  });
+
 
   useEffect(() => {
     if (currentUser) {
@@ -68,13 +64,7 @@ const Profile = () => {
     }
   };
 
-  const toggleCrtFilter = () => {
-    const nextVal = !crtEnabled;
-    setCrtEnabled(nextVal);
-    localStorage.setItem('kuttytv_global_crt', nextVal ? 'true' : 'false');
-    // Dispatch custom event to update any active players instantly
-    window.dispatchEvent(new Event('crtSettingsChanged'));
-  };
+
 
   const currentLang = i18n.language || 'en';
   const handleLangSelect = (lng) => {
@@ -341,27 +331,6 @@ const Profile = () => {
                     தமிழ் (Tamil)
                   </button>
                 </div>
-              </div>
-
-              {/* Custom Retro CRT Filter Global Toggle */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                  <h4 className="text-sm font-bold text-theme-coffee dark:text-theme-darkText flex items-center gap-1.5">
-                    <Tv size={15} />
-                    <span>Global Retro CRT Filter</span>
-                  </h4>
-                  <p className="text-xs text-theme-coffee/50 dark:text-theme-darkText/40 mt-0.5">Applies vintage CRT phosphors and scans lines over players globally.</p>
-                </div>
-                <button
-                  onClick={toggleCrtFilter}
-                  className={`px-4 py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer self-start sm:self-center ${
-                    crtEnabled
-                      ? 'bg-theme-orange border-theme-orange text-theme-cream shadow-md'
-                      : 'bg-theme-coffee/5 border-theme-coffee/10 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee/85 dark:text-theme-darkText/85 hover:bg-theme-coffee/10'
-                  }`}
-                >
-                  {crtEnabled ? 'CRT: Enabled' : 'CRT: Disabled'}
-                </button>
               </div>
 
             </div>

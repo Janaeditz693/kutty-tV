@@ -19,7 +19,7 @@ const Loader = () => {
           <Tv size={36} className="stroke-[2.5]" />
         </div>
 
-        {/* Pulsing CRT power dot */}
+        {/* Pulsing TV power dot */}
         <div className="absolute bottom-2 right-2 w-2 h-2 rounded-full bg-red-500 animate-ping"></div>
       </div>
       

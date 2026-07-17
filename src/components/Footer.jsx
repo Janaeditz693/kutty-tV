@@ -40,10 +40,6 @@ const Footer = () => {
 
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] text-theme-coffee/50 dark:text-theme-darkText/50 text-center">
           <p>© {new Date().getFullYear()} {t('common.appName')}. All nostalgic rights reserved.</p>
-          <div className="flex items-center gap-1 text-theme-orange">
-            <Sparkles size={11} className="animate-spin" style={{ animationDuration: '6s' }} />
-            <span>Turn on the CRT static on the Watch page for the true retro experience!</span>
-          </div>
         </div>
       </div>
     </footer>

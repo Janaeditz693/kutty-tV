@@ -45,9 +45,6 @@ const Player = ({
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
-  const [isCrtFilter, setIsCrtFilter] = useState(() => {
-    return localStorage.getItem('kuttytv_global_crt') === 'true';
-  });
   const [isTheaterMode, setIsTheaterMode] = useState(false);
   
   // Custom dropdowns
@@ -60,14 +57,7 @@ const Player = ({
   // Auto-hide controls timer
   const controlsTimeoutRef = useRef(null);
 
-  // Listen to global CRT toggle changes from profile page
-  useEffect(() => {
-    const handleCrtChange = () => {
-      setIsCrtFilter(localStorage.getItem('kuttytv_global_crt') === 'true');
-    };
-    window.addEventListener('crtSettingsChanged', handleCrtChange);
-    return () => window.removeEventListener('crtSettingsChanged', handleCrtChange);
-  }, []);
+
 
   const getYouTubeId = (url) => {
     if (!url) return null;
@@ -340,11 +330,7 @@ const Player = ({
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
-          {/* CRT Filter Overlay on top of Iframe */}
-          {isCrtFilter && (
-            <div className="crt-screen-overlay pointer-events-none" />
-          )}
-        </div>
+         </div>
       ) : (
         /* -------------------------------------------------------------
             HTML5 & HLS CUSTOM PLAYER
@@ -370,15 +356,7 @@ const Player = ({
             </div>
           )}
 
-          {/* CRT scanlines visual overlay */}
-          {isCrtFilter && (
-            <div className="crt-screen-overlay pointer-events-none" />
-          )}
 
-          {/* CRT Static noise visual overlay (when paused/loading) */}
-          {isCrtFilter && !isPlaying && (
-            <div className="crt-static" />
-          )}
 
           {/* Auto-play next episode countdown banner overlay */}
           {countdown !== null && (
@@ -562,16 +540,7 @@ const Player = ({
                   )}
                 </div>
 
-                {/* CRT Static Filter toggle */}
-                <button
-                  onClick={() => setIsCrtFilter(!isCrtFilter)}
-                  className={`p-1.5 rounded transition-all cursor-pointer ${
-                    isCrtFilter ? 'text-theme-orange hover:text-theme-orange-light' : 'text-theme-cream/65 hover:text-theme-cream'
-                  }`}
-                  title={t('player.crtFilter')}
-                >
-                  <Tv size={16} />
-                </button>
+
 
                 {/* Picture in picture */}
                 <button
