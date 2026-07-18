@@ -46,7 +46,7 @@ const Hero = ({ items = [] }) => {
   };
 
   return (
-    <div className="relative w-full aspect-[16/9] md:aspect-[21/9] min-h-[400px] max-h-[700px] overflow-hidden bg-theme-coffee/10 dark:bg-theme-darkBg transition-colors duration-300">
+    <div className="relative w-full aspect-[16/10] md:aspect-[21/9] min-h-[300px] sm:min-h-[400px] max-h-[700px] overflow-hidden bg-theme-coffee/10 dark:bg-theme-darkBg transition-colors duration-300">
       
       {/* Background Images with AnimatePresence */}
       <AnimatePresence mode="wait">
@@ -79,15 +79,15 @@ const Hero = ({ items = [] }) => {
         <>
           <button
             onClick={handlePrev}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-2.5 rounded-full bg-black/35 hover:bg-black/55 backdrop-blur-md text-theme-cream hover:scale-105 transition-all duration-200"
+            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 p-1.5 sm:p-2.5 rounded-full bg-black/35 hover:bg-black/55 backdrop-blur-md text-theme-cream hover:scale-105 transition-all duration-200"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={16} className="sm:w-5 sm:h-5" />
           </button>
           <button
             onClick={handleNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-2.5 rounded-full bg-black/35 hover:bg-black/55 backdrop-blur-md text-theme-cream hover:scale-105 transition-all duration-200"
+            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 p-1.5 sm:p-2.5 rounded-full bg-black/35 hover:bg-black/55 backdrop-blur-md text-theme-cream hover:scale-105 transition-all duration-200"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={16} className="sm:w-5 sm:h-5" />
           </button>
         </>
       )}
@@ -107,9 +107,8 @@ const Hero = ({ items = [] }) => {
         </div>
       )}
 
-      {/* Hero Content Overlays */}
-      <div className="absolute inset-x-0 bottom-0 z-20 px-4 pb-8 sm:px-8 sm:pb-12 md:pb-16 max-w-7xl mx-auto flex flex-col justify-end h-full">
-        <div className="max-w-xl md:max-w-2xl flex flex-col gap-3">
+      <div className="absolute inset-x-0 bottom-0 z-20 px-10 sm:px-16 pb-8 sm:pb-12 md:pb-16 max-w-7xl mx-auto flex flex-col justify-end h-full">
+        <div className="max-w-xl md:max-w-2xl flex flex-col gap-2 sm:gap-3">
           
           {/* Metadata badges (Rating, Year, Language, Genres) */}
           <div className="flex flex-wrap items-center gap-2.5 text-xs font-bold uppercase tracking-wider text-theme-coffee/80 dark:text-theme-cream/80">
@@ -128,17 +127,17 @@ const Hero = ({ items = [] }) => {
           </div>
 
           {/* Large Title */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-theme-coffee dark:text-theme-darkText font-sans drop-shadow-md">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-theme-coffee dark:text-theme-darkText font-sans drop-shadow-md">
             {displayTitle}
           </h1>
 
           {/* Description */}
-          <p className="text-sm sm:text-base text-theme-coffee/70 dark:text-theme-darkText/75 line-clamp-3 leading-relaxed drop-shadow-sm font-medium">
+          <p className="text-xs sm:text-sm text-theme-coffee/70 dark:text-theme-darkText/75 line-clamp-2 sm:line-clamp-3 leading-relaxed drop-shadow-sm font-medium">
             {displayDesc}
           </p>
 
           {/* Play & Favorite Actions */}
-          <div className="flex items-center gap-3 mt-2 sm:mt-4">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1 sm:mt-4">
             
             {/* Watch Now Button */}
             <button
