@@ -28,6 +28,7 @@ const Watch = () => {
   const [newComment, setNewComment] = useState('');
   const [postingComment, setPostingComment] = useState(false);
   const [isTheaterMode, setIsTheaterMode] = useState(false);
+  const [activeSeason, setActiveSeason] = useState(1);
 
   // Load theater mode settings on event triggers
   useEffect(() => {
@@ -73,6 +74,9 @@ const Watch = () => {
             activeEp = episodes[0];
           }
           setCurrentEpisode(activeEp);
+          if (activeEp) {
+            setActiveSeason(activeEp.season || 1);
+          }
         } else {
           // It's a movie
           setCurrentEpisode(null);
@@ -170,6 +174,9 @@ const Watch = () => {
 
   // Next / Prev button conditions
   const episodes = item.episodes || [];
+  const availableSeasons = [...new Set(episodes.map(ep => ep.season || 1))].sort((a, b) => a - b);
+  const filteredEpisodes = episodes.filter(ep => (ep.season || 1) === activeSeason);
+
   const activeIndex = currentEpisode ? episodes.findIndex(e => e.id === currentEpisode.id) : -1;
   const hasNext = item.type === 'show' && activeIndex !== -1 && activeIndex < episodes.length - 1;
   const hasPrev = item.type === 'show' && activeIndex > 0;
@@ -339,11 +346,29 @@ const Watch = () => {
             {item.type === 'show' && episodes.length > 0 && (
               <div className="flex flex-col gap-3 p-4 rounded-premium bg-theme-beige/20 border border-theme-coffee/10 dark:bg-theme-darkCard/40 dark:border-theme-darkBorder">
                 <h3 className="text-sm sm:text-base font-extrabold text-theme-coffee dark:text-theme-darkText border-b border-theme-coffee/10 dark:border-theme-darkBorder pb-2">
-                  {t('watch.episodesList')} ({episodes.length})
+                  {t('watch.episodesList')} ({filteredEpisodes.length})
                 </h3>
+
+                {availableSeasons.length > 1 && (
+                  <div className="flex gap-2 pb-2 border-b border-theme-coffee/10 dark:border-theme-darkBorder overflow-x-auto no-scrollbar shrink-0">
+                    {availableSeasons.map((s) => (
+                      <button
+                        key={s}
+                        onClick={() => setActiveSeason(s)}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
+                          activeSeason === s
+                            ? 'bg-theme-orange border-theme-orange text-theme-cream shadow'
+                            : 'bg-theme-cream border-theme-coffee/10 text-theme-coffee dark:bg-theme-darkBg dark:border-theme-darkBorder dark:text-theme-darkText hover:bg-theme-coffee/5'
+                        }`}
+                      >
+                        Season {s}
+                      </button>
+                    ))}
+                  </div>
+                )}
                 
                 <div className="flex flex-col gap-2 max-h-[40vh] overflow-y-auto pr-1">
-                  {episodes.map((ep) => {
+                  {filteredEpisodes.map((ep) => {
                     const isActive = currentEpisode?.id === ep.id;
                     const epTitleStr = currentLang.startsWith('ta') && ep.titleTa ? ep.titleTa : ep.title;
                     

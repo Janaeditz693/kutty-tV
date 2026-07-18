@@ -66,6 +66,7 @@ const AdminDashboard = () => {
   const [epThumbnail, setEpThumbnail] = useState('');
   const [epVideoUrl, setEpVideoUrl] = useState('');
   const [epDuration, setEpDuration] = useState('600');
+  const [epSeason, setEpSeason] = useState('1');
 
   const loadData = async () => {
     try {
@@ -262,6 +263,7 @@ const AdminDashboard = () => {
     const newEpObj = {
       id: `ep-${Date.now()}`,
       number: parseInt(epNumber),
+      season: parseInt(epSeason) || 1,
       title: epTitle.trim(),
       titleTa: epTitleTa.trim() || epTitle.trim(),
       description: epDesc.trim(),
@@ -272,15 +274,22 @@ const AdminDashboard = () => {
     };
 
     const updatedEpisodes = [...(showObj.episodes || [])];
-    // Check if episode number already exists
-    const existingIdx = updatedEpisodes.findIndex(e => e.number === newEpObj.number);
+    // Check if episode number already exists within this season
+    const existingIdx = updatedEpisodes.findIndex(e => e.number === newEpObj.number && (e.season || 1) === newEpObj.season);
     if (existingIdx !== -1) {
       updatedEpisodes[existingIdx] = newEpObj;
     } else {
       updatedEpisodes.push(newEpObj);
     }
-    // Sort episodes by number ascending
-    updatedEpisodes.sort((a, b) => a.number - b.number);
+    // Sort episodes by season first, then number ascending
+    updatedEpisodes.sort((a, b) => {
+      const aSeason = a.season || 1;
+      const bSeason = b.season || 1;
+      if (aSeason !== bSeason) {
+        return aSeason - bSeason;
+      }
+      return a.number - b.number;
+    });
 
     const updatedShowObj = {
       ...showObj,
@@ -300,6 +309,7 @@ const AdminDashboard = () => {
     setEpThumbnail('');
     setEpVideoUrl('');
     setEpDuration('600');
+    setEpSeason('1');
 
     loadData();
   };
@@ -899,6 +909,22 @@ const AdminDashboard = () => {
                         />
                       </div>
 
+                      {/* Season Number Selector */}
+                      <div className="flex flex-col gap-1">
+                        <label className="text-xs font-bold uppercase tracking-wider text-theme-coffee/60 dark:text-theme-darkText/50">Season *</label>
+                        <select
+                          value={epSeason}
+                          onChange={(e) => setEpSeason(e.target.value)}
+                          className="px-3 py-2 rounded-xl text-sm bg-theme-cream border border-theme-coffee/15 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none font-bold"
+                        >
+                          <option value="1">Season 1</option>
+                          <option value="2">Season 2</option>
+                          <option value="3">Season 3</option>
+                          <option value="4">Season 4</option>
+                          <option value="5">Season 5</option>
+                        </select>
+                      </div>
+
                       {/* Duration */}
                       <div className="flex flex-col gap-1">
                         <label className="text-xs font-bold uppercase tracking-wider text-theme-coffee/60 dark:text-theme-darkText/50">Duration (seconds) *</label>
@@ -1036,7 +1062,7 @@ const AdminDashboard = () => {
                         <tbody>
                           {activeShowForEps.episodes.map((ep) => (
                             <tr key={ep.id} className="border-b border-theme-coffee/10 dark:border-theme-darkBorder hover:bg-theme-coffee/5 dark:hover:bg-theme-darkBg transition-colors font-medium">
-                              <td className="p-4 font-mono font-bold text-theme-orange">#{ep.number}</td>
+                              <td className="p-4 font-mono font-bold text-theme-orange">S{ep.season || 1} Ep {ep.number}</td>
                               <td className="p-4">
                                 <img src={ep.thumbnail} alt={ep.title} className="w-14 aspect-[16/10] object-cover rounded-lg border border-theme-coffee/10 dark:border-theme-darkBorder" />
                               </td>
