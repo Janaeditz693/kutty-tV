@@ -5,6 +5,31 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Plus, Check, ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
+const DescriptionWithReadMore = ({ text, maxLines = 3 }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  if (!text) return null;
+
+  return (
+    <div className="relative inline">
+      <span className={isExpanded ? '' : maxLines === 2 ? 'line-clamp-2' : 'line-clamp-3'}>
+        {text}
+      </span>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setIsExpanded(!isExpanded);
+        }}
+        className="inline-block text-theme-orange hover:text-theme-orange-light font-extrabold text-xs sm:text-sm underline cursor-pointer ml-1.5 active:scale-95 transition-transform"
+      >
+        {isExpanded ? 'Read Less' : 'Read More'}
+      </button>
+    </div>
+  );
+};
+
 const Hero = ({ items = [] }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -150,10 +175,10 @@ const Hero = ({ items = [] }) => {
             </p>
           )}
 
-          {/* Description */}
-          <p className="text-xs text-theme-coffee/75 dark:text-theme-darkText/75 px-4 line-clamp-2 leading-relaxed max-w-sm font-medium">
-            {displayDesc}
-          </p>
+          {/* Mobile Description with Read More */}
+          <div className="px-4 max-w-sm text-xs text-theme-coffee/75 dark:text-theme-darkText/75 leading-relaxed font-medium">
+            <DescriptionWithReadMore text={displayDesc} maxLines={2} />
+          </div>
 
           {/* Play & Favorite buttons side by side */}
           <div className="flex items-center justify-center gap-2.5 w-full mt-2 px-2">
@@ -278,10 +303,10 @@ const Hero = ({ items = [] }) => {
               {displayTitle}
             </h1>
 
-            {/* Description */}
-            <p className="text-sm sm:text-base text-theme-coffee/70 dark:text-theme-darkText/75 line-clamp-3 leading-relaxed drop-shadow-sm font-medium">
-              {displayDesc}
-            </p>
+            {/* Desktop Description with Read More */}
+            <div className="text-sm sm:text-base text-theme-coffee/70 dark:text-theme-darkText/75 leading-relaxed drop-shadow-sm font-medium">
+              <DescriptionWithReadMore text={displayDesc} maxLines={3} />
+            </div>
 
             {/* Play & Favorite Actions */}
             <div className="flex items-center gap-3 mt-4">
