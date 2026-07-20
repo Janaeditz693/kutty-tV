@@ -91,15 +91,21 @@ const Watch = () => {
     loadDetails();
   }, [showId, episodeId, navigate]);
 
+  const lastSaveTimeRef = React.useRef(0);
+
   // Handle watch progress tracking
   const handleTimeUpdate = (currentTime, duration) => {
     if (!item) return;
     // Don't track if video is just starting
     if (currentTime < 2) return;
 
-    // Track progress in context (which updates Continue Watching row)
+    // Throttle progress updates to at most once every 5 seconds
+    const now = Date.now();
+    if (now - lastSaveTimeRef.current < 5000) return;
+    lastSaveTimeRef.current = now;
+
+    // Track progress in context (which updates Continue Watching row & Firestore)
     const targetPlayable = currentEpisode || item;
-    // Debounced save through the AppContext history logic (limits DB writes internally)
     addToHistory(item, targetPlayable, Math.floor(currentTime), Math.floor(duration));
   };
 

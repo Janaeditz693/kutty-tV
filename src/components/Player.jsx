@@ -78,6 +78,7 @@ const Player = ({
 
   const ytId = getYouTubeId(videoUrl);
   const startParam = (initialProgress > 0) ? `&start=${Math.floor(initialProgress)}` : '';
+  const hasSeekedRef = useRef(false);
 
   // Initialize and load video streams
   useEffect(() => {
@@ -85,11 +86,12 @@ const Player = ({
     const video = videoRef.current;
     if (!video) return;
 
-    // Reset player states
+    // Reset player states and seek flag
     setIsPlaying(false);
     setDuration(0);
     setCurrentTime(0);
     setCountdown(null);
+    hasSeekedRef.current = false;
 
     // Destroy existing HLS instances
     if (hlsRef.current) {
@@ -128,13 +130,12 @@ const Player = ({
       video.src = videoUrl;
     }
 
-    // Set initial progress if provided
+    // Set initial progress once if provided
     const handleLoadedMetadata = () => {
       if (video.duration) setDuration(video.duration);
-      if (initialProgress > 0 && video.duration && initialProgress < video.duration * 0.98) {
-        if (Math.abs(video.currentTime - initialProgress) > 2) {
-          video.currentTime = initialProgress;
-        }
+      if (!hasSeekedRef.current && initialProgress > 0 && video.duration && initialProgress < video.duration * 0.98) {
+        hasSeekedRef.current = true;
+        video.currentTime = initialProgress;
       }
     };
 
@@ -150,7 +151,7 @@ const Player = ({
         hlsRef.current.destroy();
       }
     };
-  }, [videoUrl, ytId, initialProgress]);
+  }, [videoUrl, ytId]);
 
   // Handle auto-next countdown when video ends
   useEffect(() => {
