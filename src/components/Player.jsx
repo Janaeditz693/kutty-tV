@@ -218,15 +218,33 @@ const Player = ({
 
   const toggleFullscreen = () => {
     const container = containerRef.current;
+    const video = videoRef.current;
     if (!container) return;
 
-    if (!document.fullscreenElement) {
-      container.requestFullscreen()
-        .then(() => setIsFullscreen(true))
-        .catch(err => console.error("Fullscreen error:", err));
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      if (container.requestFullscreen) {
+        container.requestFullscreen()
+          .then(() => setIsFullscreen(true))
+          .catch(() => {
+            if (video && video.webkitEnterFullscreen) {
+              video.webkitEnterFullscreen();
+            }
+          });
+      } else if (container.webkitRequestFullscreen) {
+        container.webkitRequestFullscreen();
+        setIsFullscreen(true);
+      } else if (video && video.webkitEnterFullscreen) {
+        video.webkitEnterFullscreen();
+      }
     } else {
-      document.exitFullscreen()
-        .then(() => setIsFullscreen(false));
+      if (document.exitFullscreen) {
+        document.exitFullscreen()
+          .then(() => setIsFullscreen(false))
+          .catch(() => setIsFullscreen(false));
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+        setIsFullscreen(false);
+      }
     }
   };
 
@@ -342,6 +360,15 @@ const Player = ({
             autoPlay
           />
 
+          {/* Top-Right Quick Fullscreen button for mobile/touch screens */}
+          <button
+            onClick={toggleFullscreen}
+            className="absolute top-3 right-3 z-30 p-2 sm:p-2.5 rounded-full bg-black/60 backdrop-blur-md text-theme-cream hover:bg-black/85 transition-all shadow-md cursor-pointer border border-theme-cream/20 flex items-center justify-center opacity-85 hover:opacity-100"
+            title={t('player.fullscreen')}
+          >
+            {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
+          </button>
+
           {/* Subtitles Overlay */}
           {activeSubtitle && (
             <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-30 px-4 py-1.5 bg-black/75 backdrop-blur-md rounded-lg border border-theme-cream/10 text-theme-cream text-xs sm:text-sm font-semibold tracking-wide text-center drop-shadow">
@@ -418,7 +445,7 @@ const Player = ({
             <div className="flex items-center justify-between">
               
               {/* Playback Controls (Play/Pause, Prev, Next, Volume) */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2.5 sm:gap-4">
                 {/* Prev episode */}
                 <button
                   onClick={onPrev}
@@ -448,7 +475,7 @@ const Player = ({
                 </button>
 
                 {/* Volume icon */}
-                <div className="flex items-center gap-2 group/volume ml-2">
+                <div className="flex items-center gap-1.5 sm:gap-2 group/volume ml-1 sm:ml-2">
                   <button
                     onClick={toggleMute}
                     className="text-theme-cream/80 hover:text-theme-cream transition-colors cursor-pointer"
@@ -462,19 +489,19 @@ const Player = ({
                     step="0.05"
                     value={isMuted ? 0 : volume}
                     onChange={handleVolumeChange}
-                    className="w-16 h-1 appearance-none bg-theme-cream/20 cursor-pointer accent-theme-cream outline-none rounded-full"
+                    className="w-16 h-1 appearance-none bg-theme-cream/20 cursor-pointer accent-theme-cream outline-none rounded-full hidden sm:block"
                   />
                 </div>
               </div>
 
               {/* Action Utilities (Speed, Subtitles, Quality, CRT, PiP, Theater, Fullscreen) */}
-              <div className="flex items-center gap-3.5 relative">
+              <div className="flex items-center gap-2 sm:gap-3.5 relative">
                 
                 {/* Playback Speed selector */}
                 <div className="relative">
                   <button
                     onClick={() => { setShowSpeedMenu(!showSpeedMenu); setShowQualityMenu(false); }}
-                    className="text-xs font-extrabold text-theme-cream/80 hover:text-theme-cream hover:bg-theme-cream/10 px-2 py-1 rounded transition-colors cursor-pointer"
+                    className="text-xs font-extrabold text-theme-cream/80 hover:text-theme-cream hover:bg-theme-cream/10 px-1.5 sm:px-2 py-1 rounded transition-colors cursor-pointer"
                     title={t('player.speed')}
                   >
                     {playbackSpeed}x
@@ -499,7 +526,7 @@ const Player = ({
                 {/* Subtitle Toggle */}
                 <button
                   onClick={() => setSubtitlesEnabled(!subtitlesEnabled)}
-                  className={`p-1.5 rounded transition-all cursor-pointer ${
+                  className={`p-1 rounded transition-all cursor-pointer ${
                     subtitlesEnabled ? 'text-theme-orange hover:text-theme-orange-light' : 'text-theme-cream/65 hover:text-theme-cream'
                   }`}
                   title={t('player.subtitles')}
@@ -533,12 +560,10 @@ const Player = ({
                   )}
                 </div>
 
-
-
                 {/* Picture in picture */}
                 <button
                   onClick={triggerPictureInPicture}
-                  className="text-theme-cream/70 hover:text-theme-cream transition-colors cursor-pointer"
+                  className="text-theme-cream/70 hover:text-theme-cream transition-colors cursor-pointer hidden sm:inline"
                   title={t('player.pip')}
                 >
                   <ExternalLink size={16} />
@@ -555,10 +580,10 @@ const Player = ({
                   </button>
                 )}
 
-                {/* Fullscreen */}
+                {/* Fullscreen Button */}
                 <button
                   onClick={toggleFullscreen}
-                  className="text-theme-cream/70 hover:text-theme-cream transition-colors cursor-pointer"
+                  className="p-1 rounded text-theme-cream hover:text-theme-orange transition-colors cursor-pointer shrink-0"
                   title={t('player.fullscreen')}
                 >
                   {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
