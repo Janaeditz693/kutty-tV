@@ -101,6 +101,22 @@ const Hero = ({ items = [] }) => {
           )}
         </div>
 
+        {/* Carousel Dots Indicators (Mobile Only) */}
+        {items.length > 1 && (
+          <div className="flex items-center justify-center gap-1.5 z-20">
+            {items.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setIndex(i)}
+                className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                  i === index ? 'w-4 bg-theme-orange' : 'w-1.5 bg-theme-coffee/35 dark:bg-theme-cream/35'
+                }`}
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
+
         {/* Info & Metadata below the Card */}
         <div className="w-full z-20 flex flex-col items-center text-center gap-2.5 mt-1">
           {/* Metadata Badges */}
