@@ -68,20 +68,20 @@ const Home = () => {
           ))}
         </Carousel>
 
-        {/* 4. Trending Now Shelf (Placed below Movies) */}
-        {trendingItems.length > 0 && (
-          <Carousel title={t('home.trending')} loading={loading}>
-            {trendingItems.map((item) => (
-              <CartoonCard key={item.id} item={item} />
-            ))}
-          </Carousel>
-        )}
-
-        {/* 5. Continue Watching */}
+        {/* 4. Continue Watching (Placed ABOVE Trending Now) */}
         {currentUser && continueWatching.length > 0 && (
           <Carousel title={t('common.continueWatching')} loading={loading}>
             {continueWatching.map((record) => (
               <ContinueWatchingCard key={record.showId} record={record} />
+            ))}
+          </Carousel>
+        )}
+
+        {/* 5. Trending Now Shelf */}
+        {trendingItems.length > 0 && (
+          <Carousel title={t('home.trending')} loading={loading}>
+            {trendingItems.map((item) => (
+              <CartoonCard key={item.id} item={item} />
             ))}
           </Carousel>
         )}

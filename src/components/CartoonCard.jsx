@@ -38,7 +38,7 @@ const CartoonCard = ({ item }) => {
     <motion.div
       whileHover={{ y: -8, scale: 1.03 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
-      className="relative flex-none w-56 sm:w-64 rounded-premium bg-theme-cream border border-theme-coffee/10 dark:bg-theme-darkCard dark:border-theme-darkBorder shadow-retro hover:shadow-retro-hover overflow-hidden group select-none"
+      className="relative w-full h-full rounded-premium bg-theme-cream border border-theme-coffee/10 dark:bg-theme-darkCard dark:border-theme-darkBorder shadow-retro hover:shadow-retro-hover overflow-hidden group select-none flex flex-col justify-between"
     >
       {/* Link surrounding the card */}
       <Link to={item.type === 'movie' ? `/watch/${item.id}` : `/watch/${item.id}/${item.episodes?.[0]?.id || ''}`}>

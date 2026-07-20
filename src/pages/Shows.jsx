@@ -129,13 +129,13 @@ const Shows = () => {
       {/* Catalog Grid */}
       <div className="flex-grow">
         {loading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 sm:gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
               <Skeleton key={i} variant="card" />
             ))}
           </div>
         ) : filtered.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 sm:gap-6">
             {filtered.map((item) => (
               <CartoonCard key={item.id} item={item} />
             ))}

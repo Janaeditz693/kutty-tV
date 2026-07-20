@@ -28,7 +28,7 @@ const ContinueWatchingCard = ({ record }) => {
     <motion.div
       whileHover={{ scale: 1.03, y: -4 }}
       transition={{ duration: 0.25 }}
-      className="relative flex-none w-56 sm:w-64 rounded-premium bg-theme-cream border border-theme-coffee/10 dark:bg-theme-darkCard dark:border-theme-darkBorder shadow-retro overflow-hidden group select-none cursor-pointer"
+      className="relative w-full h-full rounded-premium bg-theme-cream border border-theme-coffee/10 dark:bg-theme-darkCard dark:border-theme-darkBorder shadow-retro overflow-hidden group select-none cursor-pointer flex flex-col justify-between"
     >
       <Link to={record.episodeNumber ? `/watch/${record.showId}/${record.episodeId}` : `/watch/${record.showId}`}>
         {/* Thumbnail Area */}

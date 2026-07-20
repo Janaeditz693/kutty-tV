@@ -64,10 +64,14 @@ const Carousel = ({ title, loading = false, children }) => {
           {loading ? (
             // Pulser Skeletons
             Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} variant="card" className="w-56 sm:w-64 flex-shrink-0" />
+              <Skeleton key={i} variant="card" className="w-52 sm:w-64 flex-shrink-0" />
             ))
           ) : (
-            children
+            React.Children.map(children, (child, idx) => (
+              <div key={idx} className="w-52 sm:w-64 flex-shrink-0 flex">
+                {child}
+              </div>
+            ))
           )}
         </div>
 
