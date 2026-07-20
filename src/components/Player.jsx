@@ -17,7 +17,8 @@ import {
   Expand,
   Shrink,
   Volume1,
-  RotateCcw
+  RotateCcw,
+  Share2
 } from 'lucide-react';
 
 const Player = ({ 
@@ -46,10 +47,6 @@ const Player = ({
   const [showControls, setShowControls] = useState(true);
   const [isTheaterMode, setIsTheaterMode] = useState(false);
   
-  // Netflix-style splash state
-  const [playSplash, setPlaySplash] = useState(null); // 'play' or 'pause'
-  const splashTimerRef = useRef(null);
-
   // Custom dropdowns
   const [showSpeedMenu, setShowSpeedMenu] = useState(false);
   const [showQualityMenu, setShowQualityMenu] = useState(false);
@@ -59,14 +56,6 @@ const Player = ({
 
   // Auto-hide controls timer
   const controlsTimeoutRef = useRef(null);
-
-  const triggerSplash = (type) => {
-    setPlaySplash(type);
-    clearTimeout(splashTimerRef.current);
-    splashTimerRef.current = setTimeout(() => {
-      setPlaySplash(null);
-    }, 650);
-  };
 
   // Video Events
   const handlePlayPause = () => {
@@ -78,12 +67,10 @@ const Player = ({
 
     if (isPlaying) {
       video.pause();
-      triggerSplash('pause');
       setShowControls(true);
       clearTimeout(controlsTimeoutRef.current);
     } else {
       video.play().catch(e => console.log("Play interrupted:", e));
-      triggerSplash('play');
       setShowControls(true);
       clearTimeout(controlsTimeoutRef.current);
       controlsTimeoutRef.current = setTimeout(() => {
@@ -97,6 +84,29 @@ const Player = ({
   const handleContainerClick = (e) => {
     if (e.target.closest('button, input, select, a, [role="button"]')) return;
     handlePlayPause();
+  };
+
+  const handleShare = async (e) => {
+    if (e) e.stopPropagation();
+    const shareData = {
+      title: title || 'Kutty TV',
+      text: `Watch ${title} on Kutty TV!`,
+      url: window.location.href,
+    };
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.log("Share error:", err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        alert("Link copied to clipboard!");
+      } catch (err) {
+        console.error("Copy failed:", err);
+      }
+    }
   };
 
   const getYouTubeId = (url) => {
@@ -393,19 +403,6 @@ const Player = ({
             autoPlay
           />
 
-          {/* Netflix-style Animated Splash Icon (Play / Pause touch feedback) */}
-          {playSplash && (
-            <div className="absolute inset-0 z-40 pointer-events-none flex items-center justify-center">
-              <div className="p-6 rounded-full bg-black/65 backdrop-blur-md text-theme-cream shadow-2xl border border-theme-cream/20 transform animate-bounce">
-                {playSplash === 'play' ? (
-                  <Play size={44} className="fill-theme-cream ml-1" />
-                ) : (
-                  <Pause size={44} className="fill-theme-cream" />
-                )}
-              </div>
-            </div>
-          )}
-
           {/* Top-Right Quick Fullscreen button (Fades out when controls hide) */}
           <button
             onClick={toggleFullscreen}
@@ -449,16 +446,6 @@ const Player = ({
                 </button>
               </div>
             </div>
-          )}
-
-          {/* Centered big play/pause splash button (visible on hover) */}
-          {!isPlaying && countdown === null && (
-            <button
-              onClick={handlePlayPause}
-              className="absolute z-30 p-5 rounded-full bg-theme-orange hover:bg-theme-orange-light text-theme-cream shadow-2xl transform scale-110 hover:scale-120 transition-all duration-300 flex items-center justify-center cursor-pointer"
-            >
-              <Play size={24} className="fill-theme-cream ml-0.5" />
-            </button>
           )}
 
           {/* -------------------------------------------------------------
@@ -625,6 +612,15 @@ const Player = ({
                     {isTheaterMode ? <Shrink size={16} /> : <Expand size={16} />}
                   </button>
                 )}
+
+                {/* Share Option */}
+                <button
+                  onClick={handleShare}
+                  className="p-1 rounded text-theme-cream/70 hover:text-theme-cream transition-colors cursor-pointer"
+                  title="Share"
+                >
+                  <Share2 size={16} />
+                </button>
 
                 {/* Fullscreen Button */}
                 <button

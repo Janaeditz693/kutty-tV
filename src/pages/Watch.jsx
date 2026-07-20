@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, MessageSquare, Plus, Check, Play, User as UserIcon } from 'lucide-react';
+import { Star, MessageSquare, Plus, Check, Play, User as UserIcon, Share2 } from 'lucide-react';
 import Player from '../components/Player';
 import Carousel from '../components/Carousel';
 import CartoonCard from '../components/CartoonCard';
@@ -18,6 +18,28 @@ const Watch = () => {
   
   const { currentUser } = useAuth();
   const { toggleFavorite, isFavorite, addToHistory, watchHistory, continueWatching } = useApp();
+
+  const handleShare = async () => {
+    const shareData = {
+      title: item?.title || 'Kutty TV',
+      text: item?.description || 'Watch on Kutty TV',
+      url: window.location.href,
+    };
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.log("Share failed:", err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        alert("Link copied to clipboard!");
+      } catch (err) {
+        console.error("Clipboard copy failed:", err);
+      }
+    }
+  };
 
   // Page States
   const [loading, setLoading] = useState(true);
@@ -233,23 +255,34 @@ const Watch = () => {
                   )}
                 </div>
 
-                {/* Favorite Toggle button */}
-                <button
-                  onClick={() => toggleFavorite(item)}
-                  className="flex items-center gap-2 px-4 py-2 bg-theme-coffee/5 border border-theme-coffee/10 hover:bg-theme-coffee/10 dark:bg-theme-darkCard dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText text-xs font-bold rounded-xl shadow-sm transition-all active:scale-95 cursor-pointer"
-                >
-                  {isFav ? (
-                    <>
-                      <Check size={14} className="text-green-600 dark:text-green-500" />
-                      <span>{t('common.addedToList')}</span>
-                    </>
-                  ) : (
-                    <>
-                      <Plus size={14} />
-                      <span>{t('common.addToList')}</span>
-                    </>
-                  )}
-                </button>
+                <div className="flex items-center gap-3">
+                  {/* Favorite Toggle button */}
+                  <button
+                    onClick={() => toggleFavorite(item)}
+                    className="flex items-center gap-2 px-4 py-2 bg-theme-coffee/5 border border-theme-coffee/10 hover:bg-theme-coffee/10 dark:bg-theme-darkCard dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText text-xs font-bold rounded-xl shadow-sm transition-all active:scale-95 cursor-pointer"
+                  >
+                    {isFav ? (
+                      <>
+                        <Check size={14} className="text-green-600 dark:text-green-500" />
+                        <span>{t('common.addedToList')}</span>
+                      </>
+                    ) : (
+                      <>
+                        <Plus size={14} />
+                        <span>{t('common.addToList')}</span>
+                      </>
+                    )}
+                  </button>
+
+                  {/* Share button */}
+                  <button
+                    onClick={handleShare}
+                    className="flex items-center gap-1.5 px-4 py-2 bg-theme-coffee/5 border border-theme-coffee/10 hover:bg-theme-coffee/10 dark:bg-theme-darkCard dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText text-xs font-bold rounded-xl shadow-sm transition-all active:scale-95 cursor-pointer"
+                  >
+                    <Share2 size={14} className="text-theme-orange" />
+                    <span>Share</span>
+                  </button>
+                </div>
               </div>
 
               {/* Badges row */}
