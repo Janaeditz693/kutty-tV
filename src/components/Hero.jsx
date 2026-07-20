@@ -10,14 +10,15 @@ const Hero = ({ items = [] }) => {
   const navigate = useNavigate();
   const { toggleFavorite, isFavorite } = useApp();
   const [index, setIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
-    if (items.length <= 1) return;
+    if (items.length <= 1 || isPaused) return;
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % items.length);
-    }, 7000); // Change hero slide every 7 seconds
+    }, 6000); // Change hero slide every 6 seconds
     return () => clearInterval(interval);
-  }, [items]);
+  }, [items, isPaused]);
 
   if (!items || items.length === 0) return null;
 
@@ -49,7 +50,11 @@ const Hero = ({ items = [] }) => {
     <div className="w-full bg-theme-cream dark:bg-theme-darkBg transition-colors duration-300">
       
       {/* MOBILE LAYOUT (hidden on desktop/tablet) */}
-      <div className="relative w-full overflow-hidden bg-theme-cream dark:bg-theme-darkBg transition-colors duration-300 md:hidden flex flex-col items-center py-6 px-4 gap-4">
+      <div 
+        onTouchStart={() => setIsPaused(true)}
+        onTouchEnd={() => setTimeout(() => setIsPaused(false), 5000)} // Resume autoplay 5s after touch ends
+        className="relative w-full overflow-hidden bg-theme-cream dark:bg-theme-darkBg transition-colors duration-300 md:hidden flex flex-col items-center py-6 px-4 gap-4"
+      >
         
         {/* Ambient Blurred Background Glow */}
         <div className="absolute inset-0 w-full h-full opacity-10 dark:opacity-20 blur-xl scale-110 pointer-events-none">
@@ -185,7 +190,11 @@ const Hero = ({ items = [] }) => {
       </div>
 
       {/* DESKTOP/TABLET LAYOUT (hidden on mobile) */}
-      <div className="hidden md:block relative w-full aspect-[21/9] min-h-[400px] max-h-[700px] overflow-hidden bg-theme-coffee/10 dark:bg-theme-darkBg transition-colors duration-300">
+      <div 
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        className="hidden md:block relative w-full aspect-[21/9] min-h-[400px] max-h-[700px] overflow-hidden bg-theme-coffee/10 dark:bg-theme-darkBg transition-colors duration-300"
+      >
         
         {/* Background Images with AnimatePresence */}
         <AnimatePresence mode="wait">
