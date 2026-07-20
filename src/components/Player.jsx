@@ -77,6 +77,7 @@ const Player = ({
   };
 
   const ytId = getYouTubeId(videoUrl);
+  const startParam = (initialProgress > 0) ? `&start=${Math.floor(initialProgress)}` : '';
 
   // Initialize and load video streams
   useEffect(() => {
@@ -129,21 +130,27 @@ const Player = ({
 
     // Set initial progress if provided
     const handleLoadedMetadata = () => {
-      setDuration(video.duration);
-      if (initialProgress > 0 && initialProgress < video.duration) {
-        video.currentTime = initialProgress;
+      if (video.duration) setDuration(video.duration);
+      if (initialProgress > 0 && video.duration && initialProgress < video.duration * 0.98) {
+        if (Math.abs(video.currentTime - initialProgress) > 2) {
+          video.currentTime = initialProgress;
+        }
       }
     };
 
     video.addEventListener('loadedmetadata', handleLoadedMetadata);
+    video.addEventListener('loadeddata', handleLoadedMetadata);
+    video.addEventListener('canplay', handleLoadedMetadata);
 
     return () => {
       video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      video.removeEventListener('loadeddata', handleLoadedMetadata);
+      video.removeEventListener('canplay', handleLoadedMetadata);
       if (hlsRef.current) {
         hlsRef.current.destroy();
       }
     };
-  }, [videoUrl, ytId]);
+  }, [videoUrl, ytId, initialProgress]);
 
   // Handle auto-next countdown when video ends
   useEffect(() => {
@@ -324,7 +331,7 @@ const Player = ({
       {ytId ? (
         <div className="w-full h-full relative">
           <iframe
-            src={`https://www.youtube.com/embed/${ytId}?autoplay=1&controls=1&rel=0&modestbranding=1&enablejsapi=1`}
+            src={`https://www.youtube.com/embed/${ytId}?autoplay=1&controls=1&rel=0&modestbranding=1&enablejsapi=1${startParam}`}
             title={title}
             className="w-full h-full border-none"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

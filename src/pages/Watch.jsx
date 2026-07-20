@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,7 +17,7 @@ const Watch = () => {
   const navigate = useNavigate();
   
   const { currentUser } = useAuth();
-  const { toggleFavorite, isFavorite, addToHistory } = useApp();
+  const { toggleFavorite, isFavorite, addToHistory, watchHistory, continueWatching } = useApp();
 
   // Page States
   const [loading, setLoading] = useState(true);
@@ -172,6 +172,43 @@ const Watch = () => {
   const videoUrl = item.type === 'movie' ? item.videoUrl : (currentEpisode?.videoUrl || '');
   const mediaTitle = item.type === 'movie' ? displayTitle : `${displayTitle} - Ep ${currentEpisode?.number}: ${currentEpTitle}`;
 
+  // Compute initial progress to resume playback from where user left off
+  const initialProgress = useMemo(() => {
+    if (!item) return 0;
+
+    const targetShowId = item.id;
+    const isMovie = item.type === 'movie';
+    const targetEpId = currentEpisode ? currentEpisode.id : null;
+
+    // Check continueWatching array first
+    const continueMatch = (continueWatching || []).find(c => {
+      if (c.showId !== targetShowId) return false;
+      if (isMovie) return true;
+      return c.episodeId === targetEpId;
+    });
+
+    if (continueMatch && continueMatch.progress > 0) {
+      if (!continueMatch.duration || continueMatch.progress < continueMatch.duration * 0.95) {
+        return continueMatch.progress;
+      }
+    }
+
+    // Check watchHistory array second
+    const historyMatch = (watchHistory || []).find(h => {
+      if (h.showId !== targetShowId) return false;
+      if (isMovie) return true;
+      return h.episodeId === targetEpId;
+    });
+
+    if (historyMatch && historyMatch.progress > 0) {
+      if (!historyMatch.duration || historyMatch.progress < historyMatch.duration * 0.95) {
+        return historyMatch.progress;
+      }
+    }
+
+    return 0;
+  }, [item, currentEpisode, continueWatching, watchHistory]);
+
   // Next / Prev button conditions
   const episodes = item.episodes || [];
   const availableSeasons = [...new Set(episodes.map(ep => ep.season || 1))].sort((a, b) => a - b);
@@ -192,8 +229,10 @@ const Watch = () => {
       {/* 1. Video Player Section (Dynamic layout under Theater mode) */}
       <div className={`w-full bg-black/5 dark:bg-black/50 ${isTheaterMode ? 'w-full' : 'max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8'}`}>
         <Player
+          key={`${item.id}-${currentEpisode?.id || 'movie'}`}
           videoUrl={videoUrl}
           title={mediaTitle}
+          initialProgress={initialProgress}
           onNext={handleNextEpisode}
           onPrev={handlePrevEpisode}
           hasNext={hasNext}
