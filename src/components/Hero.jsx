@@ -303,10 +303,10 @@ const Hero = ({ items = [] }) => {
               {displayTitle}
             </h1>
 
-            {/* Desktop Description with Read More */}
-            <div className="text-sm sm:text-base text-theme-coffee/70 dark:text-theme-darkText/75 leading-relaxed drop-shadow-sm font-medium">
-              <DescriptionWithReadMore text={displayDesc} maxLines={3} />
-            </div>
+            {/* Desktop Description */}
+            <p className="text-sm sm:text-base text-theme-coffee/70 dark:text-theme-darkText/75 line-clamp-3 leading-relaxed drop-shadow-sm font-medium">
+              {displayDesc}
+            </p>
 
             {/* Play & Favorite Actions */}
             <div className="flex items-center gap-3 mt-4">

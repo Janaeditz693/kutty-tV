@@ -112,12 +112,12 @@ const CartoonCard = ({ item }) => {
             </span>
           </div>
 
-          {/* Localized short description snippet with Read More link */}
+          {/* Localized short description snippet (Read More link on Mobile only) */}
           <div className="mt-1 flex flex-col items-start gap-0.5">
             <p className="text-[11px] text-theme-coffee/60 dark:text-theme-darkText/50 line-clamp-2 leading-relaxed">
               {displayDesc}
             </p>
-            <span className="text-[11px] text-theme-orange font-extrabold hover:underline cursor-pointer">
+            <span className="text-[11px] text-theme-orange font-extrabold hover:underline cursor-pointer sm:hidden">
               Read More
             </span>
           </div>
