@@ -28,7 +28,6 @@ const Player = ({
   hasNext = false, 
   hasPrev = false,
   onTimeUpdate = () => {},
-  initialProgress = 0,
   onVideoEnded = () => {}
 }) => {
   const { t } = useTranslation();
@@ -57,8 +56,6 @@ const Player = ({
   // Auto-hide controls timer
   const controlsTimeoutRef = useRef(null);
 
-
-
   const getYouTubeId = (url) => {
     if (!url || typeof url !== 'string') return null;
     
@@ -77,8 +74,6 @@ const Player = ({
   };
 
   const ytId = getYouTubeId(videoUrl);
-  const startParam = (initialProgress > 0) ? `&start=${Math.floor(initialProgress)}` : '';
-  const hasSeekedRef = useRef(false);
 
   // Initialize and load video streams
   useEffect(() => {
@@ -86,12 +81,11 @@ const Player = ({
     const video = videoRef.current;
     if (!video) return;
 
-    // Reset player states and seek flag
+    // Reset player states
     setIsPlaying(false);
     setDuration(0);
     setCurrentTime(0);
     setCountdown(null);
-    hasSeekedRef.current = false;
 
     // Destroy existing HLS instances
     if (hlsRef.current) {
@@ -130,23 +124,14 @@ const Player = ({
       video.src = videoUrl;
     }
 
-    // Set initial progress once if provided
     const handleLoadedMetadata = () => {
       if (video.duration) setDuration(video.duration);
-      if (!hasSeekedRef.current && initialProgress > 0 && video.duration && initialProgress < video.duration * 0.98) {
-        hasSeekedRef.current = true;
-        video.currentTime = initialProgress;
-      }
     };
 
     video.addEventListener('loadedmetadata', handleLoadedMetadata);
-    video.addEventListener('loadeddata', handleLoadedMetadata);
-    video.addEventListener('canplay', handleLoadedMetadata);
 
     return () => {
       video.removeEventListener('loadedmetadata', handleLoadedMetadata);
-      video.removeEventListener('loadeddata', handleLoadedMetadata);
-      video.removeEventListener('canplay', handleLoadedMetadata);
       if (hlsRef.current) {
         hlsRef.current.destroy();
       }
@@ -332,7 +317,7 @@ const Player = ({
       {ytId ? (
         <div className="w-full h-full relative">
           <iframe
-            src={`https://www.youtube.com/embed/${ytId}?autoplay=1&controls=1&rel=0&modestbranding=1&enablejsapi=1${startParam}`}
+            src={`https://www.youtube.com/embed/${ytId}?autoplay=1&controls=1&rel=0&modestbranding=1&enablejsapi=1`}
             title={title}
             className="w-full h-full border-none"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
