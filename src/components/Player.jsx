@@ -46,6 +46,10 @@ const Player = ({
   const [showControls, setShowControls] = useState(true);
   const [isTheaterMode, setIsTheaterMode] = useState(false);
   
+  // Netflix-style splash state
+  const [playSplash, setPlaySplash] = useState(null); // 'play' or 'pause'
+  const splashTimerRef = useRef(null);
+
   // Custom dropdowns
   const [showSpeedMenu, setShowSpeedMenu] = useState(false);
   const [showQualityMenu, setShowQualityMenu] = useState(false);
@@ -55,6 +59,45 @@ const Player = ({
 
   // Auto-hide controls timer
   const controlsTimeoutRef = useRef(null);
+
+  const triggerSplash = (type) => {
+    setPlaySplash(type);
+    clearTimeout(splashTimerRef.current);
+    splashTimerRef.current = setTimeout(() => {
+      setPlaySplash(null);
+    }, 650);
+  };
+
+  // Video Events
+  const handlePlayPause = () => {
+    if (countdown !== null) {
+      setCountdown(null);
+    }
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isPlaying) {
+      video.pause();
+      triggerSplash('pause');
+      setShowControls(true);
+      clearTimeout(controlsTimeoutRef.current);
+    } else {
+      video.play().catch(e => console.log("Play interrupted:", e));
+      triggerSplash('play');
+      setShowControls(true);
+      clearTimeout(controlsTimeoutRef.current);
+      controlsTimeoutRef.current = setTimeout(() => {
+        setShowControls(false);
+        setShowSpeedMenu(false);
+        setShowQualityMenu(false);
+      }, 2500);
+    }
+  };
+
+  const handleContainerClick = (e) => {
+    if (e.target.closest('button, input, select, a, [role="button"]')) return;
+    handlePlayPause();
+  };
 
   const getYouTubeId = (url) => {
     if (!url || typeof url !== 'string') return null;
@@ -152,20 +195,7 @@ const Player = ({
     return () => clearTimeout(timer);
   }, [countdown]);
 
-  // Video Events
-  const handlePlayPause = () => {
-    if (countdown !== null) {
-      setCountdown(null);
-    }
-    const video = videoRef.current;
-    if (!video) return;
 
-    if (isPlaying) {
-      video.pause();
-    } else {
-      video.play().catch(e => console.log("Play interrupted:", e));
-    }
-  };
 
   const handleVideoEnded = () => {
     setIsPlaying(false);
@@ -346,24 +376,42 @@ const Player = ({
         /* -------------------------------------------------------------
             HTML5 & HLS CUSTOM PLAYER
            ------------------------------------------------------------- */
-        <div className="w-full h-full relative flex items-center justify-center group/player">
+        <div 
+          onClick={handleContainerClick}
+          onTouchStart={handleMouseMove}
+          className="w-full h-full relative flex items-center justify-center group/player cursor-pointer select-none"
+        >
           
           <video
             ref={videoRef}
-            onClick={handlePlayPause}
             onTimeUpdate={handleTimeUpdate}
             onEnded={handleVideoEnded}
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
-            className="w-full h-full object-contain"
+            className="w-full h-full object-contain pointer-events-none"
             playsInline
             autoPlay
           />
 
-          {/* Top-Right Quick Fullscreen button for mobile/touch screens */}
+          {/* Netflix-style Animated Splash Icon (Play / Pause touch feedback) */}
+          {playSplash && (
+            <div className="absolute inset-0 z-40 pointer-events-none flex items-center justify-center">
+              <div className="p-6 rounded-full bg-black/65 backdrop-blur-md text-theme-cream shadow-2xl border border-theme-cream/20 transform animate-bounce">
+                {playSplash === 'play' ? (
+                  <Play size={44} className="fill-theme-cream ml-1" />
+                ) : (
+                  <Pause size={44} className="fill-theme-cream" />
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Top-Right Quick Fullscreen button (Fades out when controls hide) */}
           <button
             onClick={toggleFullscreen}
-            className="absolute top-3 right-3 z-30 p-2 sm:p-2.5 rounded-full bg-black/60 backdrop-blur-md text-theme-cream hover:bg-black/85 transition-all shadow-md cursor-pointer border border-theme-cream/20 flex items-center justify-center opacity-85 hover:opacity-100"
+            className={`absolute top-3 right-3 z-30 p-2 sm:p-2.5 rounded-full bg-black/60 backdrop-blur-md text-theme-cream hover:bg-black/85 transition-opacity duration-300 shadow-md cursor-pointer border border-theme-cream/20 flex items-center justify-center ${
+              showControls ? 'opacity-85 hover:opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
             title={t('player.fullscreen')}
           >
             {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
@@ -375,8 +423,6 @@ const Player = ({
               {activeSubtitle}
             </div>
           )}
-
-
 
           {/* Auto-play next episode countdown banner overlay */}
           {countdown !== null && (
