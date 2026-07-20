@@ -3,9 +3,9 @@ import { Tv } from 'lucide-react';
 
 const Logo = ({ size = 'md' }) => {
   const sizes = {
-    sm: { icon: 16, text: 'text-lg', container: 'gap-1' },
-    md: { icon: 22, text: 'text-2xl', container: 'gap-2' },
-    lg: { icon: 32, text: 'text-4xl', container: 'gap-3' }
+    sm: { icon: 14, text: 'text-base', container: 'gap-1' },
+    md: { icon: 19, text: 'text-xl', container: 'gap-2' },
+    lg: { icon: 28, text: 'text-3xl', container: 'gap-3' }
   };
 
   const currentSize = sizes[size] || sizes.md;
