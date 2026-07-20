@@ -37,11 +37,6 @@ const Home = () => {
   const trendingItems = catalogItems.filter(item => parseFloat(item.rating) >= 8.8);
   const cartoonShows = catalogItems.filter(item => item.type === 'show');
   const fullMovies = catalogItems.filter(item => item.type === 'movie');
-  
-  // Curious custom recommendation algorithm (high ratings, shuffled)
-  const recommendedItems = [...catalogItems]
-    .filter(item => parseFloat(item.rating) >= 8.5)
-    .sort(() => 0.5 - Math.random());
 
   return (
     <div className="flex flex-col w-full pb-12">
@@ -56,7 +51,28 @@ const Home = () => {
       {/* Grid wrapper for shelves */}
       <div className="flex flex-col gap-2 mt-4 sm:mt-6">
         
-        {/* 2. Continue Watching (Visible only when logged in and content has watch progress) */}
+        {/* 2. Trending Shelf */}
+        <Carousel title={t('home.trending')} loading={loading}>
+          {trendingItems.map((item) => (
+            <CartoonCard key={item.id} item={item} />
+          ))}
+        </Carousel>
+
+        {/* 3. Cartoon Series Catalog */}
+        <Carousel title={t('common.shows')} loading={loading}>
+          {cartoonShows.map((item) => (
+            <CartoonCard key={item.id} item={item} />
+          ))}
+        </Carousel>
+
+        {/* 4. Cartoon Movies & Films */}
+        <Carousel title={t('common.movies')} loading={loading}>
+          {fullMovies.map((item) => (
+            <CartoonCard key={item.id} item={item} />
+          ))}
+        </Carousel>
+
+        {/* 5. Continue Watching (Replaces Recommended for You) */}
         {currentUser && continueWatching.length > 0 && (
           <Carousel title={t('common.continueWatching')} loading={loading}>
             {continueWatching.map((record) => (
@@ -64,36 +80,6 @@ const Home = () => {
             ))}
           </Carousel>
         )}
-
-        {/* 3. Trending Shelf */}
-        <Carousel title={t('home.trending')} loading={loading}>
-          {trendingItems.map((item) => (
-            <CartoonCard key={item.id} item={item} />
-          ))}
-        </Carousel>
-
-
-
-        {/* 5. Cartoon Series Catalog */}
-        <Carousel title={t('common.shows')} loading={loading}>
-          {cartoonShows.map((item) => (
-            <CartoonCard key={item.id} item={item} />
-          ))}
-        </Carousel>
-
-        {/* 6. Cartoon Movies & Films */}
-        <Carousel title={t('common.movies')} loading={loading}>
-          {fullMovies.map((item) => (
-            <CartoonCard key={item.id} item={item} />
-          ))}
-        </Carousel>
-
-        {/* 7. Recommended for You Shelf */}
-        <Carousel title={t('home.recommended')} loading={loading}>
-          {recommendedItems.map((item) => (
-            <CartoonCard key={item.id} item={item} />
-          ))}
-        </Carousel>
 
       </div>
     </div>
