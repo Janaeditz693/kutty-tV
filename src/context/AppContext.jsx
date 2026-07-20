@@ -148,34 +148,34 @@ export const AppProvider = ({ children }) => {
 
     const continueItem = { ...historyItem };
 
+    let nextHistory = [];
     setWatchHistory(prevHistory => {
       const filteredHistory = prevHistory.filter(h => {
         if (h.showId !== show.id) return true;
         if (isMovie) return false;
         return h.episodeId !== epId;
       });
-      const updatedHistory = [historyItem, ...filteredHistory].slice(0, 50);
-
-      setContinueWatching(prevContinue => {
-        const filteredContinue = prevContinue.filter(c => c.showId !== show.id);
-        const updatedContinue = [continueItem, ...filteredContinue].slice(0, 10);
-
-        // Sync state snapshot to Firestore
-        syncData(favorites, updatedHistory, updatedContinue);
-
-        return updatedContinue;
-      });
-
-      return updatedHistory;
+      nextHistory = [historyItem, ...filteredHistory].slice(0, 50);
+      return nextHistory;
     });
+
+    let nextContinue = [];
+    setContinueWatching(prevContinue => {
+      const filteredContinue = prevContinue.filter(c => c.showId !== show.id);
+      nextContinue = [continueItem, ...filteredContinue].slice(0, 10);
+      return nextContinue;
+    });
+
+    syncData(favorites, nextHistory, nextContinue);
   };
 
   const removeFromContinueWatching = (showId) => {
+    let nextContinue = [];
     setContinueWatching(prevContinue => {
-      const updatedContinue = prevContinue.filter(c => c.showId !== showId);
-      syncData(favorites, watchHistory, updatedContinue);
-      return updatedContinue;
+      nextContinue = prevContinue.filter(c => c.showId !== showId);
+      return nextContinue;
     });
+    syncData(favorites, watchHistory, nextContinue);
   };
 
   const clearHistory = () => {

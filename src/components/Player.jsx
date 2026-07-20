@@ -60,7 +60,7 @@ const Player = ({
 
 
   const getYouTubeId = (url) => {
-    if (!url) return null;
+    if (!url || typeof url !== 'string') return null;
     
     let targetUrl = url;
     // Check if it is a full HTML iframe block and extract the src URL
