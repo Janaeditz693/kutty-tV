@@ -34,9 +34,12 @@ const Home = () => {
 
   // Filter lists for shelves
   const featuredItems = catalogItems.filter(item => item.featured);
-  const trendingItems = catalogItems.filter(item => parseFloat(item.rating) >= 8.8);
   const cartoonShows = catalogItems.filter(item => item.type === 'show');
   const fullMovies = catalogItems.filter(item => item.type === 'movie');
+  
+  // Trending Items: ratings >= 8.0 or explicit trending property, fallback to top items so it is never empty
+  const highRated = catalogItems.filter(item => item.trending || parseFloat(item.rating) >= 8.0);
+  const trendingItems = highRated.length > 0 ? highRated : catalogItems.slice(0, 8);
 
   return (
     <div className="flex flex-col w-full pb-12">
@@ -51,28 +54,30 @@ const Home = () => {
       {/* Grid wrapper for shelves */}
       <div className="flex flex-col gap-2 mt-4 sm:mt-6">
         
-        {/* 2. Trending Shelf */}
-        <Carousel title={t('home.trending')} loading={loading}>
-          {trendingItems.map((item) => (
-            <CartoonCard key={item.id} item={item} />
-          ))}
-        </Carousel>
-
-        {/* 3. Cartoon Series Catalog */}
+        {/* 2. Cartoon Series Catalog */}
         <Carousel title={t('common.shows')} loading={loading}>
           {cartoonShows.map((item) => (
             <CartoonCard key={item.id} item={item} />
           ))}
         </Carousel>
 
-        {/* 4. Cartoon Movies & Films */}
+        {/* 3. Cartoon Movies & Films */}
         <Carousel title={t('common.movies')} loading={loading}>
           {fullMovies.map((item) => (
             <CartoonCard key={item.id} item={item} />
           ))}
         </Carousel>
 
-        {/* 5. Continue Watching (Replaces Recommended for You) */}
+        {/* 4. Trending Now Shelf (Placed below Movies) */}
+        {trendingItems.length > 0 && (
+          <Carousel title={t('home.trending')} loading={loading}>
+            {trendingItems.map((item) => (
+              <CartoonCard key={item.id} item={item} />
+            ))}
+          </Carousel>
+        )}
+
+        {/* 5. Continue Watching */}
         {currentUser && continueWatching.length > 0 && (
           <Carousel title={t('common.continueWatching')} loading={loading}>
             {continueWatching.map((record) => (
