@@ -7,14 +7,11 @@ import { useApp } from '../context/AppContext';
 
 const CartoonCard = ({ item }) => {
   const { t, i18n } = useTranslation();
-  const { toggleFavorite, isFavorite, continueWatching } = useApp();
+  const { toggleFavorite, isFavorite } = useApp();
   const navigate = useNavigate();
   
   const isFav = isFavorite(item.id);
   const currentLang = i18n.language || 'en';
-
-  const watchRecord = (continueWatching || []).find(c => c.showId === item.id);
-  const percentage = watchRecord && watchRecord.duration > 0 ? (watchRecord.progress / watchRecord.duration) * 100 : 0;
   
   const displayTitle = currentLang.startsWith('ta') && item.titleTa ? item.titleTa : item.title;
   const displayDesc = currentLang.startsWith('ta') && item.descriptionTa ? item.descriptionTa : item.description;
@@ -67,16 +64,6 @@ const CartoonCard = ({ item }) => {
             <Star size={11} className="fill-black stroke-none" />
             <span>{item.rating}</span>
           </div>
-
-          {/* Thin Netflix/Prime Video style orange progress bar along the bottom of thumbnail */}
-          {percentage > 0 && (
-            <div className="absolute bottom-0 inset-x-0 h-1 z-30 bg-black/60 backdrop-blur-xs">
-              <div 
-                className="h-full bg-theme-orange rounded-r-full transition-all duration-300 shadow-[0_0_8px_rgba(249,115,22,0.8)]"
-                style={{ width: `${Math.max(10, Math.min(100, percentage))}%` }}
-              />
-            </div>
-          )}
 
           {/* Hover Overlay Controls */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 z-20">

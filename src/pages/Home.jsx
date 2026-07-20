@@ -68,18 +68,14 @@ const Home = () => {
           ))}
         </Carousel>
 
-        {/* 4. Continue Watching (Always displayed on Homepage) */}
-        <Carousel title={t('common.continueWatching')} loading={loading}>
-          {continueWatching && continueWatching.length > 0 ? (
-            continueWatching.map((record) => (
+        {/* 4. Continue Watching (Visible when logged in and content has watch progress) */}
+        {currentUser && continueWatching && continueWatching.length > 0 && (
+          <Carousel title={t('common.continueWatching')} loading={loading}>
+            {continueWatching.map((record) => (
               <ContinueWatchingCard key={record.showId} record={record} />
-            ))
-          ) : (
-            catalogItems.slice(0, 6).map((item) => (
-              <CartoonCard key={item.id} item={item} />
-            ))
-          )}
-        </Carousel>
+            ))}
+          </Carousel>
+        )}
 
         {/* 5. Trending Now Shelf */}
         {trendingItems.length > 0 && (

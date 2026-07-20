@@ -61,10 +61,10 @@ const ContinueWatchingCard = ({ record }) => {
           </div>
 
           {/* Thin Netflix/Prime Video style orange progress bar along the bottom of thumbnail */}
-          <div className="absolute bottom-0 inset-x-0 h-1 z-30 bg-black/60 backdrop-blur-xs">
+          <div className="absolute bottom-0 inset-x-0 h-1 z-30 bg-black/60">
             <div 
-              className="h-full bg-theme-orange rounded-r-full transition-all duration-300 shadow-[0_0_8px_rgba(249,115,22,0.8)]"
-              style={{ width: `${Math.max(12, Math.min(100, percentage || 35))}%` }}
+              className="h-full bg-theme-orange transition-all duration-300"
+              style={{ width: `${Math.max(5, Math.min(100, percentage))}%` }}
             />
           </div>
         </div>
