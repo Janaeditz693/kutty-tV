@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Loader from './components/Loader';
 import { useAuth } from './context/AuthContext';
+import { Analytics } from '@vercel/analytics/react';
 
 // Lazy loading all pages for code-splitting and performance
 const Home = lazy(() => import('./pages/Home'));
@@ -101,6 +102,9 @@ function App() {
 
         {/* Global Footer */}
         <Footer />
+
+        {/* Vercel Analytics tracking */}
+        <Analytics />
         
       </div>
     </Router>
