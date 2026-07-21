@@ -262,7 +262,7 @@ const AdminDashboard = () => {
 
     const newEpObj = {
       id: `ep-${Date.now()}`,
-      number: parseInt(epNumber),
+      number: epNumber.trim(),
       season: parseInt(epSeason) || 1,
       title: epTitle.trim(),
       titleTa: epTitleTa.trim() || epTitle.trim(),
@@ -270,25 +270,25 @@ const AdminDashboard = () => {
       descriptionTa: epDescTa.trim() || epDesc.trim(),
       thumbnail: epThumbnail.trim(),
       videoUrl: epVideoUrl.trim(),
-      duration: parseInt(epDuration)
+      duration: parseInt(epDuration) || 600
     };
 
     const updatedEpisodes = [...(showObj.episodes || [])];
     // Check if episode number already exists within this season
-    const existingIdx = updatedEpisodes.findIndex(e => e.number === newEpObj.number && (e.season || 1) === newEpObj.season);
+    const existingIdx = updatedEpisodes.findIndex(e => String(e.number) === String(newEpObj.number) && (e.season || 1) === newEpObj.season);
     if (existingIdx !== -1) {
       updatedEpisodes[existingIdx] = newEpObj;
     } else {
       updatedEpisodes.push(newEpObj);
     }
-    // Sort episodes by season first, then number ascending
+    // Sort episodes by season first, then episode number ascending (supports 1, 1.A, 1.B, 2)
     updatedEpisodes.sort((a, b) => {
-      const aSeason = a.season || 1;
-      const bSeason = b.season || 1;
+      const aSeason = parseInt(a.season) || 1;
+      const bSeason = parseInt(b.season) || 1;
       if (aSeason !== bSeason) {
         return aSeason - bSeason;
       }
-      return a.number - b.number;
+      return String(a.number).localeCompare(String(b.number), undefined, { numeric: true, sensitivity: 'base' });
     });
 
     const updatedShowObj = {
@@ -900,12 +900,12 @@ const AdminDashboard = () => {
                       <div className="flex flex-col gap-1">
                         <label className="text-xs font-bold uppercase tracking-wider text-theme-coffee/60 dark:text-theme-darkText/50">Episode Number *</label>
                         <input
-                          type="number"
+                          type="text"
                           required
                           value={epNumber}
                           onChange={(e) => setEpNumber(e.target.value)}
-                          placeholder="e.g. 4"
-                          className="px-3 py-2 rounded-xl text-sm bg-theme-cream border border-theme-coffee/15 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none"
+                          placeholder="e.g. 1, 1.A, 1.B, 2"
+                          className="px-3 py-2 rounded-xl text-sm bg-theme-cream border border-theme-coffee/15 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none font-bold font-mono"
                         />
                       </div>
 
