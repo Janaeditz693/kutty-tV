@@ -85,27 +85,48 @@
   background: var(--text-secondary);
 }
 
-/* Retro Glassmorphism */
+/* Retro Glassmorphism & Mobile GPU Optimizations */
 .glass-nav {
-  background: rgba(245, 241, 232, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(245, 241, 232, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(74, 54, 40, 0.08);
 }
 
 .dark .glass-nav {
-  background: rgba(18, 12, 8, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(18, 12, 8, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(250, 248, 245, 0.08);
 }
 
-/* Hide Scrollbar for Horizontal rows */
+/* Hide Scrollbar & Hardware Accelerated Touch Scrolling */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
+}
+
+/* Mobile Performance Rules */
+@media (max-width: 768px) {
+  .glass-nav {
+    background: rgba(245, 241, 232, 0.95);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .dark .glass-nav {
+    background: rgba(18, 12, 8, 0.95);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  
+  /* Optimize mobile image rendering and prevent layout thrashing */
+  img {
+    content-visibility: auto;
+  }
 }
 

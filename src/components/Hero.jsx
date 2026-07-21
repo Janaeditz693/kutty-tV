@@ -81,12 +81,13 @@ const Hero = ({ items = [] }) => {
         className="relative w-full overflow-hidden bg-theme-cream dark:bg-theme-darkBg transition-colors duration-300 md:hidden flex flex-col items-center py-6 px-4 gap-4"
       >
         
-        {/* Ambient Blurred Background Glow */}
-        <div className="absolute inset-0 w-full h-full opacity-10 dark:opacity-20 blur-xl scale-110 pointer-events-none">
+        {/* Ambient Blurred Background Glow (Optimized for Mobile FPS) */}
+        <div className="absolute inset-0 w-full h-full opacity-10 dark:opacity-20 blur-md pointer-events-none">
           <img
             src={currentItem.thumbnail || currentItem.banner}
             alt=""
             className="w-full h-full object-cover"
+            loading="lazy"
           />
         </div>
 

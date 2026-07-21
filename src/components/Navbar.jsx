@@ -151,13 +151,19 @@ const Navbar = () => {
                 </button>
               </form>
 
-              {/* Mobile Search Bar (Directly in header next to Hamburger) */}
+              {/* Mobile Search Bar (Directly in header) */}
               <form onSubmit={handleSearchSubmit} className="relative lg:hidden flex-grow max-w-[150px] xs:max-w-[200px]">
                 <input
                   type="text"
                   placeholder="Search..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setSearchQuery(val);
+                    if (val.trim()) {
+                      navigate(`/search?q=${encodeURIComponent(val.trim())}`, { replace: true });
+                    }
+                  }}
                   className="w-full px-3 py-1.5 pr-8 rounded-lg text-xs bg-zinc-800 text-white placeholder-zinc-400 border border-zinc-700/40 focus:outline-none focus:ring-1 focus:ring-[#FF5A1F]"
                 />
                 <button type="submit" className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400">

@@ -58,51 +58,54 @@ const Search = () => {
     }
 
     const q = searchQuery.toLowerCase().trim();
+    const tokens = q.split(/\s+/).filter(Boolean);
 
-    // Filter Items
+    // Filter Items with multi-token matching and null-safe properties
     const results = items.filter(item => {
-      const matchTitle = item.title.toLowerCase().includes(q) || (item.titleTa && item.titleTa.toLowerCase().includes(q));
-      const matchDesc = item.description.toLowerCase().includes(q) || (item.descriptionTa && item.descriptionTa.toLowerCase().includes(q));
-      const matchGenres = item.genres?.some(g => g.toLowerCase().includes(q));
-      const matchCharacters = item.characters?.some(c => c.toLowerCase().includes(q));
-      const matchYear = item.year.includes(q);
-      
-      // Check individual episode titles
-      const matchEpisodes = item.episodes?.some(ep => 
-        ep.title.toLowerCase().includes(q) || (ep.titleTa && ep.titleTa.toLowerCase().includes(q))
-      );
+      const title = (item.title || '').toLowerCase();
+      const titleTa = (item.titleTa || '').toLowerCase();
+      const desc = (item.description || '').toLowerCase();
+      const descTa = (item.descriptionTa || '').toLowerCase();
+      const year = (item.year || '').toString().toLowerCase();
+      const type = (item.type || '').toLowerCase();
+      const genres = (item.genres || []).map(g => (g || '').toLowerCase()).join(' ');
+      const characters = (item.characters || []).map(c => (c || '').toLowerCase()).join(' ');
+      const episodeTitles = (item.episodes || []).map(ep => `${ep.title || ''} ${ep.titleTa || ''}`).join(' ').toLowerCase();
 
-      return matchTitle || matchDesc || matchGenres || matchCharacters || matchYear || matchEpisodes;
+      const combinedText = `${title} ${titleTa} ${desc} ${descTa} ${year} ${type} ${genres} ${characters} ${episodeTitles}`;
+
+      // Every typed word/token must match somewhere in the combined text
+      return tokens.every(token => combinedText.includes(token));
     });
     setFilteredItems(results);
 
-    // Build suggestions (matching characters, titles, genres)
+    // Build live suggestions
     const sug = [];
     items.forEach(item => {
-      if (item.title.toLowerCase().includes(q) && !sug.includes(item.title)) {
+      if ((item.title || '').toLowerCase().includes(q) && !sug.includes(item.title)) {
         sug.push(item.title);
       }
       item.characters?.forEach(char => {
-        if (char.toLowerCase().includes(q) && !sug.includes(char)) {
+        if ((char || '').toLowerCase().includes(q) && !sug.includes(char)) {
           sug.push(char);
         }
       });
       item.genres?.forEach(gen => {
-        if (gen.toLowerCase().includes(q) && !sug.includes(gen)) {
+        if ((gen || '').toLowerCase().includes(q) && !sug.includes(gen)) {
           sug.push(gen);
         }
       });
     });
-    setSuggestions(sug.slice(0, 5)); // Limit to 5 live suggestions
+    setSuggestions(sug.slice(0, 5));
   }, [searchQuery, items]);
 
   const handleSearchChange = (e) => {
     const val = e.target.value;
     setSearchQuery(val);
-    // Debounce or update URL params instantly
-    if (!val) {
-      searchParams.delete('q');
-      setSearchParams(searchParams);
+    if (val.trim()) {
+      setSearchParams({ q: val.trim() }, { replace: true });
+    } else {
+      setSearchParams({}, { replace: true });
     }
   };
 
