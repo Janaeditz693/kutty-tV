@@ -196,6 +196,14 @@ const Watch = () => {
     ? (currentLang.startsWith('ta') && currentEpisode.titleTa ? currentEpisode.titleTa : currentEpisode.title)
     : '';
 
+  const currentEpDesc = currentEpisode 
+    ? (currentLang.startsWith('ta') && currentEpisode.descriptionTa ? currentEpisode.descriptionTa : currentEpisode.description)
+    : '';
+
+  const activeDescription = (currentEpisode && currentEpDesc && currentEpDesc.trim()) 
+    ? currentEpDesc 
+    : displayDesc;
+
   // Get active video url and meta details
   const videoUrl = item.type === 'movie' ? item.videoUrl : (currentEpisode?.videoUrl || '');
   const mediaTitle = item.type === 'movie' ? displayTitle : `${displayTitle} - Ep ${currentEpisode?.number}: ${currentEpTitle}`;
@@ -302,7 +310,7 @@ const Watch = () => {
 
               {/* Description */}
               <p className="text-sm sm:text-base text-theme-coffee/70 dark:text-theme-darkText/75 leading-relaxed font-medium mt-1">
-                {displayDesc}
+                {activeDescription}
               </p>
             </div>
 
