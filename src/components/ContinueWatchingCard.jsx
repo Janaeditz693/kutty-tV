@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Play, X } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { optimizeImageUrl } from '../utils/image';
 
 const ContinueWatchingCard = ({ record }) => {
   const { t } = useTranslation();
@@ -34,7 +35,7 @@ const ContinueWatchingCard = ({ record }) => {
         {/* Thumbnail Area */}
         <div className="relative aspect-[16/10] overflow-hidden bg-theme-coffee/5">
           <img
-            src={record.showThumbnail}
+            src={optimizeImageUrl(record.showThumbnail, 'card')}
             alt={record.showTitle}
             className="w-full h-full object-cover"
             loading="lazy"

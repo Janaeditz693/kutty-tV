@@ -152,7 +152,13 @@ const Player = ({
         video.src = videoUrl;
       } else if (Hls.isSupported()) {
         // Hls.js library for Chrome/Firefox/Edge/Windows
-        const hls = new Hls({ maxBufferSize: 0, maxBufferLength: 5 });
+        const hls = new Hls({ 
+          maxBufferSize: 12 * 1024 * 1024, // Limit preloaded buffer size to 12MB to avoid wasting data
+          maxBufferLength: 8,              // Only download 8 seconds ahead instead of pre-fetching full video
+          capLevelToPlayerSize: true,      // Capped automatically on mobile screen sizes
+          startLevel: 0,                   // Start video on optimal lightweight quality and upscale only when needed
+          abrEwmaDefaultEstimate: 500000   // Low default estimate to ensure start bandwidth usage is minimized
+        });
         hls.loadSource(videoUrl);
         hls.attachMedia(video);
         hlsRef.current = hls;

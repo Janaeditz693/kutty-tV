@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Plus, Check, ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { optimizeImageUrl } from '../utils/image';
 
 const DescriptionWithReadMore = ({ text, maxLines = 3 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -84,7 +85,7 @@ const Hero = ({ items = [] }) => {
         {/* Ambient Blurred Background Glow (Optimized for Mobile FPS) */}
         <div className="absolute inset-0 w-full h-full opacity-10 dark:opacity-20 blur-md pointer-events-none">
           <img
-            src={currentItem.thumbnail || currentItem.banner}
+            src={optimizeImageUrl(currentItem.thumbnail || currentItem.banner, 'thumbnail')}
             alt=""
             className="w-full h-full object-cover"
             loading="lazy"
@@ -104,7 +105,7 @@ const Hero = ({ items = [] }) => {
               className="relative w-[88%] aspect-[16/10] rounded-2xl overflow-hidden shadow-xl border border-theme-coffee/10 dark:border-zinc-800 z-20 bg-theme-coffee/5"
             >
               <img
-                src={currentItem.thumbnail || currentItem.banner}
+                src={optimizeImageUrl(currentItem.thumbnail || currentItem.banner, 'card')}
                 alt={displayTitle}
                 className="w-full h-full object-cover object-center"
               />
@@ -234,7 +235,7 @@ const Hero = ({ items = [] }) => {
           >
             {/* Main Slide Image */}
             <img
-              src={currentItem.banner}
+              src={optimizeImageUrl(currentItem.banner, 'hero')}
               alt={displayTitle}
               className="w-full h-full object-cover object-center"
             />

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Play, Heart, Star, Film, Tv } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { optimizeImageUrl } from '../utils/image';
 
 const CartoonCard = ({ item }) => {
   const { t, i18n } = useTranslation();
@@ -47,7 +48,7 @@ const CartoonCard = ({ item }) => {
         <div className="relative aspect-[16/10] overflow-hidden bg-theme-coffee/5">
           {/* Main Thumbnail */}
           <img 
-            src={item.thumbnail} 
+            src={optimizeImageUrl(item.thumbnail, 'card')} 
             alt={displayTitle}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
