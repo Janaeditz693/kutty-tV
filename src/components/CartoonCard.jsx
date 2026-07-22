@@ -35,10 +35,13 @@ const CartoonCard = ({ item }) => {
     }
   };
 
+  const isTouch = window.matchMedia('(pointer: coarse)').matches;
+  const hoverAnimation = isTouch ? {} : { y: -8, scale: 1.03 };
+
   return (
     <motion.div
-      whileHover={{ y: -8, scale: 1.03 }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
+      whileHover={hoverAnimation}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
       className="relative w-full h-full rounded-premium bg-theme-cream border border-theme-coffee/10 dark:bg-theme-darkCard dark:border-theme-darkBorder shadow-retro hover:shadow-retro-hover overflow-hidden group select-none flex flex-col justify-between"
     >
       {/* Link surrounding the card */}

@@ -25,10 +25,13 @@ const ContinueWatchingCard = ({ record }) => {
     navigate(record.episodeNumber ? `/watch/${record.showId}/${record.episodeId}` : `/watch/${record.showId}`);
   };
 
+  const isTouch = window.matchMedia('(pointer: coarse)').matches;
+  const hoverAnimation = isTouch ? {} : { scale: 1.03, y: -4 };
+
   return (
     <motion.div
-      whileHover={{ scale: 1.03, y: -4 }}
-      transition={{ duration: 0.25 }}
+      whileHover={hoverAnimation}
+      transition={{ duration: 0.2 }}
       className="relative w-full h-full rounded-premium bg-theme-cream border border-theme-coffee/10 dark:bg-theme-darkCard dark:border-theme-darkBorder shadow-retro overflow-hidden group select-none cursor-pointer flex flex-col justify-between"
     >
       <Link to={record.episodeNumber ? `/watch/${record.showId}/${record.episodeId}` : `/watch/${record.showId}`}>

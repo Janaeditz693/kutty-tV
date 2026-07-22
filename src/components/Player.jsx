@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import Hls from 'hls.js';
 import { 
   Play, 
   Pause, 
@@ -149,33 +148,41 @@ const Player = ({
       if (video.canPlayType('application/vnd.apple.mpegurl')) {
         // Native HLS (Safari / iOS)
         video.src = videoUrl;
-      } else if (Hls.isSupported()) {
-        // Hls.js library for Chrome/Firefox/Edge/Windows
-        const hls = new Hls({ 
-          maxBufferSize: 12 * 1024 * 1024, // Limit preloaded buffer size to 12MB to avoid wasting data
-          maxBufferLength: 8,              // Only download 8 seconds ahead instead of pre-fetching full video
-          capLevelToPlayerSize: true,      // Capped automatically on mobile screen sizes
-          startLevel: 0,                   // Start video on optimal lightweight quality and upscale only when needed
-          abrEwmaDefaultEstimate: 500000   // Low default estimate to ensure start bandwidth usage is minimized
-        });
-        hls.loadSource(videoUrl);
-        hls.attachMedia(video);
-        hlsRef.current = hls;
+      } else {
+        // Dynamically load Hls.js library only when an HLS video is started
+        import('hls.js')
+          .then(({ default: Hls }) => {
+            if (Hls.isSupported()) {
+              const hls = new Hls({ 
+                maxBufferSize: 12 * 1024 * 1024, // Limit preloaded buffer size to 12MB to avoid wasting data
+                maxBufferLength: 8,              // Only download 8 seconds ahead instead of pre-fetching full video
+                capLevelToPlayerSize: true,      // Capped automatically on mobile screen sizes
+                startLevel: 0,                   // Start video on optimal lightweight quality and upscale only when needed
+                abrEwmaDefaultEstimate: 500000   // Low default estimate to ensure start bandwidth usage is minimized
+              });
+              hls.loadSource(videoUrl);
+              hls.attachMedia(video);
+              hlsRef.current = hls;
 
-        hls.on(Hls.Events.ERROR, (event, data) => {
-          if (data.fatal) {
-            switch (data.type) {
-              case Hls.ErrorTypes.NETWORK_ERROR:
-                hls.startLoad();
-                break;
-              case Hls.ErrorTypes.MEDIA_ERROR:
-                hls.recoverMediaError();
-                break;
-              default:
-                break;
+              hls.on(Hls.Events.ERROR, (event, data) => {
+                if (data.fatal) {
+                  switch (data.type) {
+                    case Hls.ErrorTypes.NETWORK_ERROR:
+                      hls.startLoad();
+                      break;
+                    case Hls.ErrorTypes.MEDIA_ERROR:
+                      hls.recoverMediaError();
+                      break;
+                    default:
+                      break;
+                  }
+                }
+              });
             }
-          }
-        });
+          })
+          .catch(err => {
+            console.error("Hls.js dynamic loading error:", err);
+          });
       }
     } else {
       // Normal direct MP4/WebM URL
