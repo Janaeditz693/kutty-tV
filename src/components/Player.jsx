@@ -51,7 +51,6 @@ const Player = ({
   const [showSpeedMenu, setShowSpeedMenu] = useState(false);
   const [showQualityMenu, setShowQualityMenu] = useState(false);
   const [selectedQuality, setSelectedQuality] = useState('1080p');
-  const [subtitlesEnabled, setSubtitlesEnabled] = useState(true);
   const [countdown, setCountdown] = useState(null);
 
   // Auto-hide controls timer
@@ -82,7 +81,7 @@ const Player = ({
   };
 
   const handleContainerClick = (e) => {
-    if (e.target.closest('button, input, select, a, [role="button"]')) return;
+    if (e.target.closest('.control-bar-container, button, input, select, a, [role="button"]')) return;
     handlePlayPause();
   };
 
@@ -350,22 +349,6 @@ const Player = ({
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  // Mock cartoon subtitle quotes corresponding to time
-  const getSubtitles = (time) => {
-    if (!subtitlesEnabled) return null;
-    const cleanTime = Math.floor(time);
-    
-    // Fun cartoon quote triggers based on seconds
-    if (cleanTime >= 5 && cleanTime < 10) return "[Music playing - Uplifting Whimsical Theme]";
-    if (cleanTime >= 15 && cleanTime < 25) return "Penny: \"Don't press that shiny red button!\"";
-    if (cleanTime >= 28 && cleanTime < 38) return "Dr. Hugo: \"But science demands it! Behold the power!\"";
-    if (cleanTime >= 45 && cleanTime < 55) return "Timid: \"The things I do for love...\"";
-    if (cleanTime >= 80 && cleanTime < 90) return "[Giant Hamster roaring in distance]";
-    return null;
-  };
-
-  const activeSubtitle = getSubtitles(currentTime);
-
   return (
     <div 
       ref={containerRef}
@@ -420,12 +403,7 @@ const Player = ({
             {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
           </button>
 
-          {/* Subtitles Overlay */}
-          {activeSubtitle && (
-            <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-30 px-4 py-1.5 bg-black/75 backdrop-blur-md rounded-lg border border-theme-cream/10 text-theme-cream text-xs sm:text-sm font-semibold tracking-wide text-center drop-shadow">
-              {activeSubtitle}
-            </div>
-          )}
+
 
           {/* Auto-play next episode countdown banner overlay */}
           {countdown !== null && (
@@ -458,7 +436,19 @@ const Player = ({
               CUSTOM SKINNED CONTROL BAR
              ------------------------------------------------------------- */}
           <div 
-            className={`absolute bottom-0 inset-x-0 z-30 bg-gradient-to-t from-black/90 via-black/55 to-transparent px-4 pt-10 pb-4 flex flex-col gap-3 transition-opacity duration-300 ${
+            onMouseEnter={() => {
+              clearTimeout(controlsTimeoutRef.current);
+            }}
+            onMouseLeave={() => {
+              if (isPlaying) {
+                controlsTimeoutRef.current = setTimeout(() => {
+                  setShowControls(false);
+                  setShowSpeedMenu(false);
+                  setShowQualityMenu(false);
+                }, 2500);
+              }
+            }}
+            className={`control-bar-container absolute bottom-0 inset-x-0 z-30 bg-gradient-to-t from-black/90 via-black/55 to-transparent px-4 pt-10 pb-4 flex flex-col gap-3 transition-opacity duration-300 ${
               showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
           >
@@ -562,16 +552,7 @@ const Player = ({
                   )}
                 </div>
 
-                {/* Subtitle Toggle */}
-                <button
-                  onClick={() => setSubtitlesEnabled(!subtitlesEnabled)}
-                  className={`p-1 rounded transition-all cursor-pointer ${
-                    subtitlesEnabled ? 'text-theme-orange hover:text-theme-orange-light' : 'text-theme-cream/65 hover:text-theme-cream'
-                  }`}
-                  title={t('player.subtitles')}
-                >
-                  <Subtitles size={16} />
-                </button>
+
 
                 {/* Quality selector */}
                 <div className="relative">
