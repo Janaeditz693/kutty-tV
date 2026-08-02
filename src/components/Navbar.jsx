@@ -18,7 +18,9 @@ import {
   Film,
   Menu,
   X,
-  Coffee
+  Coffee,
+  Copy,
+  Check
 } from 'lucide-react';
 import Logo from './Logo';
 import { useTheme } from '../context/ThemeContext';
@@ -43,6 +45,7 @@ const Navbar = () => {
   const [coffeeAmount, setCoffeeAmount] = useState(10);
   const [showCoffeeQr, setShowCoffeeQr] = useState(false);
   const [customAmountError, setCustomAmountError] = useState('');
+  const [copiedUpi, setCopiedUpi] = useState(false);
 
   const profileMenuRef = useRef(null);
 
@@ -91,6 +94,16 @@ const Navbar = () => {
     } else {
       setCoffeeAmount(amt);
       setCustomAmountError('');
+    }
+  };
+
+  const handleCopyUpi = async () => {
+    try {
+      await navigator.clipboard.writeText('janaeditz693@okicici');
+      setCopiedUpi(true);
+      setTimeout(() => setCopiedUpi(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
     }
   };
 
@@ -513,7 +526,7 @@ const Navbar = () => {
                     <div className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-white border border-theme-coffee/10 shadow-md">
                       <img
                         src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
-                          `upi://pay?pa=janaeditz693@okicici&pn=Jana%20v&am=${coffeeAmount}&cu=INR&tn=Coffee%20Support`
+                          `upi://pay?pa=janaeditz693@okicici&pn=JANA%20V&am=${coffeeAmount}.00&cu=INR&tn=Coffee%20Support&tr=KTTV${Date.now()}&mode=02&orgid=000000`
                         )}`}
                         alt="UPI Payment QR Code"
                         className="w-44 h-44 object-contain"
@@ -526,16 +539,27 @@ const Navbar = () => {
 
                     {/* Pay via UPI App for Mobile */}
                     <a
-                      href={`upi://pay?pa=janaeditz693@okicici&pn=Jana%20v&am=${coffeeAmount}&cu=INR&tn=Coffee%20Support`}
+                      href={`upi://pay?pa=janaeditz693@okicici&pn=JANA%20V&am=${coffeeAmount}.00&cu=INR&tn=Coffee%20Support&tr=KTTV${Date.now()}&mode=02&orgid=000000`}
                       className="w-full py-2.5 bg-[#FF5A1F] hover:bg-[#FF7A47] text-white text-center font-bold text-sm rounded-xl shadow-md transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <Coffee size={15} className="fill-white stroke-none" />
                       <span>Pay via UPI App (Mobile)</span>
                     </a>
 
-                    <p className="text-xs text-theme-coffee/60 dark:text-theme-darkText/50">
-                      UPI ID: <span className="font-mono font-bold select-all bg-theme-coffee/5 px-2 py-0.5 rounded border border-theme-coffee/10 dark:bg-theme-darkBorder">janaeditz693@okicici</span>
-                    </p>
+                    {/* Premium Copy Block */}
+                    <div className="flex items-center justify-between w-full p-2.5 rounded-xl border border-theme-coffee/15 dark:border-theme-darkBorder bg-theme-coffee/5 dark:bg-theme-darkCard text-xs">
+                      <div className="flex flex-col text-left">
+                        <span className="text-[9px] font-bold text-theme-coffee/50 dark:text-theme-darkText/50 uppercase">UPI ID</span>
+                        <span className="font-mono font-bold text-theme-coffee dark:text-theme-darkText select-all">janaeditz693@okicici</span>
+                      </div>
+                      <button
+                        onClick={handleCopyUpi}
+                        className="p-2 rounded-lg hover:bg-theme-coffee/10 dark:hover:bg-theme-darkBorder transition-colors text-[#FF5A1F] cursor-pointer flex items-center justify-center"
+                        title="Copy UPI ID"
+                      >
+                        {copiedUpi ? <Check size={14} className="text-green-600 dark:text-green-500" /> : <Copy size={14} />}
+                      </button>
+                    </div>
 
                     {/* Back button */}
                     <div className="flex gap-2 w-full mt-4">
