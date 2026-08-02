@@ -536,7 +536,7 @@ const Navbar = () => {
                     </div>
 
                     {/* Pay via UPI App for Mobile */}
-                    <div className="w-full flex flex-col gap-1">
+                    <div className="w-full flex flex-col gap-1.5">
                       <a
                         href="upi://pay?pa=janaeditz693@okicici&pn=JANA%20V"
                         className="w-full py-2.5 bg-[#FF5A1F] hover:bg-[#FF7A47] text-white text-center font-bold text-sm rounded-xl shadow-md transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
@@ -544,24 +544,45 @@ const Navbar = () => {
                         <Coffee size={15} className="fill-white stroke-none" />
                         <span>Pay via UPI App (Mobile)</span>
                       </a>
-                      <p className="text-[9px] text-center font-semibold text-theme-coffee/50 dark:text-theme-darkText/40">
-                        * Enter selected amount manually in your payment app
+                      <p className="text-[9px] text-center font-bold text-red-500/80 dark:text-red-400/80">
+                        * Note: If your bank blocks browser direct links, use the Copy method below.
                       </p>
                     </div>
 
-                    {/* Premium Copy Block */}
-                    <div className="flex items-center justify-between w-full p-2.5 rounded-xl border border-theme-coffee/15 dark:border-theme-darkBorder bg-theme-coffee/5 dark:bg-theme-darkCard text-xs">
-                      <div className="flex flex-col text-left">
-                        <span className="text-[9px] font-bold text-theme-coffee/50 dark:text-theme-darkText/50 uppercase">UPI ID</span>
-                        <span className="font-mono font-bold text-theme-coffee dark:text-theme-darkText select-all">janaeditz693@okicici</span>
+                    {/* Premium Instructions & Copy Block */}
+                    <div className="w-full mt-1.5 flex flex-col gap-1.5 text-left border-t border-theme-coffee/10 dark:border-theme-darkBorder pt-3">
+                      <span className="text-[10px] font-extrabold text-theme-coffee/50 dark:text-theme-darkText/50 uppercase tracking-wider">
+                        Easy Manual Payment Steps:
+                      </span>
+                      <p className="text-[10px] text-theme-coffee/80 dark:text-theme-darkText/75 leading-relaxed font-semibold">
+                        1. Tap **Copy** below to copy the UPI ID.<br />
+                        2. Open **Google Pay**, **PhonePe**, or **Paytm**.<br />
+                        3. Select **Pay to UPI ID**, paste it, and make payment.
+                      </p>
+                      
+                      <div className="flex items-center justify-between w-full p-2.5 rounded-xl border border-[#FF5A1F]/30 bg-theme-coffee/5 dark:bg-theme-darkCard text-xs shadow-inner mt-0.5">
+                        <div className="flex flex-col text-left">
+                          <span className="text-[9px] font-bold text-[#FF5A1F] uppercase">UPI ID</span>
+                          <span className="font-mono font-bold text-theme-coffee dark:text-theme-darkText select-all text-sm">janaeditz693@okicici</span>
+                        </div>
+                        <button
+                          onClick={handleCopyUpi}
+                          className="px-3 py-1.5 rounded-lg bg-[#FF5A1F]/10 hover:bg-[#FF5A1F]/20 transition-colors text-[#FF5A1F] cursor-pointer flex items-center justify-center border border-[#FF5A1F]/20 font-extrabold gap-1 active:scale-95 text-[10px]"
+                          title="Copy UPI ID"
+                        >
+                          {copiedUpi ? (
+                            <>
+                              <Check size={12} className="text-green-600 dark:text-green-500" />
+                              <span>Copied!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy size={12} />
+                              <span>Copy</span>
+                            </>
+                          )}
+                        </button>
                       </div>
-                      <button
-                        onClick={handleCopyUpi}
-                        className="p-2 rounded-lg hover:bg-theme-coffee/10 dark:hover:bg-theme-darkBorder transition-colors text-[#FF5A1F] cursor-pointer flex items-center justify-center"
-                        title="Copy UPI ID"
-                      >
-                        {copiedUpi ? <Check size={14} className="text-green-600 dark:text-green-500" /> : <Copy size={14} />}
-                      </button>
                     </div>
 
                     {/* Back button */}
