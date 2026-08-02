@@ -525,11 +525,9 @@ const Navbar = () => {
                     {/* QR Code Container */}
                     <div className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-white border border-theme-coffee/10 shadow-md">
                       <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
-                          `upi://pay?pa=janaeditz693@okicici&pn=JANA%20V&am=${coffeeAmount}.00&cu=INR&tn=Coffee%20Support&tr=KTTV${Date.now()}&mode=02&orgid=000000`
-                        )}`}
+                        src="/gpay-qr.png"
                         alt="UPI Payment QR Code"
-                        className="w-44 h-44 object-contain"
+                        className="w-44 h-44 object-contain rounded-xl"
                       />
                       <div className="text-center">
                         <p className="text-[10px] font-bold text-zinc-500">Scan with GPay, PhonePe, or Paytm</p>
