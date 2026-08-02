@@ -216,7 +216,7 @@ const Navbar = () => {
 
               {/* Sign In / Profile dropdown */}
               {currentUser ? (
-                <div className="relative hidden sm:block" ref={profileMenuRef}>
+                <div className="relative flex items-center" ref={profileMenuRef}>
                   <button
                     onClick={() => setIsOpenProfile(!isOpenProfile)}
                     className="flex items-center gap-1.5 p-1 rounded-xl hover:bg-theme-coffee/5 dark:hover:bg-theme-darkCard transition-all duration-200 focus:outline-none cursor-pointer"
@@ -297,9 +297,10 @@ const Navbar = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="text-sm font-semibold text-theme-coffee/80 dark:text-theme-darkText/80 hover:text-[#FF5A1F] transition-colors duration-200 hidden sm:block"
+                  className="px-3 py-1.5 rounded-xl bg-theme-orange hover:bg-theme-orange-light text-theme-cream font-extrabold text-xs tracking-wide transition-all duration-200 active:scale-95 shadow-md flex items-center gap-1.5 shrink-0"
                 >
-                  Sign In
+                  <User size={14} />
+                  <span>Sign In</span>
                 </Link>
               )}
 
@@ -393,8 +394,8 @@ const Navbar = () => {
                     {isDark ? <Sun size={15} /> : <Moon size={15} />}
                   </button>
 
-                  {/* User Profile & Logout on Mobile */}
-                  {currentUser && (
+                  {/* User Profile & Logout / Login on Mobile */}
+                  {currentUser ? (
                     <>
                       <Link
                         to="/profile"
@@ -415,6 +416,15 @@ const Navbar = () => {
                         <span>Logout</span>
                       </button>
                     </>
+                  ) : (
+                    <Link
+                      to="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-1.5 px-3.5 py-1.5 bg-theme-orange hover:bg-theme-orange-light text-theme-cream font-bold text-xs rounded-lg shadow-md cursor-pointer transition-all duration-200 active:scale-95"
+                    >
+                      <User size={13} />
+                      <span>{t('common.login')}</span>
+                    </Link>
                   )}
                 </div>
 
