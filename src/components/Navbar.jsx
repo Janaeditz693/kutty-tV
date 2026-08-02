@@ -536,13 +536,18 @@ const Navbar = () => {
                     </div>
 
                     {/* Pay via UPI App for Mobile */}
-                    <a
-                      href={`upi://pay?pa=janaeditz693@okicici&pn=JANA%20V&am=${coffeeAmount}.00&cu=INR&tn=Coffee%20Support&tr=KTTV${Date.now()}&mode=02&orgid=000000`}
-                      className="w-full py-2.5 bg-[#FF5A1F] hover:bg-[#FF7A47] text-white text-center font-bold text-sm rounded-xl shadow-md transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
-                    >
-                      <Coffee size={15} className="fill-white stroke-none" />
-                      <span>Pay via UPI App (Mobile)</span>
-                    </a>
+                    <div className="w-full flex flex-col gap-1">
+                      <a
+                        href="upi://pay?pa=janaeditz693@okicici&pn=JANA%20V"
+                        className="w-full py-2.5 bg-[#FF5A1F] hover:bg-[#FF7A47] text-white text-center font-bold text-sm rounded-xl shadow-md transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                      >
+                        <Coffee size={15} className="fill-white stroke-none" />
+                        <span>Pay via UPI App (Mobile)</span>
+                      </a>
+                      <p className="text-[9px] text-center font-semibold text-theme-coffee/50 dark:text-theme-darkText/40">
+                        * Enter selected amount manually in your payment app
+                      </p>
+                    </div>
 
                     {/* Premium Copy Block */}
                     <div className="flex items-center justify-between w-full p-2.5 rounded-xl border border-theme-coffee/15 dark:border-theme-darkBorder bg-theme-coffee/5 dark:bg-theme-darkCard text-xs">
