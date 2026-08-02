@@ -55,7 +55,8 @@ const setLocalSession = (user) => {
 export const loginWithEmail = async (email, password) => {
   if (isFirebaseConfigured && auth) {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    return userCredential.user;
+    const profile = await syncUserProfile(userCredential.user);
+    return profile || userCredential.user;
   } else {
     // Mock Mode
     const users = getLocalUsers();
@@ -78,7 +79,15 @@ export const registerWithEmail = async (email, password, displayName) => {
   if (isFirebaseConfigured && auth) {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     await firebaseUpdateProfile(userCredential.user, { displayName });
-    return userCredential.user;
+    
+    // Sync to Firestore immediately with correct display name
+    const profile = await syncUserProfile({
+      uid: userCredential.user.uid,
+      email: userCredential.user.email,
+      displayName: displayName,
+      role: 'user'
+    });
+    return profile || userCredential.user;
   } else {
     // Mock Mode
     const users = getLocalUsers();
@@ -112,7 +121,8 @@ export const loginWithGoogle = async () => {
   if (isFirebaseConfigured && auth) {
     const provider = new GoogleAuthProvider();
     const userCredential = await signInWithPopup(auth, provider);
-    return userCredential.user;
+    const profile = await syncUserProfile(userCredential.user);
+    return profile || userCredential.user;
   } else {
     // Mock Google Login
     const sessionUser = {
@@ -137,7 +147,8 @@ export const logout = async () => {
 export const updateProfileInfo = async (currentUser, { displayName }) => {
   if (isFirebaseConfigured && auth && auth.currentUser) {
     await firebaseUpdateProfile(auth.currentUser, { displayName });
-    return auth.currentUser;
+    const profile = await syncUserProfile(auth.currentUser);
+    return profile || auth.currentUser;
   } else {
     // Mock Mode
     const session = getLocalSession();

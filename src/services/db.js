@@ -237,8 +237,8 @@ export const syncUserProfile = async (user) => {
       if (userSnap.exists()) {
         const data = userSnap.data();
         role = data.role || role;
-        displayName = data.displayName || displayName;
-        email = data.email || email;
+        displayName = user.displayName || data.displayName || displayName;
+        email = user.email || data.email || email;
       }
       
       const profile = {
