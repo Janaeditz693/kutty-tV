@@ -1,16 +1,40 @@
-# React + Vite
+# Kutty TV
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A nostalgic cartoon streaming web app for 90s and 2000s kids, with Tamil and English support.
 
-Currently, two official plugins are available:
+**Live:** https://kutty-t-v.vercel.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
+- Browse shows and movies by collection, search, and favourites
+- HLS video player with episode support and continue-watching
+- Email and Google sign-in (Firebase Auth)
+- Admin dashboard to manage the catalogue and user roles
+- Tamil / English UI (i18next), light / dark theme
 
-## React Compiler
+## Tech stack
+React 19, Vite, Tailwind CSS 4, Firebase (Auth + Firestore), Framer Motion, hls.js, react-i18next. Deployed on Vercel.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Getting started
+```bash
+npm install
+cp .env.example .env   # then fill in your Firebase values
+npm run dev
+```
 
-## Expanding the Oxlint configuration
+Required environment variables:
+```
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+```
+Without these, the app runs in local mock mode (development only).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Admin access
+Roles are enforced by Firestore rules (`firestore.rules`). New users are always `user`.
+To create the first admin, set `role: "admin"` on that user's document in the `users` collection from the Firebase console. Deploy rules with `firebase deploy --only firestore:rules`.
+
+## Scripts
+`npm run dev`, `npm run build`, `npm run preview`, `npm run lint`
