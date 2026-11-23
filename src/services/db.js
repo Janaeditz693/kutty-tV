@@ -224,65 +224,59 @@ export const deleteCatalogItem = async (id) => {
 
 export const syncUserProfile = async (user) => {
   if (!user) return null;
-  const defaultAdminEmail = 'vjana0640@gmail.com';
-  
+
   if (isFirebaseConfigured && firestore) {
     try {
       const userRef = doc(firestore, 'users', user.uid);
       const userSnap = await getDoc(userRef);
-      let role = user.email === defaultAdminEmail ? 'admin' : 'user';
-      let displayName = user.displayName || 'Viewer';
-      let email = user.email || '';
-      
+
       if (userSnap.exists()) {
+        // Existing user: never write the role from the client.
+        // Roles are changed only by an admin (enforced by Firestore rules).
         const data = userSnap.data();
-        role = data.role || role;
-        displayName = user.displayName || data.displayName || displayName;
-        email = user.email || data.email || email;
+        const displayName = user.displayName || data.displayName || 'Viewer';
+        const email = user.email || data.email || '';
+        if (displayName !== data.displayName || email !== data.email) {
+          await setDoc(userRef, { displayName, email }, { merge: true });
+        }
+        return { uid: user.uid, email, displayName, role: data.role || 'user' };
       }
-      
+
+      // New user: always starts as a normal 'user'.
+      // To make someone an admin, set role = 'admin' in the Firebase console.
       const profile = {
         uid: user.uid,
-        email: email,
-        displayName: displayName,
-        role: role
+        email: user.email || '',
+        displayName: user.displayName || 'Viewer',
+        role: 'user',
       };
-      
-      // Merge user data to guarantee Firestore has email, displayName, and role fields
-      await setDoc(userRef, profile, { merge: true });
+      await setDoc(userRef, profile);
       return profile;
     } catch (err) {
       console.error("Error syncing user profile to Firestore:", err);
     }
   }
-  // Mock Mode: check in localStorage users list
+
+  // Mock Mode (local development only): check in localStorage users list
   const users = JSON.parse(localStorage.getItem('kuttytv_users') || '[]');
-  let existing = users.find(u => u.uid === user.uid || u.email === user.email);
+  const existing = users.find(u => u.uid === user.uid || u.email === user.email);
   if (existing) {
-    // If it's the default admin, guarantee role is admin
-    if (existing.email === defaultAdminEmail && existing.role !== 'admin') {
-      existing.role = 'admin';
-      localStorage.setItem('kuttytv_users', JSON.stringify(users));
-    }
     return {
       uid: existing.uid,
       email: existing.email,
       displayName: existing.displayName,
       role: existing.role || 'user',
     };
-  } else {
-    // Create new mock user record
-    const role = user.email === defaultAdminEmail ? 'admin' : 'user';
-    const newMock = {
-      uid: user.uid || `mock-${Date.now()}`,
-      email: user.email,
-      displayName: user.displayName || 'Viewer',
-      role: role
-    };
-    users.push(newMock);
-    localStorage.setItem('kuttytv_users', JSON.stringify(users));
-    return newMock;
   }
+  const newMock = {
+    uid: user.uid || `mock-${Date.now()}`,
+    email: user.email,
+    displayName: user.displayName || 'Viewer',
+    role: 'user',
+  };
+  users.push(newMock);
+  localStorage.setItem('kuttytv_users', JSON.stringify(users));
+  return newMock;
 };
 
 // Get all users (Admin only)

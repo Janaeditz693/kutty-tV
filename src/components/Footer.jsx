@@ -21,12 +21,6 @@ const Footer = () => {
           
           {/* Quick links & nostalgic reminder */}
           <div className="flex flex-col items-center md:items-end text-center md:text-right gap-3">
-            <div className="flex flex-wrap justify-center gap-4 text-xs font-semibold text-theme-coffee/70 dark:text-theme-darkText/60">
-              <a href="#about" className="hover:text-theme-orange transition-colors duration-200">About</a>
-              <a href="#privacy" className="hover:text-theme-orange transition-colors duration-200">Privacy Policy</a>
-              <a href="#terms" className="hover:text-theme-orange transition-colors duration-200">Terms of Service</a>
-              <a href="#contact" className="hover:text-theme-orange transition-colors duration-200">Contact</a>
-            </div>
             
             <p className="text-[10px] text-theme-coffee/40 dark:text-theme-darkText/40 flex items-center gap-1.5 justify-center md:justify-end">
               Made with <Heart size={10} className="fill-theme-orange stroke-theme-orange animate-pulse" /> for 90s & 2000s kids.

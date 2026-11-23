@@ -11,28 +11,25 @@ import { auth, isFirebaseConfigured } from './firebase';
 import { syncUserProfile } from './db';
 
 // Helper to get local mock users
+// Mock mode is for local development only (when Firebase env vars are missing).
+// No credentials are shipped in the source; demo accounts exist only in dev builds.
 const getLocalUsers = () => {
   const users = localStorage.getItem('kuttytv_users');
-  return users ? JSON.parse(users) : [
-    {
-      uid: 'admin-mock-id',
-      email: 'vjana0640@gmail.com',
-      password: 'admin123',
-      displayName: 'vjana0640 (Admin)',
-      role: 'admin',
-      favorites: [],
-      history: [],
-    },
-    {
-      uid: 'viewer-mock-id',
-      email: 'viewer@kuttytv.com',
-      password: 'viewer123',
-      displayName: 'Nostalgic Kid',
-      role: 'user',
-      favorites: [],
-      history: [],
-    }
-  ];
+  if (users) return JSON.parse(users);
+  if (import.meta.env.DEV) {
+    return [
+      {
+        uid: 'dev-admin-id',
+        email: 'admin@example.test',
+        password: 'dev-only-change-me',
+        displayName: 'Dev Admin',
+        role: 'admin',
+        favorites: [],
+        history: [],
+      },
+    ];
+  }
+  return [];
 };
 
 const saveLocalUsers = (users) => {
