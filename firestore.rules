@@ -9,7 +9,7 @@ service cloud.firestore {
     function isAdmin() {
       return isSignedIn()
         && exists(/databases/$(database)/documents/users/$(request.auth.uid))
-        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', 'user') == 'admin';
     }
 
     // User profiles
@@ -20,13 +20,14 @@ service cloud.firestore {
       // New accounts can only create their own profile as a normal 'user'
       allow create: if isSignedIn()
         && request.auth.uid == userId
-        && request.resource.data.role == 'user';
+        && request.resource.data.get('role', 'user') == 'user';
 
       // Users can edit their own profile but can NEVER change their role.
+      // Older profiles with no 'role' field are treated as 'user'.
       // Only admins can change roles.
       allow update: if isSignedIn()
         && ((request.auth.uid == userId
-              && request.resource.data.role == resource.data.role)
+              && request.resource.data.get('role', 'user') == resource.data.get('role', 'user'))
             || isAdmin());
 
       allow delete: if isAdmin();
