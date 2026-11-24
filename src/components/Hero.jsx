@@ -6,31 +6,6 @@ import { Play, Plus, Check, ChevronLeft, ChevronRight, Star } from 'lucide-react
 import { useApp } from '../context/AppContext';
 import { optimizeImageUrl } from '../utils/image';
 
-const DescriptionWithReadMore = ({ text, maxLines = 3 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  if (!text) return null;
-
-  return (
-    <div className="relative inline">
-      <span className={isExpanded ? '' : maxLines === 2 ? 'line-clamp-2' : 'line-clamp-3'}>
-        {text}
-      </span>
-      <button
-        type="button"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setIsExpanded(!isExpanded);
-        }}
-        className="inline-block text-theme-orange hover:text-theme-orange-light font-extrabold text-xs sm:text-sm underline cursor-pointer ml-1.5 active:scale-95 transition-transform"
-      >
-        {isExpanded ? 'Read Less' : 'Read More'}
-      </button>
-    </div>
-  );
-};
-
 const Hero = ({ items = [] }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -42,26 +17,21 @@ const Hero = ({ items = [] }) => {
     if (items.length <= 1 || isPaused) return;
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % items.length);
-    }, 6000); // Change hero slide every 6 seconds
+    }, 6500);
     return () => clearInterval(interval);
   }, [items, isPaused]);
 
   if (!items || items.length === 0) return null;
 
-  const currentItem = items[index];
+  const currentItem = items[index % items.length];
   const isFav = isFavorite(currentItem.id);
-  const currentLang = i18n.language || 'en';
+  const isTamil = (i18n.language || 'en').startsWith('ta');
 
-  const displayTitle = currentLang.startsWith('ta') && currentItem.titleTa ? currentItem.titleTa : currentItem.title;
-  const displayDesc = currentLang.startsWith('ta') && currentItem.descriptionTa ? currentItem.descriptionTa : currentItem.description;
+  const displayTitle = isTamil && currentItem.titleTa ? currentItem.titleTa : currentItem.title;
+  const displayDesc = isTamil && currentItem.descriptionTa ? currentItem.descriptionTa : currentItem.description;
 
-  const handlePrev = () => {
-    setIndex((prev) => (prev - 1 + items.length) % items.length);
-  };
-
-  const handleNext = () => {
-    setIndex((prev) => (prev + 1) % items.length);
-  };
+  const handlePrev = () => setIndex((prev) => (prev - 1 + items.length) % items.length);
+  const handleNext = () => setIndex((prev) => (prev + 1) % items.length);
 
   const handlePlay = () => {
     if (currentItem.type === 'movie') {
@@ -72,267 +42,93 @@ const Hero = ({ items = [] }) => {
     }
   };
 
+  const image = currentItem.banner || currentItem.thumbnail;
+
   return (
-    <div className="w-full bg-theme-cream dark:bg-theme-darkBg transition-colors duration-300">
-      
-      {/* MOBILE LAYOUT (hidden on desktop/tablet) */}
-      <div 
-        onTouchStart={() => setIsPaused(true)}
-        onTouchEnd={() => setTimeout(() => setIsPaused(false), 5000)} // Resume autoplay 5s after touch ends
-        className="relative w-full overflow-hidden bg-theme-cream dark:bg-theme-darkBg transition-colors duration-300 md:hidden flex flex-col items-center py-6 px-4 gap-4"
-      >
-        
-        {/* Ambient Blurred Background Glow (Optimized for Mobile FPS) */}
-        <div className="absolute inset-0 w-full h-full opacity-10 dark:opacity-20 blur-md pointer-events-none">
+    <section
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={() => setIsPaused(true)}
+      onTouchEnd={() => setTimeout(() => setIsPaused(false), 5000)}
+      className="relative w-full -mt-16 min-h-[460px] h-[78svh] max-h-[760px] overflow-hidden bg-theme-darkBg text-white"
+      aria-roledescription="carousel"
+    >
+      {/* Backdrop */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentItem.id}
+          initial={{ opacity: 0, scale: 1.04 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.7 }}
+          className="absolute inset-0"
+        >
           <img
-            src={optimizeImageUrl(currentItem.thumbnail || currentItem.banner, 'thumbnail')}
+            src={optimizeImageUrl(image, 'hero')}
             alt=""
-            className="w-full h-full object-cover"
-            loading="lazy"
+            className="w-full h-full object-cover object-center"
           />
-        </div>
+        </motion.div>
+      </AnimatePresence>
 
-        {/* Slides Container with Navigation */}
-        <div className="relative w-full flex items-center justify-center">
-          {/* Main Slide Card */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentItem.id}
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4 }}
-              className="relative w-[88%] aspect-[16/10] rounded-2xl overflow-hidden shadow-xl border border-theme-coffee/10 dark:border-zinc-800 z-20 bg-theme-coffee/5"
-            >
-              <img
-                src={optimizeImageUrl(currentItem.thumbnail || currentItem.banner, 'card')}
-                alt={displayTitle}
-                className="w-full h-full object-cover object-center"
-              />
-              {/* Subtle overlay on bottom of card */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent pointer-events-none" />
-            </motion.div>
-          </AnimatePresence>
+      {/* Readability gradients */}
+      <div className="absolute inset-0 bg-gradient-to-t from-theme-darkBg via-theme-darkBg/55 to-theme-darkBg/10" />
+      <div className="absolute inset-0 bg-gradient-to-r from-theme-darkBg/90 via-theme-darkBg/35 to-transparent" />
 
-          {/* Navigation Arrows on mobile */}
-          {items.length > 1 && (
-            <>
-              <button
-                onClick={handlePrev}
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-30 p-1.5 rounded-full bg-black/20 text-theme-cream backdrop-blur-sm cursor-pointer"
-              >
-                <ChevronLeft size={16} />
-              </button>
-              <button
-                onClick={handleNext}
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-30 p-1.5 rounded-full bg-black/20 text-theme-cream backdrop-blur-sm cursor-pointer"
-              >
-                <ChevronRight size={16} />
-              </button>
-            </>
-          )}
-        </div>
-
-        {/* Carousel Dots Indicators (Mobile Only) */}
-        {items.length > 1 && (
-          <div className="flex items-center justify-center gap-1.5 z-20">
-            {items.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setIndex(i)}
-                className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                  i === index ? 'w-4 bg-theme-orange' : 'w-1.5 bg-theme-coffee/35 dark:bg-theme-cream/35'
-                }`}
-                aria-label={`Go to slide ${i + 1}`}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Info & Metadata below the Card */}
-        <div className="w-full z-20 flex flex-col items-center text-center gap-2.5 mt-1">
-          {/* Metadata Badges */}
-          <div className="flex flex-wrap items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-wider text-theme-coffee/70 dark:text-theme-cream/70">
-            <span className="px-1.5 py-0.5 bg-amber-500 rounded text-black flex items-center gap-0.5 font-extrabold shadow-sm">
-              <Star size={10} className="fill-black stroke-none" />
-              {currentItem.rating}
-            </span>
-            <span className="px-1.5 py-0.5 bg-theme-coffee/10 dark:bg-theme-darkCard rounded border border-theme-coffee/15 dark:border-theme-darkBorder">
-              {currentItem.year}
-            </span>
-            <span className="px-1.5 py-0.5 bg-theme-coffee/10 dark:bg-theme-darkCard rounded border border-theme-coffee/15 dark:border-theme-darkBorder text-theme-orange">
-              {currentItem.languages?.includes('தமிழ்') ? 'ENG | தமிழ்' : 'ENGLISH'}
-            </span>
-          </div>
-
-          {/* Title */}
-          <h1 className="text-xl font-extrabold text-theme-coffee dark:text-theme-darkText px-4 drop-shadow-sm line-clamp-1 leading-snug">
-            {displayTitle}
-          </h1>
-
-          {/* Genres (Compact bullet-separated line) */}
-          {currentItem.genres && currentItem.genres.length > 0 && (
-            <p className="text-[11px] font-bold text-theme-coffee/50 dark:text-theme-cream/40 uppercase tracking-wider">
-              {currentItem.genres.join('  •  ')}
-            </p>
-          )}
-
-          {/* Mobile Description with Read More */}
-          <div className="px-4 max-w-sm text-xs text-theme-coffee/75 dark:text-theme-darkText/75 leading-relaxed font-medium">
-            <DescriptionWithReadMore text={displayDesc} maxLines={2} />
-          </div>
-
-          {/* Play & Favorite buttons side by side */}
-          <div className="flex items-center justify-center gap-2.5 w-full mt-2 px-2">
-            <button
-              onClick={handlePlay}
-              className="flex items-center justify-center gap-1.5 flex-1 max-w-[140px] py-2 bg-theme-orange hover:bg-theme-orange-light text-theme-cream font-bold text-xs rounded-xl shadow transition-all duration-200 cursor-pointer active:scale-95"
-            >
-              <Play size={14} className="fill-theme-cream" />
-              <span>{t('common.watchNow')}</span>
-            </button>
-
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleFavorite(currentItem);
-              }}
-              className="flex items-center justify-center gap-1.5 flex-1 max-w-[140px] py-2 bg-theme-coffee/5 hover:bg-theme-coffee/10 dark:bg-theme-darkCard border border-theme-coffee/15 dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText font-bold text-xs rounded-xl transition-all duration-200 cursor-pointer active:scale-95"
-            >
-              {isFav ? (
-                <>
-                  <Check size={14} className="text-green-600 dark:text-green-500" />
-                  <span>Added</span>
-                </>
-              ) : (
-                <>
-                  <Plus size={14} />
-                  <span>{t('common.addToList')}</span>
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-
-      </div>
-
-      {/* DESKTOP/TABLET LAYOUT (hidden on mobile) */}
-      <div 
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-        className="hidden md:block relative w-full aspect-[21/9] min-h-[400px] max-h-[700px] overflow-hidden bg-theme-coffee/10 dark:bg-theme-darkBg transition-colors duration-300"
-      >
-        
-        {/* Background Images with AnimatePresence */}
+      {/* Content */}
+      <div className="relative z-10 h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-end pb-14 sm:pb-20">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentItem.id}
-            initial={{ opacity: 0, scale: 1.03 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8 }}
-            className="absolute inset-0 w-full h-full"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.45 }}
+            className="max-w-2xl flex flex-col gap-3 sm:gap-4"
           >
-            {/* Main Slide Image */}
-            <img
-              src={optimizeImageUrl(currentItem.banner, 'hero')}
-              alt={displayTitle}
-              className="w-full h-full object-cover object-center"
-            />
-
-            {/* Gradient Overlay bottom to top */}
-            <div className="absolute inset-0 bg-gradient-to-t from-theme-cream via-theme-cream/45 to-transparent dark:from-theme-darkBg dark:via-theme-darkBg/50 dark:to-transparent transition-all duration-300" />
-            
-            {/* Left vertical gradient for text readability */}
-            <div className="absolute inset-0 bg-gradient-to-r from-theme-cream/80 via-theme-cream/20 to-transparent dark:from-theme-darkBg/85 dark:via-theme-darkBg/20 dark:to-transparent transition-all duration-300" />
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Slide Navigation Buttons */}
-        {items.length > 1 && (
-          <>
-            <button
-              onClick={handlePrev}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-2.5 rounded-full bg-black/35 hover:bg-black/55 backdrop-blur-md text-theme-cream hover:scale-105 transition-all duration-200 cursor-pointer"
-            >
-              <ChevronLeft size={20} />
-            </button>
-            <button
-              onClick={handleNext}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-2.5 rounded-full bg-black/35 hover:bg-black/55 backdrop-blur-md text-theme-cream hover:scale-105 transition-all duration-200 cursor-pointer"
-            >
-              <ChevronRight size={20} />
-            </button>
-          </>
-        )}
-
-        {/* Carousel Dots */}
-        {items.length > 1 && (
-          <div className="absolute bottom-24 right-8 z-30 flex items-center gap-2">
-            {items.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setIndex(i)}
-                className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                  i === index ? 'w-6 bg-theme-orange' : 'w-2.5 bg-theme-coffee/35 dark:bg-theme-cream/35'
-                }`}
-              />
-            ))}
-          </div>
-        )}
-
-        <div className="absolute inset-x-0 bottom-0 z-20 px-10 sm:px-16 pb-12 md:pb-16 max-w-7xl mx-auto flex flex-col justify-end h-full">
-          <div className="max-w-xl md:max-w-2xl flex flex-col gap-3">
-            
-            {/* Metadata badges (Rating, Year, Language, Genres) */}
-            <div className="flex flex-wrap items-center gap-2.5 text-xs font-bold uppercase tracking-wider text-theme-coffee/80 dark:text-theme-cream/80">
-              <span className="px-2 py-0.5 bg-amber-500 rounded-md text-black flex items-center gap-1 font-extrabold shadow-sm">
+            <div className="flex flex-wrap items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-theme-sun text-black font-extrabold">
                 <Star size={11} className="fill-black stroke-none" />
                 {currentItem.rating}
               </span>
-              <span className="px-2 py-0.5 bg-theme-coffee/10 dark:bg-theme-darkCard rounded-md border border-theme-coffee/15 dark:border-theme-darkBorder">
+              <span className="px-2.5 py-1 rounded-full bg-white/12 backdrop-blur-sm border border-white/15">
                 {currentItem.year}
               </span>
-              <span className="px-2 py-0.5 bg-theme-coffee/10 dark:bg-theme-darkCard rounded-md border border-theme-coffee/15 dark:border-theme-darkBorder text-theme-orange">
+              <span className="px-2.5 py-1 rounded-full bg-white/12 backdrop-blur-sm border border-white/15 text-theme-sun">
                 {currentItem.languages?.includes('தமிழ்') ? 'ENG | தமிழ்' : 'ENGLISH'}
               </span>
-              <span className="text-theme-coffee/40 dark:text-theme-cream/40">|</span>
-              <span>{currentItem.genres?.join(', ')}</span>
+              {currentItem.genres?.length > 0 && (
+                <span className="hidden sm:inline text-white/60">{currentItem.genres.slice(0, 3).join(' · ')}</span>
+              )}
             </div>
 
-            {/* Large Title */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-theme-coffee dark:text-theme-darkText font-sans drop-shadow-md">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.05] drop-shadow-lg">
               {displayTitle}
             </h1>
 
-            {/* Desktop Description */}
-            <p className="text-sm sm:text-base text-theme-coffee/70 dark:text-theme-darkText/75 line-clamp-3 leading-relaxed drop-shadow-sm font-medium">
+            <p className="text-sm sm:text-base text-white/75 leading-relaxed line-clamp-2 sm:line-clamp-3 max-w-xl">
               {displayDesc}
             </p>
 
-            {/* Play & Favorite Actions */}
-            <div className="flex items-center gap-3 mt-4">
-              
-              {/* Watch Now Button */}
+            <div className="flex items-center gap-3 mt-1 sm:mt-2">
               <button
                 onClick={handlePlay}
-                className="flex items-center gap-2 px-6 py-3 bg-theme-orange hover:bg-theme-orange-light active:scale-95 text-theme-cream font-bold text-sm sm:text-base rounded-xl shadow-lg hover:shadow-orange-500/25 transition-all duration-200 cursor-pointer"
+                className="flex items-center gap-2 px-6 sm:px-8 py-3 bg-theme-orange hover:bg-theme-orange-light active:scale-95 text-white font-extrabold text-sm sm:text-base rounded-full shadow-lg shadow-orange-500/30 transition-all duration-200 cursor-pointer"
               >
-                <Play size={18} className="fill-theme-cream ml-0.5" />
+                <Play size={18} className="fill-white" />
                 <span>{t('common.watchNow')}</span>
               </button>
 
-              {/* List Toggle Button */}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleFavorite(currentItem);
                 }}
-                className="flex items-center gap-2 px-5 py-3 bg-theme-coffee/5 hover:bg-theme-coffee/10 dark:bg-theme-darkCard dark:hover:bg-theme-darkBorder border border-theme-coffee/15 dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText font-bold text-sm sm:text-base rounded-xl transition-all duration-200 active:scale-95 cursor-pointer"
+                className="flex items-center gap-2 px-5 sm:px-6 py-3 bg-white/12 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-bold text-sm sm:text-base rounded-full transition-all duration-200 active:scale-95 cursor-pointer"
               >
                 {isFav ? (
                   <>
-                    <Check size={18} className="text-green-600 dark:text-green-500" />
+                    <Check size={18} className="text-green-400" />
                     <span>{t('common.addedToList')}</span>
                   </>
                 ) : (
@@ -343,12 +139,43 @@ const Hero = ({ items = [] }) => {
                 )}
               </button>
             </div>
-
-          </div>
-        </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-    </div>
+      {/* Controls */}
+      {items.length > 1 && (
+        <>
+          <button
+            onClick={handlePrev}
+            aria-label="Previous slide"
+            className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/35 hover:bg-black/60 backdrop-blur-md text-white hover:scale-105 transition-all cursor-pointer"
+          >
+            <ChevronLeft size={20} />
+          </button>
+          <button
+            onClick={handleNext}
+            aria-label="Next slide"
+            className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/35 hover:bg-black/60 backdrop-blur-md text-white hover:scale-105 transition-all cursor-pointer"
+          >
+            <ChevronRight size={20} />
+          </button>
+
+          <div className="absolute bottom-5 sm:bottom-8 right-4 sm:right-8 z-20 flex items-center gap-2">
+            {items.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setIndex(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                  i === index % items.length ? 'w-8 bg-theme-orange' : 'w-3 bg-white/35 hover:bg-white/60'
+                }`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </section>
   );
 };
 

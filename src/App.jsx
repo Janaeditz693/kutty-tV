@@ -52,7 +52,7 @@ function App() {
         <Navbar />
 
         {/* Dynamic Route Content */}
-        <main className="flex-grow pb-16 md:pb-0">
+        <main className="flex-grow pb-20 lg:pb-0">
           <Suspense fallback={<Loader />}>
             <Routes>
               {/* Public Views */}

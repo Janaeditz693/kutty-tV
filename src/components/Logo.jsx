@@ -1,7 +1,6 @@
 import React from 'react';
-import { Tv } from 'lucide-react';
 
-const Logo = ({ size = 'md' }) => {
+const Logo = ({ size = 'md', light = false }) => {
   const sizes = {
     sm: { icon: 14, text: 'text-base', container: 'gap-1' },
     md: { icon: 19, text: 'text-xl', container: 'gap-2' },
@@ -13,7 +12,7 @@ const Logo = ({ size = 'md' }) => {
   return (
     <div className={`flex items-center ${currentSize.container} select-none group cursor-pointer`}>
       {/* Custom Branded Logo Image */}
-      <div className="relative flex items-center justify-center overflow-hidden rounded-xl bg-theme-cream border border-theme-coffee/10 dark:border-theme-darkBorder shadow-inner transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-2">
+      <div className="relative flex items-center justify-center overflow-hidden rounded-xl bg-white border border-theme-coffee/10 dark:border-white/10 shadow-md transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-2">
         <img 
           src="/logo.jpg" 
           alt="Kutty TV Logo" 
@@ -27,7 +26,7 @@ const Logo = ({ size = 'md' }) => {
       
       {/* Brand Text */}
       <span className={`font-extrabold text-lg sm:${currentSize.text} tracking-tight font-sans transition-colors duration-300 inline`}>
-        <span className="text-theme-coffee dark:text-theme-darkText">Kutty</span>
+        <span className={light ? 'text-white' : 'text-theme-coffee dark:text-theme-darkText'}>Kutty</span>
         <span className="text-theme-orange ml-0.5">TV</span>
       </span>
     </div>

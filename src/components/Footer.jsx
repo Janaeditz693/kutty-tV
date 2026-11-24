@@ -8,7 +8,7 @@ const Footer = () => {
 
   return (
     <footer className="w-full bg-theme-beige/30 border-t border-theme-coffee/10 dark:bg-theme-darkCard/40 dark:border-theme-darkBorder transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 md:py-12 pb-24 md:pb-12">
+      <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 md:py-12 pb-28 lg:pb-12">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           
           {/* Logo & Tagline */}
