@@ -92,7 +92,7 @@ const Auth = () => {
           {isFirebaseConfigured ? (
             <span className="text-green-600 dark:text-green-500 animate-pulse">Firebase Connected</span>
           ) : (
-            <span className="text-theme-orange">Local Mock Mode</span>
+            <span className="text-theme-accent">Local Mock Mode</span>
           )}
         </div>
 
@@ -102,7 +102,7 @@ const Auth = () => {
             onClick={() => { setIsLogin(true); setLocalError(''); }}
             className={`flex-1 pb-3 text-sm font-bold uppercase tracking-wider transition-colors duration-200 ${
               isLogin 
-                ? 'border-b-2 border-theme-orange text-theme-orange' 
+                ? 'border-b-2 border-theme-accent text-theme-accent' 
                 : 'text-theme-coffee/50 dark:text-theme-darkText/50 hover:text-theme-coffee dark:hover:text-theme-darkText'
             }`}
           >
@@ -112,7 +112,7 @@ const Auth = () => {
             onClick={() => { setIsLogin(false); setLocalError(''); }}
             className={`flex-1 pb-3 text-sm font-bold uppercase tracking-wider transition-colors duration-200 ${
               !isLogin 
-                ? 'border-b-2 border-theme-orange text-theme-orange' 
+                ? 'border-b-2 border-theme-accent text-theme-accent' 
                 : 'text-theme-coffee/50 dark:text-theme-darkText/50 hover:text-theme-coffee dark:hover:text-theme-darkText'
             }`}
           >
@@ -152,7 +152,7 @@ const Auth = () => {
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   disabled={loading}
-                  className="w-full px-4 py-2.5 pl-10 rounded-xl text-sm bg-theme-coffee/5 border border-theme-coffee/10 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none focus:ring-2 focus:ring-theme-orange/40"
+                  className="w-full px-4 py-2.5 pl-10 rounded-xl text-sm bg-theme-coffee/5 border border-theme-coffee/10 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none focus:ring-2 focus:ring-theme-accent/40"
                 />
                 <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-theme-coffee/40 dark:text-theme-darkText/40" />
               </div>
@@ -169,7 +169,7 @@ const Auth = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
-                className="w-full px-4 py-2.5 pl-10 rounded-xl text-sm bg-theme-coffee/5 border border-theme-coffee/10 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none focus:ring-2 focus:ring-theme-orange/40"
+                className="w-full px-4 py-2.5 pl-10 rounded-xl text-sm bg-theme-coffee/5 border border-theme-coffee/10 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none focus:ring-2 focus:ring-theme-accent/40"
               />
               <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-theme-coffee/40 dark:text-theme-darkText/40" />
             </div>
@@ -185,7 +185,7 @@ const Auth = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
-                className="w-full px-4 py-2.5 pl-10 rounded-xl text-sm bg-theme-coffee/5 border border-theme-coffee/10 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none focus:ring-2 focus:ring-theme-orange/40"
+                className="w-full px-4 py-2.5 pl-10 rounded-xl text-sm bg-theme-coffee/5 border border-theme-coffee/10 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none focus:ring-2 focus:ring-theme-accent/40"
               />
               <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-theme-coffee/40 dark:text-theme-darkText/40" />
             </div>
@@ -195,7 +195,7 @@ const Auth = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 mt-2 bg-theme-orange hover:bg-theme-orange-light text-theme-cream font-bold rounded-xl shadow-md transition-all duration-250 active:scale-98 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            className="w-full py-3 mt-2 bg-theme-accent hover:bg-theme-accent-light text-theme-cream font-bold rounded-xl shadow-md transition-all duration-250 active:scale-98 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
           >
             {loading ? (
               <span className="w-5 h-5 border-2 border-theme-cream border-t-transparent rounded-full animate-spin"></span>
@@ -245,8 +245,8 @@ const Auth = () => {
 
         {/* Quick Demo Fills */}
         {isLogin && (
-          <div className="flex flex-col gap-2 p-4 rounded-xl bg-theme-orange/5 border border-theme-orange/10 mt-1.5">
-            <span className="text-[10px] font-extrabold uppercase tracking-widest text-theme-orange flex items-center gap-1.5">
+          <div className="flex flex-col gap-2 p-4 rounded-xl bg-theme-accent/5 border border-theme-accent/10 mt-1.5">
+            <span className="text-[10px] font-extrabold uppercase tracking-widest text-theme-accent flex items-center gap-1.5">
               <Sparkles size={12} className="animate-spin" style={{ animationDuration: '4s' }} />
               Quick-Fill Test Account:
             </span>

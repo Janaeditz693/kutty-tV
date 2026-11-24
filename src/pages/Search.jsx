@@ -139,7 +139,7 @@ const Search = () => {
       {/* Header Title */}
       <div className="flex flex-col gap-1.5 mt-2">
         <h1 className="text-3xl font-extrabold tracking-tight text-theme-coffee dark:text-theme-darkText flex items-center gap-2">
-          <SearchIcon size={24} className="text-theme-orange" />
+          <SearchIcon size={24} className="text-theme-accent" />
           <span>{t('common.search')}</span>
         </h1>
         <p className="text-sm text-theme-coffee/60 dark:text-theme-darkText/50 font-medium">
@@ -155,7 +155,7 @@ const Search = () => {
             placeholder={t('common.search')}
             value={searchQuery}
             onChange={handleSearchChange}
-            className="w-full px-5 py-4 pl-12 pr-12 text-base rounded-premium bg-theme-cream border-2 border-theme-coffee/15 dark:bg-theme-darkCard dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText shadow-retro placeholder-theme-coffee/30 dark:placeholder-theme-darkText/30 focus:outline-none focus:ring-2 focus:ring-theme-orange/40 focus:border-theme-orange transition-all duration-300"
+            className="w-full px-5 py-4 pl-12 pr-12 text-base rounded-premium bg-theme-cream border-2 border-theme-coffee/15 dark:bg-theme-darkCard dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText shadow-retro placeholder-theme-coffee/30 dark:placeholder-theme-darkText/30 focus:outline-none focus:ring-2 focus:ring-theme-accent/40 focus:border-theme-accent transition-all duration-300"
           />
           <SearchIcon size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-theme-coffee/40 dark:text-theme-darkText/40" />
           
@@ -179,7 +179,7 @@ const Search = () => {
                 onClick={() => handleSuggestionClick(sug)}
                 className="w-full text-left px-5 py-2.5 text-sm font-semibold hover:bg-theme-coffee/5 dark:hover:bg-theme-darkBorder text-theme-coffee/85 dark:text-theme-darkText/80 flex items-center gap-2.5 transition-colors duration-150"
               >
-                <Sparkles size={13} className="text-theme-orange" />
+                <Sparkles size={13} className="text-theme-accent" />
                 <span>{sug}</span>
               </button>
             ))}
@@ -199,7 +199,7 @@ const Search = () => {
             onClick={() => handleTagClick(tag.query)}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 border cursor-pointer hover:scale-105 active:scale-95 ${
               searchQuery.toLowerCase() === tag.query.toLowerCase()
-                ? 'bg-theme-orange border-theme-orange text-theme-cream'
+                ? 'bg-theme-accent border-theme-accent text-theme-cream'
                 : 'bg-theme-cream border-theme-coffee/10 hover:border-theme-coffee/30 dark:bg-theme-darkCard dark:border-theme-darkBorder text-theme-coffee/80 dark:text-theme-darkText/80'
             }`}
           >
