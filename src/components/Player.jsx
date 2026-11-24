@@ -415,7 +415,7 @@ const Player = ({
           {/* Auto-play next episode countdown banner overlay */}
           {countdown !== null && (
             <div className="absolute inset-0 z-30 flex flex-col justify-center items-center bg-black/85 text-theme-cream text-center p-6">
-              <RotateCcw size={36} className="text-theme-orange animate-spin mb-4" style={{ animationDuration: '4s' }} />
+              <RotateCcw size={36} className="text-theme-accent animate-spin mb-4" style={{ animationDuration: '4s' }} />
               <h3 className="text-lg font-bold tracking-wide">
                 {t('player.nextIn', { seconds: countdown })}
               </h3>
@@ -431,7 +431,7 @@ const Player = ({
                 </button>
                 <button
                   onClick={onNext}
-                  className="px-5 py-2.5 rounded-xl bg-theme-orange text-theme-cream font-extrabold text-xs cursor-pointer shadow hover:bg-theme-orange-light transition-colors"
+                  className="px-5 py-2.5 rounded-xl bg-theme-accent text-theme-cream font-extrabold text-xs cursor-pointer shadow hover:bg-theme-accent-light transition-colors"
                 >
                   Play Now
                 </button>
@@ -470,7 +470,7 @@ const Player = ({
                 max={duration || 100}
                 value={currentTime}
                 onChange={handleSeekChange}
-                className="flex-grow h-1.5 rounded-full appearance-none bg-theme-cream/25 cursor-pointer accent-theme-orange outline-none"
+                className="flex-grow h-1.5 rounded-full appearance-none bg-theme-cream/25 cursor-pointer accent-theme-accent outline-none"
               />
               <span className="text-[11px] font-bold font-mono text-theme-cream/80">
                 {formatTime(duration)}
@@ -548,8 +548,8 @@ const Player = ({
                         <button
                           key={sp}
                           onClick={() => handleSpeedChange(sp)}
-                          className={`px-3 py-1.5 text-left text-theme-cream hover:bg-theme-orange transition-colors ${
-                            playbackSpeed === sp ? 'text-theme-orange font-bold hover:text-theme-cream' : ''
+                          className={`px-3 py-1.5 text-left text-theme-cream hover:bg-theme-accent transition-colors ${
+                            playbackSpeed === sp ? 'text-theme-accent font-bold hover:text-theme-cream' : ''
                           }`}
                         >
                           {sp}x
@@ -576,8 +576,8 @@ const Player = ({
                         <button
                           key={q}
                           onClick={() => { setSelectedQuality(q); setShowQualityMenu(false); }}
-                          className={`px-3 py-1.5 text-left text-theme-cream hover:bg-theme-orange transition-colors ${
-                            selectedQuality === q ? 'text-theme-orange font-bold hover:text-theme-cream' : ''
+                          className={`px-3 py-1.5 text-left text-theme-cream hover:bg-theme-accent transition-colors ${
+                            selectedQuality === q ? 'text-theme-accent font-bold hover:text-theme-cream' : ''
                           }`}
                         >
                           {q}
@@ -619,7 +619,7 @@ const Player = ({
                 {/* Fullscreen Button */}
                 <button
                   onClick={toggleFullscreen}
-                  className="p-1 rounded text-theme-cream hover:text-theme-orange transition-colors cursor-pointer shrink-0"
+                  className="p-1 rounded text-theme-cream hover:text-theme-accent transition-colors cursor-pointer shrink-0"
                   title={t('player.fullscreen')}
                 >
                   {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}

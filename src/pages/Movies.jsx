@@ -67,7 +67,7 @@ const Movies = () => {
       {/* Header */}
       <div className="flex flex-col gap-1.5 mt-2">
         <h1 className="text-3xl font-extrabold tracking-tight text-theme-coffee dark:text-theme-darkText flex items-center gap-2.5">
-          <Film size={24} className="text-theme-orange" />
+          <Film size={24} className="text-theme-accent" />
           <span>{t('common.movies')}</span>
         </h1>
         <p className="text-sm text-theme-coffee/60 dark:text-theme-darkText/50 font-medium">
@@ -78,7 +78,7 @@ const Movies = () => {
       {/* Filters Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-premium bg-theme-beige/25 border border-theme-coffee/10 dark:bg-theme-darkCard dark:border-theme-darkBorder shadow-retro">
         <div className="flex items-center gap-2 text-theme-coffee/80 dark:text-theme-darkText/80 font-bold text-sm">
-          <SlidersHorizontal size={16} className="text-theme-orange" />
+          <SlidersHorizontal size={16} className="text-theme-accent" />
           <span>Filters:</span>
         </div>
 

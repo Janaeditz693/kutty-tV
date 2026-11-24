@@ -3,28 +3,29 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Light theme palette: clean paper + ink */
-  --color-theme-cream: #F7F6FB;
-  --color-theme-coffee: #17172B;
-  --color-theme-orange: #FF6B2C;
-  --color-theme-beige: #E9E8F3;
-  --color-theme-coffee-light: #4B4B6B;
-  --color-theme-orange-light: #FF8A57;
-  --color-theme-sun: #FFC93C;
+  /* Light theme: soft grey canvas, white cards, blue accent */
+  --color-theme-cream: #F2F4F8;
+  --color-theme-coffee: #0F1B3D;
+  --color-theme-accent: #1F6FEB;
+  --color-theme-beige: #E6EAF2;
+  --color-theme-coffee-light: #55627F;
+  --color-theme-accent-light: #4C8DF5;
+  --color-theme-sun: #FFB020;
+  --color-theme-navy: #0B3A9E;
 
-  /* Dark theme palette: midnight ink */
-  --color-theme-darkBg: #0A0A14;
-  --color-theme-darkCard: #14142A;
-  --color-theme-darkBorder: #252545;
-  --color-theme-darkText: #F4F4FA;
+  /* Dark theme: deep navy */
+  --color-theme-darkBg: #061436;
+  --color-theme-darkCard: #0D2250;
+  --color-theme-darkBorder: #1C3470;
+  --color-theme-darkText: #F2F6FF;
 
   /* Border Radius */
   --radius-premium: 16px;
   --radius-premium-lg: 24px;
 
   /* Custom shadows */
-  --shadow-retro: 0 4px 14px rgba(23, 23, 43, 0.10);
-  --shadow-retro-hover: 0 14px 32px rgba(255, 107, 44, 0.22);
+  --shadow-retro: 0 4px 14px rgba(15, 27, 61, 0.08);
+  --shadow-retro-hover: 0 14px 32px rgba(31, 111, 235, 0.22);
   --shadow-glass: 0 4px 30px rgba(0, 0, 0, 0.1);
 
   /* Custom Animations & Keyframes */
@@ -43,23 +44,23 @@
 
 @layer base {
   :root {
-    --bg-primary: #F7F6FB;
-    --bg-secondary: #E9E8F3;
-    --text-primary: #17172B;
-    --text-secondary: #4B4B6B;
-    --border-color: #D6D5E8;
-    --accent-orange: #FF6B2C;
+    --bg-primary: #F2F4F8;
+    --bg-secondary: #E6EAF2;
+    --text-primary: #0F1B3D;
+    --text-secondary: #55627F;
+    --border-color: #D9DFEC;
+    --accent-orange: #1F6FEB;
     --card-bg: #FFFFFF;
   }
 
   .dark {
-    --bg-primary: #0A0A14;
-    --bg-secondary: #14142A;
-    --text-primary: #F4F4FA;
-    --text-secondary: #B8B8D6;
-    --border-color: #252545;
-    --accent-orange: #FF7A3D;
-    --card-bg: #14142A;
+    --bg-primary: #061436;
+    --bg-secondary: #0D2250;
+    --text-primary: #F2F6FF;
+    --text-secondary: #A9B8DD;
+    --border-color: #1C3470;
+    --accent-orange: #4C8DF5;
+    --card-bg: #0D2250;
   }
 
   body {
@@ -88,14 +89,14 @@
 
 /* Retro Glassmorphism & Mobile GPU Optimizations */
 .glass-nav {
-  background: rgba(247, 246, 251, 0.82);
+  background: rgba(242, 244, 248, 0.88);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
-  border-bottom: 1px solid rgba(23, 23, 43, 0.08);
+  border-bottom: 1px solid rgba(15, 27, 61, 0.08);
 }
 
 .dark .glass-nav {
-  background: rgba(10, 10, 20, 0.78);
+  background: rgba(6, 20, 54, 0.86);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   border-bottom: 1px solid rgba(244, 244, 250, 0.08);
@@ -115,12 +116,12 @@
 /* Mobile Performance Rules */
 @media (max-width: 768px) {
   .glass-nav {
-    background: rgba(247, 246, 251, 0.96);
+    background: rgba(242, 244, 248, 0.97);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
   }
   .dark .glass-nav {
-    background: rgba(10, 10, 20, 0.96);
+    background: rgba(6, 20, 54, 0.97);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
   }
@@ -135,7 +136,7 @@
 
 /* ---- Redesign utilities ---- */
 .glass-nav-transparent {
-  background: linear-gradient(to bottom, rgba(10, 10, 20, 0.75), rgba(10, 10, 20, 0));
+  background: linear-gradient(to bottom, rgba(6, 20, 54, 0.75), rgba(6, 20, 54, 0));
   border-bottom: 1px solid transparent;
 }
 
@@ -151,11 +152,11 @@
   bottom: 12%;
   width: 5px;
   border-radius: 9999px;
-  background: linear-gradient(to bottom, #FF6B2C, #FFC93C);
+  background: linear-gradient(to bottom, #1F6FEB, #4C8DF5);
 }
 
 .poster-glow:hover {
-  box-shadow: 0 16px 40px -10px rgba(255, 107, 44, 0.45);
+  box-shadow: 0 16px 40px -10px rgba(31, 111, 235, 0.40);
 }
 
 @media (prefers-reduced-motion: reduce) {

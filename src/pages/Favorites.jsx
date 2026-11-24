@@ -15,7 +15,7 @@ const Favorites = () => {
       {/* Header Info */}
       <div className="flex flex-col gap-1.5 mt-2">
         <h1 className="text-3xl font-extrabold tracking-tight text-theme-coffee dark:text-theme-darkText flex items-center gap-2.5">
-          <Heart size={24} className="fill-theme-orange stroke-theme-orange" />
+          <Heart size={24} className="fill-theme-accent stroke-theme-accent" />
           <span>{t('profile.myFavorites')}</span>
         </h1>
         <p className="text-sm text-theme-coffee/60 dark:text-theme-darkText/50 font-medium">
@@ -34,7 +34,7 @@ const Favorites = () => {
         ) : (
           // Empty State
           <div className="flex flex-col items-center justify-center py-20 text-center border-2 border-dashed border-theme-coffee/10 dark:border-theme-darkBorder rounded-premium bg-theme-beige/5 px-4">
-            <div className="p-4 rounded-full bg-theme-orange/10 text-theme-orange animate-pulse mb-4">
+            <div className="p-4 rounded-full bg-theme-accent/10 text-theme-accent animate-pulse mb-4">
               <Heart size={36} className="stroke-[2]" />
             </div>
             <h3 className="text-xl font-bold text-theme-coffee dark:text-theme-darkText">
@@ -45,7 +45,7 @@ const Favorites = () => {
             </p>
             <Link
               to="/"
-              className="mt-6 flex items-center gap-2 px-5 py-2.5 bg-theme-orange hover:bg-theme-orange-light text-theme-cream font-bold text-sm rounded-xl shadow-md transition-all active:scale-95 cursor-pointer"
+              className="mt-6 flex items-center gap-2 px-5 py-2.5 bg-theme-accent hover:bg-theme-accent-light text-theme-cream font-bold text-sm rounded-xl shadow-md transition-all active:scale-95 cursor-pointer"
             >
               <PlusCircle size={15} />
               <span>Browse Cartoons</span>

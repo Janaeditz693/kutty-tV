@@ -12,6 +12,7 @@ const Home = lazy(() => import('./pages/Home'));
 const Shows = lazy(() => import('./pages/Shows'));
 const Movies = lazy(() => import('./pages/Movies'));
 const Watch = lazy(() => import('./pages/Watch'));
+const Details = lazy(() => import('./pages/Details'));
 const Search = lazy(() => import('./pages/Search'));
 const Favorites = lazy(() => import('./pages/Favorites'));
 const Profile = lazy(() => import('./pages/Profile'));
@@ -52,7 +53,7 @@ function App() {
         <Navbar />
 
         {/* Dynamic Route Content */}
-        <main className="flex-grow pb-20 lg:pb-0">
+        <main className="flex-grow pb-28 lg:pb-0">
           <Suspense fallback={<Loader />}>
             <Routes>
               {/* Public Views */}
@@ -63,6 +64,7 @@ function App() {
               <Route path="/login" element={<AnimatedPage><Auth /></AnimatedPage>} />
               
               {/* Watch pages (support optional episode param) */}
+              <Route path="/details/:showId" element={<AnimatedPage><Details /></AnimatedPage>} />
               <Route path="/watch/:showId" element={<AnimatedPage><Watch /></AnimatedPage>} />
               <Route path="/watch/:showId/:episodeId" element={<AnimatedPage><Watch /></AnimatedPage>} />
 
