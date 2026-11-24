@@ -361,7 +361,7 @@ const Player = ({
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => isPlaying && setShowControls(false)}
-      className={`relative w-full aspect-video select-none overflow-hidden bg-black transition-all duration-300 rounded-premium border-2 border-theme-coffee/15 dark:border-theme-darkBorder shadow-retro ${
+      className={`relative w-full aspect-video select-none overflow-hidden bg-black transition-all duration-300 rounded-none sm:rounded-2xl ring-1 ring-white/10 shadow-2xl shadow-black/50 ${
         isFullscreen ? 'rounded-none border-none' : ''
       }`}
     >

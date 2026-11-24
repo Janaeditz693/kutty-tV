@@ -21,6 +21,18 @@ const Skeleton = ({ variant = 'card', className = '' }) => {
     );
   }
 
+  if (variant === 'poster') {
+    return (
+      <div className={`flex flex-col gap-3 ${className}`}>
+        <div className={`w-full aspect-[3/4] ${baseClasses}`} />
+        <div className="flex flex-col gap-2 px-1">
+          <div className={`h-4 w-3/4 rounded ${baseClasses}`} />
+          <div className={`h-3 w-1/2 rounded ${baseClasses}`} />
+        </div>
+      </div>
+    );
+  }
+
   // Default 'card' style (widescreen cartoon thumbnail)
   return (
     <div className={`flex flex-col gap-3 ${className}`}>

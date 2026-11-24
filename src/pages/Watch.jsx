@@ -226,7 +226,8 @@ const Watch = () => {
     <div className="w-full pb-12">
       
       {/* 1. Video Player Section (Dynamic layout under Theater mode) */}
-      <div className={`w-full bg-black/5 dark:bg-black/50 ${isTheaterMode ? 'w-full' : 'max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8'}`}>
+      <div className="w-full bg-gradient-to-b from-theme-darkBg to-theme-darkBg/95">
+        <div className={`${isTheaterMode ? 'w-full' : 'max-w-6xl mx-auto px-0 sm:px-6 lg:px-8 py-0 sm:py-6'}`}>
         <Player
           key={`${item.id}-${currentEpisode?.id || 'movie'}`}
           videoUrl={videoUrl}
@@ -238,6 +239,7 @@ const Watch = () => {
           onTimeUpdate={handleTimeUpdate}
           onVideoEnded={handleNextEpisode}
         />
+        </div>
       </div>
 
       {/* 2. Main Page content grids */}

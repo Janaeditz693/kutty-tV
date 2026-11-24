@@ -3,27 +3,28 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Light theme color palette */
-  --color-theme-cream: #F5F1E8;
-  --color-theme-coffee: #4A3628;
-  --color-theme-orange: #C26A32;
-  --color-theme-beige: #E8DDC7;
-  --color-theme-coffee-light: #6E523E;
-  --color-theme-orange-light: #D67E43;
-  
-  /* Dark theme color palette */
-  --color-theme-darkBg: #120C08;
-  --color-theme-darkCard: #1F150F;
-  --color-theme-darkBorder: #38271C;
-  --color-theme-darkText: #FAF8F5;
+  /* Light theme palette: clean paper + ink */
+  --color-theme-cream: #F7F6FB;
+  --color-theme-coffee: #17172B;
+  --color-theme-orange: #FF6B2C;
+  --color-theme-beige: #E9E8F3;
+  --color-theme-coffee-light: #4B4B6B;
+  --color-theme-orange-light: #FF8A57;
+  --color-theme-sun: #FFC93C;
+
+  /* Dark theme palette: midnight ink */
+  --color-theme-darkBg: #0A0A14;
+  --color-theme-darkCard: #14142A;
+  --color-theme-darkBorder: #252545;
+  --color-theme-darkText: #F4F4FA;
 
   /* Border Radius */
-  --radius-premium: 18px;
+  --radius-premium: 16px;
   --radius-premium-lg: 24px;
 
   /* Custom shadows */
-  --shadow-retro: 0 4px 10px rgba(74, 54, 40, 0.08);
-  --shadow-retro-hover: 0 10px 25px rgba(74, 54, 40, 0.15);
+  --shadow-retro: 0 4px 14px rgba(23, 23, 43, 0.10);
+  --shadow-retro-hover: 0 14px 32px rgba(255, 107, 44, 0.22);
   --shadow-glass: 0 4px 30px rgba(0, 0, 0, 0.1);
 
   /* Custom Animations & Keyframes */
@@ -42,23 +43,23 @@
 
 @layer base {
   :root {
-    --bg-primary: #F5F1E8;
-    --bg-secondary: #E8DDC7;
-    --text-primary: #4A3628;
-    --text-secondary: #6E523E;
-    --border-color: #D9C3B0;
-    --accent-orange: #C26A32;
-    --card-bg: #FAF8F5;
+    --bg-primary: #F7F6FB;
+    --bg-secondary: #E9E8F3;
+    --text-primary: #17172B;
+    --text-secondary: #4B4B6B;
+    --border-color: #D6D5E8;
+    --accent-orange: #FF6B2C;
+    --card-bg: #FFFFFF;
   }
 
   .dark {
-    --bg-primary: #120C08;
-    --bg-secondary: #1F150F;
-    --text-primary: #FAF8F5;
-    --text-secondary: #D9C3B0;
-    --border-color: #38271C;
-    --accent-orange: #D97E4A;
-    --card-bg: #1F150F;
+    --bg-primary: #0A0A14;
+    --bg-secondary: #14142A;
+    --text-primary: #F4F4FA;
+    --text-secondary: #B8B8D6;
+    --border-color: #252545;
+    --accent-orange: #FF7A3D;
+    --card-bg: #14142A;
   }
 
   body {
@@ -87,17 +88,17 @@
 
 /* Retro Glassmorphism & Mobile GPU Optimizations */
 .glass-nav {
-  background: rgba(245, 241, 232, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(74, 54, 40, 0.08);
+  background: rgba(247, 246, 251, 0.82);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border-bottom: 1px solid rgba(23, 23, 43, 0.08);
 }
 
 .dark .glass-nav {
-  background: rgba(18, 12, 8, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(250, 248, 245, 0.08);
+  background: rgba(10, 10, 20, 0.78);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border-bottom: 1px solid rgba(244, 244, 250, 0.08);
 }
 
 /* Hide Scrollbar & Hardware Accelerated Touch Scrolling */
@@ -114,12 +115,12 @@
 /* Mobile Performance Rules */
 @media (max-width: 768px) {
   .glass-nav {
-    background: rgba(245, 241, 232, 0.95);
+    background: rgba(247, 246, 251, 0.96);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
   }
   .dark .glass-nav {
-    background: rgba(18, 12, 8, 0.95);
+    background: rgba(10, 10, 20, 0.96);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
   }
@@ -130,3 +131,33 @@
   }
 }
 
+
+
+/* ---- Redesign utilities ---- */
+.glass-nav-transparent {
+  background: linear-gradient(to bottom, rgba(10, 10, 20, 0.75), rgba(10, 10, 20, 0));
+  border-bottom: 1px solid transparent;
+}
+
+.section-accent {
+  position: relative;
+  padding-left: 14px;
+}
+.section-accent::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 12%;
+  bottom: 12%;
+  width: 5px;
+  border-radius: 9999px;
+  background: linear-gradient(to bottom, #FF6B2C, #FFC93C);
+}
+
+.poster-glow:hover {
+  box-shadow: 0 16px 40px -10px rgba(255, 107, 44, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

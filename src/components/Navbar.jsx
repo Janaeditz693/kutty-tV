@@ -16,7 +16,6 @@ import {
   Home,
   Tv,
   Film,
-  Menu,
   X,
   Coffee,
   Copy,
@@ -48,6 +47,17 @@ const Navbar = () => {
   const [copiedUpi, setCopiedUpi] = useState(false);
 
   const profileMenuRef = useRef(null);
+
+  // Transparent over the home hero, solid once scrolled
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  const onHero = location.pathname === '/' && !scrolled;
 
   // Close profile dropdown when clicking outside
   useEffect(() => {
@@ -113,31 +123,52 @@ const Navbar = () => {
     { name: t('common.movies'), path: '/movies', icon: Film },
   ];
 
+  const openCoffee = () => {
+    setMobileMenuOpen(false);
+    setIsCoffeeModalOpen(true);
+    setShowCoffeeQr(false);
+    setCoffeeAmount(10);
+    setCustomAmountError('');
+  };
+
+  // Icon-button look that adapts to being over the dark hero
+  const iconBtn = onHero
+    ? 'text-white hover:bg-white/15'
+    : 'text-theme-coffee dark:text-theme-darkText hover:bg-theme-coffee/10 dark:hover:bg-white/10';
+
+  const tabItems = [
+    { name: t('common.home'), path: '/', icon: Home },
+    { name: t('common.shows'), path: '/shows', icon: Tv },
+    { name: t('common.movies'), path: '/movies', icon: Film },
+    { name: t('common.favorites'), path: '/favorites', icon: Heart },
+  ];
+
   return (
     <>
       {/* Top Navbar */}
-      <nav className="sticky top-0 z-50 w-full glass-nav transition-all duration-300">
+      <nav className={`sticky top-0 z-50 w-full transition-all duration-300 ${onHero ? 'glass-nav-transparent' : 'glass-nav'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-15 sm:h-16">
-            
-            {/* Left side: Logo & Navigation links */}
-            <div className="flex items-center gap-6 lg:gap-10">
-              {/* Logo */}
+          <div className="flex items-center justify-between h-16">
+
+            {/* Left: logo + desktop links */}
+            <div className="flex items-center gap-6 lg:gap-8 min-w-0">
               <div className="flex-shrink-0" onClick={() => navigate('/')}>
-                <Logo size="md" />
+                <Logo size="md" light={onHero} />
               </div>
 
-              {/* Desktop Navigation Links */}
-              <div className="hidden lg:flex space-x-1 lg:space-x-4">
+              <div className="hidden lg:flex items-center gap-1">
                 {menuItems.map((item) => (
                   <NavLink
                     key={item.path}
                     to={item.path}
-                    className={({ isActive }) => 
-                      `px-3 py-2 rounded-xl text-sm font-semibold tracking-wide transition-all duration-200 ${
-                        isActive 
-                          ? 'bg-theme-coffee/10 text-theme-coffee dark:bg-theme-orange/20 dark:text-theme-orange' 
-                          : 'text-theme-coffee/70 dark:text-theme-darkText/70 hover:text-theme-coffee hover:bg-theme-coffee/5 dark:hover:text-theme-darkText dark:hover:bg-theme-darkCard'
+                    end={item.path === '/'}
+                    className={({ isActive }) =>
+                      `px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 ${
+                        isActive
+                          ? 'bg-theme-orange text-white shadow-md shadow-orange-500/25'
+                          : onHero
+                            ? 'text-white/80 hover:text-white hover:bg-white/15'
+                            : 'text-theme-coffee/70 dark:text-theme-darkText/70 hover:text-theme-coffee dark:hover:text-white hover:bg-theme-coffee/8 dark:hover:bg-white/10'
                       }`
                     }
                   >
@@ -147,84 +178,91 @@ const Navbar = () => {
               </div>
             </div>
 
-            {/* Right side: Utilities (Search, Language, Theme, Profile, Buy me a Coffee) */}
-            <div className="flex items-center gap-3 sm:gap-4">
-              
-              {/* Search Bar (Desktop - Magnifying Glass icon on the right to match layout) */}
+            {/* Right: utilities */}
+            <div className="flex items-center gap-0.5 sm:gap-2">
+
+              {/* Desktop search */}
               <form onSubmit={handleSearchSubmit} className="relative hidden lg:block">
                 <input
                   type="text"
                   placeholder={t('common.search')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-44 lg:w-60 px-4 py-2 pr-10 rounded-xl text-sm bg-zinc-800 text-white placeholder-zinc-400 border border-zinc-700/50 focus:outline-none focus:ring-2 focus:ring-[#FF5A1F]/50 focus:border-[#FF5A1F] transition-all duration-300"
+                  className="w-48 xl:w-64 pl-4 pr-10 py-2 rounded-full text-sm bg-white/10 dark:bg-white/10 text-theme-coffee dark:text-white placeholder-theme-coffee/50 dark:placeholder-white/50 border border-theme-coffee/15 dark:border-white/15 focus:outline-none focus:ring-2 focus:ring-theme-orange/60 focus:w-64 xl:focus:w-72 transition-all duration-300"
+                  style={onHero ? { color: '#fff', borderColor: 'rgba(255,255,255,0.25)' } : undefined}
                 />
-                <button type="submit" className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white cursor-pointer">
+                <button type="submit" aria-label="Search" className="absolute right-3.5 top-1/2 -translate-y-1/2 text-theme-coffee/60 dark:text-white/60 hover:text-theme-orange cursor-pointer">
                   <Search size={16} />
                 </button>
               </form>
 
-              {/* Mobile Search Bar (Directly in header) */}
-              <form onSubmit={handleSearchSubmit} className="relative lg:hidden flex-grow max-w-[150px] xs:max-w-[200px]">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={searchQuery}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setSearchQuery(val);
-                    if (val.trim()) {
-                      navigate(`/search?q=${encodeURIComponent(val.trim())}`, { replace: true });
-                    }
-                  }}
-                  className="w-full px-3 py-1.5 pr-8 rounded-lg text-xs bg-zinc-800 text-white placeholder-zinc-400 border border-zinc-700/40 focus:outline-none focus:ring-1 focus:ring-[#FF5A1F]"
-                />
-                <button type="submit" className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400">
-                  <Search size={12} />
-                </button>
-              </form>
+              {/* Mobile search toggle */}
+              <button
+                onClick={() => setMobileSearchOpen((v) => !v)}
+                aria-label="Search"
+                className={`lg:hidden p-2.5 rounded-full transition-colors cursor-pointer ${iconBtn}`}
+              >
+                {mobileSearchOpen ? <X size={19} /> : <Search size={19} />}
+              </button>
 
-              {/* Language Switcher (Desktop Only) */}
+              {/* Language */}
               <button
                 onClick={toggleLanguage}
-                className="hidden sm:inline-block px-2.5 py-1.5 rounded-xl text-xs font-bold bg-theme-coffee/5 border border-theme-coffee/15 dark:bg-theme-darkCard dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText hover:bg-theme-coffee/10 dark:hover:bg-theme-darkBorder transition-all duration-200 cursor-pointer"
+                className={`px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-extrabold border transition-colors cursor-pointer ${
+                  onHero
+                    ? 'border-white/30 text-white hover:bg-white/15'
+                    : 'border-theme-coffee/20 dark:border-white/20 text-theme-coffee dark:text-white hover:bg-theme-coffee/10 dark:hover:bg-white/10'
+                }`}
                 title="Change Language / மொழி மாற்றம்"
               >
                 {currentLang.startsWith('ta') ? 'EN' : 'தமிழ்'}
               </button>
 
-              {/* Theme Toggle (Desktop Only) */}
+              {/* Theme */}
               <button
                 onClick={toggleTheme}
-                className="hidden sm:inline-block p-2 rounded-xl bg-theme-coffee/5 dark:bg-theme-darkCard text-theme-coffee dark:text-theme-darkText hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer"
+                aria-label="Toggle theme"
+                className={`p-2.5 rounded-full transition-colors cursor-pointer ${iconBtn}`}
               >
                 {isDark ? <Sun size={18} /> : <Moon size={18} />}
               </button>
 
-              {/* Favorites (Desktop Only) */}
+              {/* Favorites (desktop) */}
               <Link
                 to="/favorites"
-                className="relative hidden lg:flex p-2 rounded-xl bg-theme-coffee/5 dark:bg-theme-darkCard text-theme-coffee dark:text-theme-darkText hover:scale-110 transition-transform duration-200"
+                aria-label={t('common.favorites')}
+                className={`relative hidden lg:flex p-2.5 rounded-full transition-colors ${iconBtn}`}
               >
                 <Heart size={18} className={favorites.length > 0 ? 'fill-theme-orange stroke-theme-orange' : ''} />
                 {favorites.length > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center text-[10px] font-extrabold text-theme-cream bg-theme-orange rounded-full shadow-sm">
+                  <span className="absolute top-0.5 right-0 min-w-[18px] h-[18px] px-1 flex items-center justify-center text-[10px] font-extrabold text-white bg-theme-orange rounded-full">
                     {favorites.length}
                   </span>
                 )}
               </Link>
+
+              {/* Coffee: icon on mobile, labelled on desktop */}
+              <button
+                onClick={openCoffee}
+                aria-label="Buy me a Coffee"
+                className="hidden sm:flex items-center gap-2 px-4 py-2 bg-theme-sun hover:brightness-95 text-black font-extrabold text-sm rounded-full shadow-md transition-all active:scale-95 cursor-pointer"
+              >
+                <Coffee size={16} />
+                <span>Buy me a Coffee</span>
+              </button>
 
               {/* Sign In / Profile dropdown */}
               {currentUser ? (
                 <div className="relative flex items-center" ref={profileMenuRef}>
                   <button
                     onClick={() => setIsOpenProfile(!isOpenProfile)}
-                    className="flex items-center gap-1.5 p-1 rounded-xl hover:bg-theme-coffee/5 dark:hover:bg-theme-darkCard transition-all duration-200 focus:outline-none cursor-pointer"
+                    aria-label="Account menu"
+                    className="flex items-center gap-1 p-0.5 rounded-full focus:outline-none cursor-pointer"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-theme-orange text-theme-cream font-bold flex items-center justify-center shadow-inner">
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-theme-orange to-theme-sun text-white font-extrabold flex items-center justify-center shadow ring-2 ring-white/20">
                       {currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : <User size={16} />}
                     </div>
-                    <ChevronDown size={14} className="text-theme-coffee/50 dark:text-theme-darkText/50 hidden sm:inline" />
+                    <ChevronDown size={14} className={`hidden sm:inline ${onHero ? 'text-white/70' : 'text-theme-coffee/50 dark:text-white/50'}`} />
                   </button>
 
                   <AnimatePresence>
@@ -234,46 +272,34 @@ const Navbar = () => {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute right-0 mt-2.5 w-56 rounded-premium bg-theme-cream border border-theme-coffee/15 dark:bg-theme-darkCard dark:border-theme-darkBorder shadow-2xl overflow-hidden py-1.5 z-50"
+                        className="absolute right-0 top-full mt-2.5 w-60 rounded-2xl bg-white dark:bg-theme-darkCard border border-theme-coffee/10 dark:border-theme-darkBorder shadow-2xl overflow-hidden py-1.5 z-50"
                       >
-                        <div className="px-4 py-2 border-b border-theme-coffee/10 dark:border-theme-darkBorder">
-                          <p className="text-xs text-theme-coffee/60 dark:text-theme-darkText/50">{t('common.appName')}</p>
-                          <p className="text-sm font-bold text-theme-coffee dark:text-theme-darkText truncate">{currentUser.displayName || 'Viewer'}</p>
-                          <p className="text-xs text-theme-coffee/40 dark:text-theme-darkText/30 truncate">{currentUser.email}</p>
+                        <div className="px-4 py-3 border-b border-theme-coffee/10 dark:border-theme-darkBorder">
+                          <p className="text-sm font-extrabold text-theme-coffee dark:text-theme-darkText truncate">{currentUser.displayName || 'Viewer'}</p>
+                          <p className="text-xs text-theme-coffee/50 dark:text-theme-darkText/50 truncate">{currentUser.email}</p>
                         </div>
-                        
-                        <Link
-                          to="/profile"
-                          onClick={() => setIsOpenProfile(false)}
-                          className="flex items-center gap-3 px-4 py-2 text-sm text-theme-coffee/80 dark:text-theme-darkText/80 hover:bg-theme-coffee/5 dark:hover:bg-theme-darkBorder transition-colors duration-150"
-                        >
-                          <User size={16} />
-                          {t('common.profile')}
-                        </Link>
 
-                        <Link
-                          to="/profile?tab=settings"
-                          onClick={() => setIsOpenProfile(false)}
-                          className="flex items-center gap-3 px-4 py-2 text-sm text-theme-coffee/80 dark:text-theme-darkText/80 hover:bg-theme-coffee/5 dark:hover:bg-theme-darkBorder transition-colors duration-150"
-                        >
-                          <Settings size={16} />
-                          {t('common.settings')}
-                        </Link>
-
-                        <Link
-                          to="/profile?tab=history"
-                          onClick={() => setIsOpenProfile(false)}
-                          className="flex items-center gap-3 px-4 py-2 text-sm text-theme-coffee/80 dark:text-theme-darkText/80 hover:bg-theme-coffee/5 dark:hover:bg-theme-darkBorder transition-colors duration-150"
-                        >
-                          <History size={16} />
-                          {t('profile.watchHistory')}
-                        </Link>
+                        {[
+                          { to: '/profile', icon: User, label: t('common.profile') },
+                          { to: '/profile?tab=settings', icon: Settings, label: t('common.settings') },
+                          { to: '/profile?tab=history', icon: History, label: t('profile.watchHistory') },
+                        ].map(({ to, icon: Icon, label }) => (
+                          <Link
+                            key={to}
+                            to={to}
+                            onClick={() => setIsOpenProfile(false)}
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-theme-coffee/80 dark:text-theme-darkText/80 hover:bg-theme-coffee/5 dark:hover:bg-white/5 transition-colors"
+                          >
+                            <Icon size={16} />
+                            {label}
+                          </Link>
+                        ))}
 
                         {isAdmin && (
                           <Link
                             to="/admin"
                             onClick={() => setIsOpenProfile(false)}
-                            className="flex items-center gap-3 px-4 py-2 text-sm text-red-600 dark:text-theme-orange hover:bg-theme-coffee/5 dark:hover:bg-theme-darkBorder font-semibold border-t border-theme-coffee/10 dark:border-theme-darkBorder transition-colors duration-150"
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-theme-orange hover:bg-theme-coffee/5 dark:hover:bg-white/5 border-t border-theme-coffee/10 dark:border-theme-darkBorder transition-colors"
                           >
                             <ShieldAlert size={16} />
                             {t('common.admin')}
@@ -285,7 +311,7 @@ const Navbar = () => {
                             setIsOpenProfile(false);
                             logout();
                           }}
-                          className="w-full text-left flex items-center gap-3 px-4 py-2 text-sm text-red-500 hover:bg-theme-coffee/5 dark:hover:bg-theme-darkBorder border-t border-theme-coffee/10 dark:border-theme-darkBorder transition-colors duration-150 cursor-pointer"
+                          className="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-red-500 hover:bg-red-500/10 border-t border-theme-coffee/10 dark:border-theme-darkBorder transition-colors cursor-pointer"
                         >
                           <LogOut size={16} />
                           {t('common.logout')}
@@ -297,156 +323,84 @@ const Navbar = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="px-3 py-1.5 rounded-xl bg-theme-orange hover:bg-theme-orange-light text-theme-cream font-extrabold text-xs tracking-wide transition-all duration-200 active:scale-95 shadow-md flex items-center gap-1.5 shrink-0"
+                  aria-label={t('common.login')}
+                  className="p-2.5 min-[420px]:px-4 min-[420px]:py-2 rounded-full bg-theme-orange hover:bg-theme-orange-light text-white font-extrabold text-sm transition-all active:scale-95 shadow-md shadow-orange-500/25 flex items-center gap-1.5 shrink-0"
                 >
-                  <User size={14} />
-                  <span>Sign In</span>
+                  <User size={16} />
+                  <span className="hidden min-[420px]:inline">{t('common.login')}</span>
                 </Link>
               )}
-
-              {/* Premium Buy Me a Coffee Button (Replacing Subscribe button) */}
-              <button
-                onClick={() => {
-                  setIsCoffeeModalOpen(true);
-                  setShowCoffeeQr(false);
-                  setCoffeeAmount(10);
-                  setCustomAmountError('');
-                }}
-                className="hidden sm:flex items-center gap-2 px-4 py-2 bg-[#FF5A1F] hover:bg-[#FF7A47] text-white font-extrabold text-sm rounded-xl shadow-md transition-all duration-200 active:scale-95 cursor-pointer"
-              >
-                <Coffee size={15} className="fill-white stroke-none" />
-                <span>Buy me a Coffee</span>
-              </button>
-
-              {/* Mobile Hamburger Toggle */}
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2 rounded-xl text-theme-coffee dark:text-theme-darkText hover:bg-theme-coffee/5 dark:hover:bg-theme-darkCard transition-all duration-200 cursor-pointer"
-              >
-                {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-              </button>
-
             </div>
           </div>
         </div>
 
-        {/* Mobile Dropdown Panel */}
+        {/* Mobile search row */}
         <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
+          {mobileSearchOpen && (
+            <motion.form
+              onSubmit={(e) => {
+                handleSearchSubmit(e);
+                setMobileSearchOpen(false);
+              }}
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden border-t border-theme-coffee/10 dark:border-theme-darkBorder bg-theme-cream dark:bg-theme-darkBg transition-colors duration-300 overflow-hidden"
+              className="lg:hidden overflow-hidden px-4 pb-3 bg-theme-darkBg/90 backdrop-blur-xl"
             >
-              <div className="px-4 py-4 flex flex-col gap-4">
-                {menuItems.map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 text-sm font-semibold text-theme-coffee/80 dark:text-theme-darkText/80 hover:text-theme-orange transition-colors duration-150"
-                  >
-                    <item.icon size={16} />
-                    <span>{item.name}</span>
-                  </Link>
-                ))}
-                
-                {/* Mobile Favorites Link */}
-                <Link
-                  to="/favorites"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 text-sm font-semibold text-theme-coffee/80 dark:text-theme-darkText/80 hover:text-theme-orange transition-colors duration-150"
-                >
-                  <Heart size={16} />
-                  <span>{t('common.favorites')} ({favorites.length})</span>
-                </Link>
-
-                {/* Mobile Admin Link if Admin */}
-                {isAdmin && (
-                  <Link
-                    to="/admin"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 text-sm font-semibold text-red-600 dark:text-theme-orange hover:text-theme-orange transition-colors duration-150"
-                  >
-                    <ShieldAlert size={16} />
-                    <span>{t('common.admin')}</span>
-                  </Link>
-                )}
-
-                <hr className="border-theme-coffee/10 dark:border-theme-darkBorder" />
-
-                {/* Mobile Quick Controls */}
-                <div className="flex flex-wrap items-center gap-3">
-                  {/* Language switch */}
-                  <button
-                    onClick={toggleLanguage}
-                    className="px-3 py-1.5 rounded-lg text-xs font-bold bg-theme-coffee/5 dark:bg-theme-darkCard border border-theme-coffee/15 dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText cursor-pointer"
-                  >
-                    {currentLang.startsWith('ta') ? 'EN' : 'தமிழ்'}
-                  </button>
-
-                  {/* Dark Mode toggle */}
-                  <button
-                    onClick={toggleTheme}
-                    className="p-2 rounded-lg bg-theme-coffee/5 dark:bg-theme-darkCard text-theme-coffee dark:text-theme-darkText cursor-pointer"
-                  >
-                    {isDark ? <Sun size={15} /> : <Moon size={15} />}
-                  </button>
-
-                  {/* User Profile & Logout / Login on Mobile */}
-                  {currentUser ? (
-                    <>
-                      <Link
-                        to="/profile"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-theme-coffee/5 dark:bg-theme-darkCard text-theme-coffee dark:text-theme-darkText"
-                      >
-                        <User size={13} />
-                        <span>{currentUser.displayName || 'Profile'}</span>
-                      </Link>
-                      <button
-                        onClick={() => {
-                          setMobileMenuOpen(false);
-                          logout();
-                        }}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-red-500/10 text-red-500 hover:bg-red-500/20 cursor-pointer"
-                      >
-                        <LogOut size={13} />
-                        <span>Logout</span>
-                      </button>
-                    </>
-                  ) : (
-                    <Link
-                      to="/login"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-1.5 px-3.5 py-1.5 bg-theme-orange hover:bg-theme-orange-light text-theme-cream font-bold text-xs rounded-lg shadow-md cursor-pointer transition-all duration-200 active:scale-95"
-                    >
-                      <User size={13} />
-                      <span>{t('common.login')}</span>
-                    </Link>
-                  )}
-                </div>
-
-                {/* Buy me a Coffee (Mobile full width) */}
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    setIsCoffeeModalOpen(true);
-                    setShowCoffeeQr(false);
-                    setCoffeeAmount(10);
-                    setCustomAmountError('');
+              <div className="relative">
+                <input
+                  autoFocus
+                  type="text"
+                  placeholder={t('common.search')}
+                  value={searchQuery}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setSearchQuery(val);
+                    if (val.trim()) {
+                      navigate(`/search?q=${encodeURIComponent(val.trim())}`, { replace: true });
+                    }
                   }}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 bg-[#FF5A1F] hover:bg-[#FF7A47] text-white font-bold text-sm rounded-xl shadow-md cursor-pointer"
-                >
-                  <Coffee size={16} className="fill-white stroke-none" />
-                  <span>Buy me a Coffee</span>
-                </button>
+                  className="w-full pl-4 pr-10 py-2.5 rounded-full text-sm bg-white/10 text-white placeholder-white/50 border border-white/15 focus:outline-none focus:ring-2 focus:ring-theme-orange/60"
+                />
+                <Search size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/60" />
               </div>
-            </motion.div>
+            </motion.form>
           )}
         </AnimatePresence>
       </nav>
+
+      {/* Mobile bottom tab bar */}
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white/92 dark:bg-theme-darkBg/92 backdrop-blur-xl border-t border-theme-coffee/10 dark:border-theme-darkBorder pb-[env(safe-area-inset-bottom)]">
+        <div className="grid grid-cols-5">
+          {tabItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              end={item.path === '/'}
+              className={({ isActive }) =>
+                `relative flex flex-col items-center gap-1 py-2.5 text-[11px] font-bold transition-colors ${
+                  isActive ? 'text-theme-orange' : 'text-theme-coffee/55 dark:text-theme-darkText/55'
+                }`
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  {isActive && <span className="absolute top-0 h-0.5 w-8 rounded-full bg-theme-orange" />}
+                  <item.icon size={20} className={isActive ? 'fill-theme-orange/20' : ''} />
+                  <span>{item.name}</span>
+                </>
+              )}
+            </NavLink>
+          ))}
+          <button
+            onClick={openCoffee}
+            className="flex flex-col items-center gap-1 py-2.5 text-[11px] font-bold text-theme-coffee/55 dark:text-theme-darkText/55 cursor-pointer"
+          >
+            <Coffee size={20} />
+            <span>Support</span>
+          </button>
+        </div>
+      </div>
 
       {/* Buy Me a Coffee UPI QR Code Modal */}
       <AnimatePresence>

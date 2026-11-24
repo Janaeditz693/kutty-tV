@@ -46,13 +46,13 @@ const Home = () => {
       
       {/* 1. Cinematic Featured Hero Banner Carousel */}
       {loading ? (
-        <div className="w-full aspect-[16/9] md:aspect-[21/9] min-h-[400px] bg-theme-coffee/5 dark:bg-theme-darkCard animate-pulse" />
+        <div className="w-full -mt-16 h-[78svh] min-h-[460px] max-h-[760px] bg-theme-darkCard animate-pulse" />
       ) : (
         <Hero items={featuredItems.length > 0 ? featuredItems : catalogItems.slice(0, 3)} />
       )}
 
       {/* Grid wrapper for shelves */}
-      <div className="flex flex-col gap-2 mt-4 sm:mt-6">
+      <div className="flex flex-col gap-2 mt-2 sm:mt-4">
         
         {/* 2. Cartoon Series Catalog */}
         <Carousel title={t('common.shows')} loading={loading}>
@@ -70,7 +70,7 @@ const Home = () => {
 
         {/* 4. Continue Watching (Visible when logged in and content has watch progress) */}
         {currentUser && continueWatching && continueWatching.length > 0 && (
-          <Carousel title={t('common.continueWatching')} loading={loading}>
+          <Carousel title={t('common.continueWatching')} loading={loading} wide>
             {continueWatching.map((record) => (
               <ContinueWatchingCard key={record.showId} record={record} />
             ))}
