@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -17,6 +17,7 @@ const Search = lazy(() => import('./pages/Search'));
 const Favorites = lazy(() => import('./pages/Favorites'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Auth = lazy(() => import('./pages/Auth'));
+const Welcome = lazy(() => import('./pages/Welcome'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 
 // Route guards
@@ -30,6 +31,18 @@ const AdminRoute = ({ children }) => {
   const { currentUser, loading, isAdmin } = useAuth();
   if (loading) return <Loader />;
   return currentUser && isAdmin ? children : <Navigate to="/" replace />;
+};
+
+// First-time visitors land on the Welcome screen once (crawlers are skipped for SEO)
+const FirstVisitGate = ({ children }) => {
+  const { pathname } = useLocation();
+  let seen = true;
+  try {
+    const bot = /bot|crawl|spider|lighthouse|preview/i.test(navigator.userAgent);
+    seen = bot || localStorage.getItem('kuttytv_welcomed') === '1';
+  } catch { /* storage blocked: skip welcome */ }
+  if (pathname === '/' && !seen) return <Navigate to="/welcome" replace />;
+  return children;
 };
 
 // Reusable page transition wrapper
@@ -57,7 +70,8 @@ function App() {
           <Suspense fallback={<Loader />}>
             <Routes>
               {/* Public Views */}
-              <Route path="/" element={<AnimatedPage><Home /></AnimatedPage>} />
+              <Route path="/" element={<FirstVisitGate><AnimatedPage><Home /></AnimatedPage></FirstVisitGate>} />
+              <Route path="/welcome" element={<Welcome />} />
               <Route path="/shows" element={<AnimatedPage><Shows /></AnimatedPage>} />
               <Route path="/movies" element={<AnimatedPage><Movies /></AnimatedPage>} />
               <Route path="/search" element={<AnimatedPage><Search /></AnimatedPage>} />

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Play, Plus, Check, Star, Share2 } from 'lucide-react';
+import { ArrowLeft, Play, Check, Star, Info, Heart } from 'lucide-react';
 import { getCatalogItemById, getAllCatalogItems } from '../services/db';
 import { useApp } from '../context/AppContext';
 import { optimizeImageUrl } from '../utils/image';
-import { genreColor, formatRuntime } from '../utils/genre';
+import { formatRuntime } from '../utils/genre';
 import CartoonCard from '../components/CartoonCard';
 
 const Details = () => {
@@ -18,6 +18,7 @@ const Details = () => {
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [seeAll, setSeeAll] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -37,13 +38,13 @@ const Details = () => {
     return () => { active = false; };
   }, [showId]);
 
-  if (loading) return <div className="min-h-[70svh] bg-theme-navy animate-pulse" />;
+  if (loading) return <div className="min-h-[70svh] bg-theme-beige dark:bg-theme-darkCard animate-pulse" />;
 
   if (!item) {
     return (
       <div className="min-h-[60svh] flex flex-col items-center justify-center gap-4 text-theme-coffee dark:text-theme-darkText">
         <p className="font-bold">Title not found</p>
-        <Link to="/" className="px-5 py-2 rounded-full bg-theme-accent text-white font-bold">{t('common.home')}</Link>
+        <Link to="/" className="px-5 py-2 rounded-full bg-theme-accent text-theme-onaccent font-bold">{t('common.home')}</Link>
       </div>
     );
   }
@@ -56,7 +57,6 @@ const Details = () => {
   const episodes = item.episodes || [];
   const firstEpId = episodes[0]?.id;
   const watchPath = isMovie || !firstEpId ? `/watch/${item.id}` : `/watch/${item.id}/${firstEpId}`;
-  const genre = item.genres?.[0];
 
   const handleShare = async () => {
     const url = window.location.href;
@@ -71,119 +71,116 @@ const Details = () => {
     } catch { /* user cancelled share */ }
   };
 
-  const Action = ({ icon: Icon, label, onClick, active }) => (
-    <button onClick={onClick} className="flex flex-col items-center gap-1.5 text-xs font-semibold text-white/85 cursor-pointer">
-      <span className={`w-11 h-11 rounded-full flex items-center justify-center border transition-colors ${active ? 'bg-theme-accent border-theme-accent' : 'bg-white/10 border-white/20 hover:bg-white/20'}`}>
-        <Icon size={20} />
-      </span>
-      {label}
-    </button>
-  );
+  const chip = 'px-3.5 py-1.5 rounded-full text-xs font-bold bg-theme-coffee/8 dark:bg-white/10 text-theme-coffee dark:text-white';
+  const stars = Math.round((parseFloat(item.rating) || 0) / 2);
 
   return (
-    <div className="min-h-[calc(100svh-4rem)] bg-theme-navy text-white pb-10">
-      {/* Poster / backdrop */}
-      <div className="relative h-[46svh] md:h-[52svh] max-h-[560px]">
-        <img src={optimizeImageUrl(item.thumbnail, 'hero')} alt="" className="md:hidden w-full h-full object-cover object-top" />
-        <img src={optimizeImageUrl(item.banner || item.thumbnail, 'hero')} alt="" className="hidden md:block w-full h-full object-cover object-center" />
-        <div className="absolute inset-0 bg-gradient-to-t from-theme-navy via-theme-navy/30 to-black/30" />
+    <div className="min-h-[calc(100svh-4rem)] bg-theme-coffee dark:bg-theme-darkBg">
+      <div className="max-w-3xl mx-auto relative">
+        {/* Full-bleed image */}
+        <div className="relative h-[52svh] max-h-[560px]">
+          <img src={optimizeImageUrl(item.thumbnail, 'hero')} alt="" className="w-full h-full object-cover object-top" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent" />
+          <button
+            onClick={() => navigate(-1)}
+            aria-label="Back"
+            className="absolute top-4 left-4 w-11 h-11 rounded-full bg-white text-theme-coffee shadow-lg flex items-center justify-center cursor-pointer"
+          >
+            <ArrowLeft size={20} />
+          </button>
+          <button
+            onClick={handleShare}
+            aria-label={copied ? 'Link copied' : 'Share'}
+            className="absolute top-4 right-4 w-11 h-11 rounded-full bg-white text-theme-coffee shadow-lg flex items-center justify-center cursor-pointer"
+          >
+            {copied ? <Check size={20} /> : <Info size={20} />}
+          </button>
+        </div>
 
-        <button
-          onClick={() => navigate(-1)}
-          aria-label="Back"
-          className="absolute top-4 left-4 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center cursor-pointer"
-        >
-          <ArrowLeft size={20} />
-        </button>
+        {/* Bottom sheet */}
+        <div className="relative -mt-10 rounded-t-[2.5rem] bg-theme-cream dark:bg-theme-darkBg text-theme-coffee dark:text-theme-darkText px-5 pt-6 pb-12 min-h-[50svh]">
+          <div className="flex items-start gap-4">
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold text-theme-coffee/55 dark:text-white/55">{[item.year, item.languages?.[0]].filter(Boolean).join(' · ')}</p>
+              <h1 className="mt-1 text-3xl sm:text-4xl font-black tracking-tight leading-tight">{title}</h1>
+            </div>
+            <button
+              onClick={() => navigate(watchPath)}
+              aria-label={t('common.watchNow')}
+              className="shrink-0 w-16 h-16 rounded-full bg-theme-accent active:scale-95 flex items-center justify-center shadow-xl shadow-black/20 transition-all cursor-pointer"
+            >
+              <Play size={26} className="fill-theme-onaccent text-theme-onaccent ml-1" />
+            </button>
+          </div>
 
-        <button
-          onClick={() => navigate(watchPath)}
-          aria-label={t('common.watchNow')}
-          className="absolute right-5 -bottom-7 z-10 w-16 h-16 rounded-full bg-theme-accent hover:bg-theme-accent-light active:scale-95 flex items-center justify-center shadow-xl shadow-rose-500/40 transition-all cursor-pointer"
-        >
-          <Play size={26} className="fill-white ml-1" />
-        </button>
-      </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <span className={chip}>{isMovie ? (formatRuntime(item.duration) || 'Movie') : `${episodes.length} ${t('common.episodes')}`}</span>
+            {item.genres?.slice(0, 2).map((g) => <span key={g} className={chip}>{g}</span>)}
+            <span className={chip}>{isMovie ? t('common.movie', { defaultValue: 'Movie' }) : t('common.show', { defaultValue: 'Show' })}</span>
+          </div>
 
-      <div className="max-w-3xl mx-auto px-5 -mt-2 relative">
-        <h1 className="text-3xl sm:text-4xl font-black tracking-tight pr-16">{title}</h1>
+          <div className="mt-5 flex items-center gap-4">
+            <div>
+              <p className="text-3xl font-black leading-none">{item.rating}<span className="text-sm font-bold text-theme-coffee/50 dark:text-white/50">/10</span></p>
+              <div className="mt-1.5 flex gap-0.5">
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <Star key={n} size={14} className={n <= stars ? 'fill-theme-sun stroke-theme-sun' : 'stroke-theme-coffee/25 dark:stroke-white/25'} />
+                ))}
+              </div>
+            </div>
+            <button
+              onClick={() => toggleFavorite(item)}
+              className={`ml-auto flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-bold cursor-pointer transition-colors ${isFav ? 'bg-red-500 text-white' : 'bg-theme-coffee/8 dark:bg-white/10'}`}
+            >
+              <Heart size={16} className={isFav ? 'fill-white' : ''} />
+              {t('common.watchlist', { defaultValue: 'Watchlist' })}
+            </button>
+          </div>
 
-        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-2 text-sm font-semibold text-white/70">
-          <span>{isMovie ? formatRuntime(item.duration) : `${episodes.length} ${t('common.episodes')}`}</span>
-          <span className="text-theme-accent">•</span>
-          <span>{isMovie ? t('common.movie', { defaultValue: 'Movie' }) : t('common.show', { defaultValue: 'Show' })}</span>
-          {genre && (
+          <h2 className="mt-7 text-lg font-extrabold">
+            {t('common.aboutThis', { defaultValue: 'About this' })} {isMovie ? t('common.movie', { defaultValue: 'Movie' }) : t('common.show', { defaultValue: 'Show' })}
+          </h2>
+          <p className="mt-2 text-sm sm:text-base leading-relaxed text-theme-coffee/75 dark:text-white/75">{description}</p>
+
+          {!isMovie && episodes.length > 0 && (
             <>
-              <span className="text-theme-accent">•</span>
-              <span className={`px-3 py-0.5 rounded-full text-xs font-bold text-white ${genreColor(genre)}`}>{genre}</span>
+              <div className="mt-7 flex items-center justify-between">
+                <h2 className="text-lg font-extrabold">{t('common.episodes')}</h2>
+                {episodes.length > 3 && (
+                  <button onClick={() => setSeeAll((v) => !v)} className="text-sm font-bold text-theme-coffee/60 dark:text-white/60 cursor-pointer">
+                    {seeAll ? 'Show less' : 'See all'}
+                  </button>
+                )}
+              </div>
+              <div className={seeAll ? 'mt-3 grid grid-cols-2 sm:grid-cols-3 gap-3' : 'mt-3 flex gap-3 overflow-x-auto no-scrollbar pb-1'}>
+                {episodes.map((ep, i) => (
+                  <Link
+                    key={ep.id}
+                    to={`/watch/${item.id}/${ep.id}`}
+                    className={`relative block ${seeAll ? '' : 'w-40 shrink-0'} aspect-[4/3] rounded-2xl overflow-hidden bg-theme-beige dark:bg-theme-darkCard`}
+                  >
+                    {ep.thumbnail && <img src={optimizeImageUrl(ep.thumbnail, 'card')} alt="" className="w-full h-full object-cover" loading="lazy" />}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                    <span className="absolute bottom-2 left-2.5 right-2.5 text-xs font-bold text-white truncate">{ep.number || i + 1}. {ep.title}</span>
+                    {ep.duration ? <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-theme-accent text-theme-onaccent text-[10px] font-extrabold">{Math.round(ep.duration / 60)} min</span> : null}
+                  </Link>
+                ))}
+              </div>
             </>
           )}
-          <span className="text-theme-accent">•</span>
-          <span>{item.year}</span>
-        </div>
 
-        <div className="mt-3 flex items-center gap-2 text-sm font-bold">
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-theme-sun text-black text-xs font-extrabold">
-            <Star size={11} className="fill-black stroke-none" /> {t('common.rating', { defaultValue: 'Rating' })}
-          </span>
-          <span className="text-white/80">{item.rating}/10</span>
-        </div>
-
-        {/* Actions */}
-        <div className="mt-6 flex items-start gap-7">
-          <Action
-            icon={isFav ? Check : Plus}
-            label={t('common.watchlist', { defaultValue: 'Watchlist' })}
-            onClick={() => toggleFavorite(item)}
-            active={isFav}
-          />
-          <Action icon={Share2} label={copied ? 'Link copied' : t('common.share', { defaultValue: 'Share' })} onClick={handleShare} />
-        </div>
-
-        <h2 className="mt-8 text-lg font-extrabold">
-          {t('common.aboutThis', { defaultValue: 'About this' })} {isMovie ? t('common.movie', { defaultValue: 'Movie' }) : t('common.show', { defaultValue: 'Show' })}
-        </h2>
-        <p className="mt-2 text-sm sm:text-base leading-relaxed text-white/75">{description}</p>
-
-        {!isMovie && episodes.length > 0 && (
-          <>
-            <h2 className="mt-8 text-lg font-extrabold">{t('common.episodes')}</h2>
-            <div className="mt-3 flex flex-col gap-2.5">
-              {episodes.map((ep, i) => (
-                <Link
-                  key={ep.id}
-                  to={`/watch/${item.id}/${ep.id}`}
-                  className="flex items-center gap-3 p-2.5 rounded-2xl bg-theme-darkCard hover:bg-theme-darkBorder transition-colors"
-                >
-                  <div className="w-24 aspect-video rounded-xl overflow-hidden bg-black/30 shrink-0">
-                    {ep.thumbnail && <img src={optimizeImageUrl(ep.thumbnail, 'card')} alt="" className="w-full h-full object-cover" loading="lazy" />}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-bold truncate">{ep.number || i + 1}. {ep.title}</p>
-                    {ep.duration ? <p className="text-xs text-white/55">{Math.round(ep.duration / 60)} min</p> : null}
-                  </div>
-                  <span className="w-9 h-9 rounded-full bg-theme-accent flex items-center justify-center shrink-0">
-                    <Play size={14} className="fill-white ml-0.5" />
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-
-      {related.length > 0 && (
-        <div className="max-w-3xl mx-auto mt-8">
-          <h2 className="px-5 text-lg font-extrabold">{t('common.moreLikeThis', { defaultValue: 'More like this' })}</h2>
-          <div className="mt-3 flex gap-4 overflow-x-auto no-scrollbar px-5 pb-2">
-            {related.map((r) => (
-              <div key={r.id} className="w-36 sm:w-40 shrink-0">
-                <CartoonCard item={r} tone="dark" />
+          {related.length > 0 && (
+            <>
+              <h2 className="mt-8 text-lg font-extrabold">{t('common.moreLikeThis', { defaultValue: 'More like this' })}</h2>
+              <div className="mt-3 -mx-5 flex gap-4 overflow-x-auto no-scrollbar px-5 pb-2">
+                {related.map((r) => (
+                  <div key={r.id} className="w-36 sm:w-40 shrink-0"><CartoonCard item={r} /></div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

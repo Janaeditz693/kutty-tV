@@ -344,7 +344,7 @@ const AdminDashboard = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-2">
         <div className="flex flex-col gap-1">
           <h1 className="text-3xl font-extrabold tracking-tight text-theme-coffee dark:text-theme-darkText flex items-center gap-2.5">
-            <ShieldAlert size={28} className="text-red-550 dark:text-theme-accent animate-pulse" />
+            <ShieldAlert size={28} className="text-red-550 dark:text-theme-accent-text animate-pulse" />
             <span>Kutty TV Admin Board</span>
           </h1>
           <p className="text-xs sm:text-sm text-theme-coffee/60 dark:text-theme-darkText/50 font-medium">
@@ -367,7 +367,7 @@ const AdminDashboard = () => {
           onClick={() => setActiveTab('overview')}
           className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider shrink-0 transition-colors border-b-2 cursor-pointer ${
             activeTab === 'overview'
-              ? 'border-theme-accent text-theme-accent'
+              ? 'border-theme-accent-text text-theme-accent-text'
               : 'border-transparent text-theme-coffee/50 dark:text-theme-darkText/50 hover:text-theme-coffee dark:hover:text-theme-darkText'
           }`}
         >
@@ -377,7 +377,7 @@ const AdminDashboard = () => {
           onClick={() => setActiveTab('catalog')}
           className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider shrink-0 transition-colors border-b-2 cursor-pointer ${
             activeTab === 'catalog'
-              ? 'border-theme-accent text-theme-accent'
+              ? 'border-theme-accent-text text-theme-accent-text'
               : 'border-transparent text-theme-coffee/50 dark:text-theme-darkText/50 hover:text-theme-coffee dark:hover:text-theme-darkText'
           }`}
         >
@@ -387,7 +387,7 @@ const AdminDashboard = () => {
           onClick={() => setActiveTab('episodes')}
           className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider shrink-0 transition-colors border-b-2 cursor-pointer ${
             activeTab === 'episodes'
-              ? 'border-theme-accent text-theme-accent'
+              ? 'border-theme-accent-text text-theme-accent-text'
               : 'border-transparent text-theme-coffee/50 dark:text-theme-darkText/50 hover:text-theme-coffee dark:hover:text-theme-darkText'
           }`}
         >
@@ -397,7 +397,7 @@ const AdminDashboard = () => {
           onClick={() => setActiveTab('users')}
           className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider shrink-0 transition-colors border-b-2 cursor-pointer ${
             activeTab === 'users'
-              ? 'border-theme-accent text-theme-accent'
+              ? 'border-theme-accent-text text-theme-accent-text'
               : 'border-transparent text-theme-coffee/50 dark:text-theme-darkText/50 hover:text-theme-coffee dark:hover:text-theme-darkText'
           }`}
         >
@@ -422,7 +422,7 @@ const AdminDashboard = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {/* Shows */}
                   <div className="p-5 rounded-premium bg-theme-cream border border-theme-coffee/15 dark:bg-theme-darkCard dark:border-theme-darkBorder shadow-retro flex items-center gap-4">
-                    <div className="p-3.5 rounded-xl bg-theme-accent/10 text-theme-accent">
+                    <div className="p-3.5 rounded-xl bg-theme-accent/10 text-theme-accent-text">
                       <Tv size={22} />
                     </div>
                     <div>
@@ -476,7 +476,7 @@ const AdminDashboard = () => {
                           <img src={item.thumbnail} className="w-12 aspect-[16/10] object-cover rounded-lg" />
                           <div className="flex-grow min-w-0">
                             <h4 className="text-xs font-bold text-theme-coffee dark:text-theme-darkText truncate">{item.title}</h4>
-                            <span className="text-[9px] text-theme-accent font-bold uppercase tracking-widest">{item.type}</span>
+                            <span className="text-[9px] text-theme-accent-text font-bold uppercase tracking-widest">{item.type}</span>
                           </div>
                           <div className="w-24 bg-theme-coffee/10 dark:bg-theme-darkBg h-2 rounded-full overflow-hidden">
                             <div className="h-full bg-theme-accent" style={{ width: `${parseFloat(item.rating) * 10}%` }}></div>
@@ -494,15 +494,15 @@ const AdminDashboard = () => {
                     </h3>
                     <div className="flex flex-col gap-2.5 text-xs text-theme-coffee/70 dark:text-theme-darkText/70">
                       <div className="py-1.5 border-b border-theme-coffee/5 dark:border-theme-darkBorder flex gap-2">
-                        <span className="text-theme-accent font-bold">10:48</span>
+                        <span className="text-theme-accent-text font-bold">10:48</span>
                         <span>Seeded mock data in localStorage</span>
                       </div>
                       <div className="py-1.5 border-b border-theme-coffee/5 dark:border-theme-darkBorder flex gap-2">
-                        <span className="text-theme-accent font-bold">11:09</span>
+                        <span className="text-theme-accent-text font-bold">11:09</span>
                         <span>Added quick authentication controls</span>
                       </div>
                       <div className="py-1.5 border-b border-theme-coffee/5 dark:border-theme-darkBorder flex gap-2">
-                        <span className="text-theme-accent font-bold">11:50</span>
+                        <span className="text-theme-accent-text font-bold">11:50</span>
                         <span>Synchronized admin databases</span>
                       </div>
                     </div>
@@ -533,7 +533,7 @@ const AdminDashboard = () => {
                       setShowFeatured(false);
                       setShowFormOpen(!showFormOpen);
                     }}
-                    className="flex items-center gap-1.5 px-4 py-2 bg-theme-accent hover:bg-theme-accent-light text-theme-cream rounded-xl text-xs font-bold shadow-md cursor-pointer transition-transform active:scale-95"
+                    className="flex items-center gap-1.5 px-4 py-2 bg-theme-accent hover:bg-theme-accent-light text-theme-onaccent rounded-xl text-xs font-bold shadow-md cursor-pointer transition-transform active:scale-95"
                   >
                     {showFormOpen ? <X size={14} /> : <Plus size={14} />}
                     <span>{showFormOpen ? 'Close Form' : 'Add Show or Movie'}</span>
@@ -702,7 +702,7 @@ const AdminDashboard = () => {
                       {/* Movie Video URL (Only shown if Type is Cartoon Movie) */}
                       {showType === 'movie' && (
                         <div className="flex flex-col gap-1 md:col-span-2">
-                          <label className="text-xs font-bold uppercase tracking-wider text-theme-accent dark:text-theme-accent">Movie Video URL * (YouTube / HTML5 / HLS .m3u8)</label>
+                          <label className="text-xs font-bold uppercase tracking-wider text-theme-accent-text dark:text-theme-accent-text">Movie Video URL * (YouTube / HTML5 / HLS .m3u8)</label>
                           <input
                             type="text"
                             required={showType === 'movie'}
@@ -789,7 +789,7 @@ const AdminDashboard = () => {
                       </button>
                       <button
                         type="submit"
-                        className="px-5 py-2.5 rounded-xl bg-theme-accent hover:bg-theme-accent-light text-theme-cream text-xs font-bold cursor-pointer shadow"
+                        className="px-5 py-2.5 rounded-xl bg-theme-accent hover:bg-theme-accent-light text-theme-onaccent text-xs font-bold cursor-pointer shadow"
                       >
                         {editShowId ? 'Save Changes' : 'Create Entry'}
                       </button>
@@ -821,7 +821,7 @@ const AdminDashboard = () => {
                           </td>
                           <td className="p-4 capitalize text-xs">
                             <span className={`px-2 py-0.5 rounded-md font-bold text-[10px] uppercase ${
-                              item.type === 'movie' ? 'bg-amber-550/15 text-amber-700 dark:text-amber-550' : 'bg-theme-accent/15 text-theme-accent'
+                              item.type === 'movie' ? 'bg-amber-550/15 text-amber-700 dark:text-amber-550' : 'bg-theme-accent/15 text-theme-accent-text'
                             }`}>
                               {item.type}
                             </span>
@@ -880,7 +880,7 @@ const AdminDashboard = () => {
                         setEpNumber((activeShowForEps.episodes?.length || 0) + 1);
                         setEpFormOpen(!epFormOpen);
                       }}
-                      className="flex items-center gap-1.5 px-4 py-2 bg-theme-accent hover:bg-theme-accent-light text-theme-cream rounded-xl text-xs font-bold shadow-md cursor-pointer transition-transform active:scale-95"
+                      className="flex items-center gap-1.5 px-4 py-2 bg-theme-accent hover:bg-theme-accent-light text-theme-onaccent rounded-xl text-xs font-bold shadow-md cursor-pointer transition-transform active:scale-95"
                     >
                       {epFormOpen ? <X size={14} /> : <Plus size={14} />}
                       <span>Add Episode</span>
@@ -1036,7 +1036,7 @@ const AdminDashboard = () => {
                       </button>
                       <button
                         type="submit"
-                        className="px-5 py-2.5 rounded-xl bg-theme-accent hover:bg-theme-accent-light text-theme-cream text-xs font-bold cursor-pointer shadow"
+                        className="px-5 py-2.5 rounded-xl bg-theme-accent hover:bg-theme-accent-light text-theme-onaccent text-xs font-bold cursor-pointer shadow"
                       >
                         Save Episode
                       </button>
@@ -1062,7 +1062,7 @@ const AdminDashboard = () => {
                         <tbody>
                           {activeShowForEps.episodes.map((ep) => (
                             <tr key={ep.id} className="border-b border-theme-coffee/10 dark:border-theme-darkBorder hover:bg-theme-coffee/5 dark:hover:bg-theme-darkBg transition-colors font-medium">
-                              <td className="p-4 font-mono font-bold text-theme-accent">S{ep.season || 1} Ep {ep.number}</td>
+                              <td className="p-4 font-mono font-bold text-theme-accent-text">S{ep.season || 1} Ep {ep.number}</td>
                               <td className="p-4">
                                 <img src={ep.thumbnail} alt={ep.title} className="w-14 aspect-[16/10] object-cover rounded-lg border border-theme-coffee/10 dark:border-theme-darkBorder" />
                               </td>
@@ -1105,10 +1105,10 @@ const AdminDashboard = () => {
               <div className="flex flex-col gap-6">
                 <div className="flex justify-between items-center border-b border-theme-coffee/10 dark:border-theme-darkBorder pb-3">
                   <h3 className="text-lg font-extrabold text-theme-coffee dark:text-theme-darkText flex items-center gap-2">
-                    <Users size={20} className="text-theme-accent" />
+                    <Users size={20} className="text-theme-accent-text" />
                     <span>Registered User Directory</span>
                   </h3>
-                  <span className="px-3 py-1 bg-theme-accent/10 text-theme-accent text-xs font-bold rounded-lg font-sans">
+                  <span className="px-3 py-1 bg-theme-accent/10 text-theme-accent-text text-xs font-bold rounded-lg font-sans">
                     Total Registered: {usersList.length}
                   </span>
                 </div>
@@ -1131,7 +1131,7 @@ const AdminDashboard = () => {
                             <td className="p-4 text-xs font-mono text-theme-coffee/70 dark:text-theme-darkText/60">{user.email || 'Awaiting login sync'}</td>
                             <td className="p-4">
                               <span className={`px-2 py-0.5 rounded-md font-bold text-[10px] uppercase ${
-                                user.role === 'admin' ? 'bg-theme-accent/15 text-theme-accent' : 'bg-theme-coffee/10 text-theme-coffee/60 dark:bg-theme-darkCard dark:text-theme-darkText/50'
+                                user.role === 'admin' ? 'bg-theme-accent/15 text-theme-accent-text' : 'bg-theme-coffee/10 text-theme-coffee/60 dark:bg-theme-darkCard dark:text-theme-darkText/50'
                               }`}>
                                 {user.role || 'user'}
                               </span>
@@ -1139,7 +1139,7 @@ const AdminDashboard = () => {
                             <td className="p-4">
                               <div className="flex justify-center">
                                 {user.email === 'vjana0640@gmail.com' ? (
-                                  <span className="text-[10px] font-extrabold uppercase text-theme-accent flex items-center gap-1">
+                                  <span className="text-[10px] font-extrabold uppercase text-theme-accent-text flex items-center gap-1">
                                     Primary Owner
                                   </span>
                                 ) : (
@@ -1148,7 +1148,7 @@ const AdminDashboard = () => {
                                     className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer active:scale-95 flex items-center gap-1.5 ${
                                       user.role === 'admin'
                                         ? 'bg-red-550/15 hover:bg-red-550/25 text-red-650 dark:text-red-550'
-                                        : 'bg-theme-accent text-theme-cream hover:bg-theme-accent-light'
+                                        : 'bg-theme-accent text-theme-onaccent hover:bg-theme-accent-light'
                                     }`}
                                   >
                                     {user.role === 'admin' ? 'Demote to User' : 'Promote to Admin'}

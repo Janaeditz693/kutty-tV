@@ -259,7 +259,7 @@ const Watch = () => {
                     {displayTitle}
                   </h1>
                   {currentEpisode && (
-                    <h2 className="text-base sm:text-lg font-bold text-theme-accent mt-0.5">
+                    <h2 className="text-base sm:text-lg font-bold text-theme-accent-text mt-0.5">
                       {t('common.episodes')} {currentEpisode.number}: {currentEpTitle}
                     </h2>
                   )}
@@ -289,7 +289,7 @@ const Watch = () => {
                     onClick={handleShare}
                     className="flex items-center gap-1.5 px-4 py-2 bg-theme-coffee/5 border border-theme-coffee/10 hover:bg-theme-coffee/10 dark:bg-theme-darkCard dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText text-xs font-bold rounded-xl shadow-sm transition-all active:scale-95 cursor-pointer"
                   >
-                    <Share2 size={14} className="text-theme-accent" />
+                    <Share2 size={14} className="text-theme-accent-text" />
                     <span>Share</span>
                   </button>
                 </div>
@@ -305,7 +305,7 @@ const Watch = () => {
                 <span>|</span>
                 <span>{item.genres?.join(', ')}</span>
                 <span>|</span>
-                <span className="text-theme-accent">
+                <span className="text-theme-accent-text">
                   {item.languages?.join(' / ')}
                 </span>
               </div>
@@ -319,14 +319,14 @@ const Watch = () => {
             {/* DISCUSSION & COMMENTS SECTION */}
             <div className="flex flex-col gap-6">
               <h3 className="text-lg font-extrabold text-theme-coffee dark:text-theme-darkText flex items-center gap-2">
-                <MessageSquare size={18} className="text-theme-accent" />
+                <MessageSquare size={18} className="text-theme-accent-text" />
                 <span>{t('watch.comments')} ({comments.length})</span>
               </h3>
 
               {/* Comment submission form */}
               {currentUser ? (
                 <form onSubmit={handleCommentSubmit} className="flex gap-3 items-start">
-                  <div className="w-10 h-10 rounded-xl bg-theme-accent text-theme-cream font-bold flex items-center justify-center shadow-inner shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-theme-accent text-theme-onaccent font-bold flex items-center justify-center shadow-inner shrink-0">
                     {currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : <UserIcon size={16} />}
                   </div>
                   <div className="flex-grow flex flex-col gap-2">
@@ -341,7 +341,7 @@ const Watch = () => {
                     <button
                       type="submit"
                       disabled={!newComment.trim() || postingComment}
-                      className="self-end px-4 py-2 bg-theme-accent hover:bg-theme-accent-light text-theme-cream font-bold text-xs rounded-xl shadow cursor-pointer transition-transform active:scale-95 disabled:opacity-50"
+                      className="self-end px-4 py-2 bg-theme-accent hover:bg-theme-accent-light text-theme-onaccent font-bold text-xs rounded-xl shadow cursor-pointer transition-transform active:scale-95 disabled:opacity-50"
                     >
                       {postingComment ? '...' : t('watch.postComment')}
                     </button>
@@ -351,7 +351,7 @@ const Watch = () => {
                 <div className="p-4 rounded-xl bg-theme-coffee/5 border border-theme-coffee/10 dark:bg-theme-darkCard dark:border-theme-darkBorder text-center">
                   <p className="text-xs text-theme-coffee/60 dark:text-theme-darkText/50 font-semibold">
                     Want to share a cartoon memory? 
-                    <Link to={`/login?redirect=/watch/${showId}`} className="text-theme-accent hover:underline font-bold ml-1">
+                    <Link to={`/login?redirect=/watch/${showId}`} className="text-theme-accent-text hover:underline font-bold ml-1">
                       Log in here
                     </Link> to join the discussion.
                   </p>
@@ -407,7 +407,7 @@ const Watch = () => {
                         onClick={() => setActiveSeason(s)}
                         className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
                           activeSeason === s
-                            ? 'bg-theme-accent border-theme-accent text-theme-cream shadow'
+                            ? 'bg-theme-accent border-theme-accent-text text-theme-onaccent shadow'
                             : 'bg-theme-cream border-theme-coffee/10 text-theme-coffee dark:bg-theme-darkBg dark:border-theme-darkBorder dark:text-theme-darkText hover:bg-theme-coffee/5'
                         }`}
                       >
@@ -428,7 +428,7 @@ const Watch = () => {
                         to={`/watch/${showId}/${ep.id}`}
                         className={`flex gap-3 p-2 rounded-xl border transition-all duration-200 cursor-pointer items-center min-w-0 ${
                           isActive
-                            ? 'bg-theme-accent border-theme-accent text-theme-cream'
+                            ? 'bg-theme-accent border-theme-accent-text text-theme-onaccent'
                             : 'bg-theme-cream border-theme-coffee/5 hover:bg-theme-coffee/5 dark:bg-theme-darkCard dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText'
                         }`}
                       >
@@ -439,7 +439,7 @@ const Watch = () => {
                           </div>
                         </div>
                         <div className="flex-grow min-w-0">
-                          <p className={`text-[10px] font-bold uppercase tracking-wider ${isActive ? 'text-theme-cream/80' : 'text-theme-accent'}`}>
+                          <p className={`text-[10px] font-bold uppercase tracking-wider ${isActive ? 'text-theme-cream/80' : 'text-theme-accent-text'}`}>
                             {t('common.episodes')} {ep.number}
                           </p>
                           <h4 className="text-xs font-bold truncate tracking-wide">
@@ -480,7 +480,7 @@ const Watch = () => {
                         <h4 className="text-xs sm:text-sm font-extrabold text-theme-coffee dark:text-theme-darkText truncate">
                           {recTitle}
                         </h4>
-                        <span className="text-[10px] text-theme-accent font-bold uppercase tracking-wider mt-0.5">
+                        <span className="text-[10px] text-theme-accent-text font-bold uppercase tracking-wider mt-0.5">
                           {rec.type === 'movie' ? t('common.movies') : t('common.shows')}
                         </span>
                         <div className="flex items-center gap-1.5 text-[9px] font-semibold text-theme-coffee/40 dark:text-theme-darkText/40 uppercase tracking-widest mt-0.5">

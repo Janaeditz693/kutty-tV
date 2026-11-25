@@ -27,7 +27,7 @@ const Logo = ({ size = 'md', light = false }) => {
       {/* Brand Text */}
       <span className={`font-extrabold text-lg sm:${currentSize.text} tracking-tight font-sans transition-colors duration-300 inline`}>
         <span className={light ? 'text-white' : 'text-theme-coffee dark:text-theme-darkText'}>Kutty</span>
-        <span className="text-theme-accent ml-0.5">TV</span>
+        <span className="text-theme-accent-text ml-0.5">TV</span>
       </span>
     </div>
   );

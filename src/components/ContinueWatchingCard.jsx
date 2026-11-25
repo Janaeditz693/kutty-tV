@@ -57,7 +57,7 @@ const ContinueWatchingCard = ({ record }) => {
           <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center z-25">
             <button
               onClick={handleResume}
-              className="p-3 bg-theme-accent text-theme-cream rounded-full shadow-lg transform scale-90 group-hover:scale-100 transition-transform duration-200"
+              className="p-3 bg-theme-accent text-theme-onaccent rounded-full shadow-lg transform scale-90 group-hover:scale-100 transition-transform duration-200"
               title="Resume Episode"
             >
               <Play size={18} className="fill-theme-cream ml-0.5" />
@@ -79,11 +79,11 @@ const ContinueWatchingCard = ({ record }) => {
             {record.showTitle}
           </h3>
           {record.episodeNumber ? (
-            <p className="text-[11px] text-theme-accent font-bold uppercase tracking-wider">
+            <p className="text-[11px] text-theme-accent-text font-bold uppercase tracking-wider">
               {t('common.episodes')} {record.episodeNumber}
             </p>
           ) : (
-            <p className="text-[11px] text-theme-accent font-bold uppercase tracking-wider">
+            <p className="text-[11px] text-theme-accent-text font-bold uppercase tracking-wider">
               Movie
             </p>
           )}

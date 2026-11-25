@@ -15,7 +15,7 @@ const Favorites = () => {
     <div className="max-w-5xl mx-auto px-4 py-6 sm:px-6 lg:px-8 min-h-[80vh] flex flex-col gap-5">
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-theme-coffee dark:text-theme-darkText flex items-center gap-2.5">
-          <Bookmark size={24} className="fill-theme-accent stroke-theme-accent" />
+          <Bookmark size={24} className="fill-theme-accent-text stroke-theme-accent-text" />
           <span>{t('profile.myFavorites')}</span>
         </h1>
         <p className="text-sm text-theme-coffee/60 dark:text-theme-darkText/55 font-medium">{t('profile.loginToSave')}</p>
@@ -45,11 +45,11 @@ const Favorites = () => {
                     {meta && (
                       <>
                         {meta}
-                        <span className="text-theme-accent">•</span>
+                        <span className="text-theme-accent-text">•</span>
                       </>
                     )}
                     {item.year}
-                    <span className="text-theme-accent">•</span>
+                    <span className="text-theme-accent-text">•</span>
                     <Star size={11} className="fill-theme-sun stroke-none" />
                     {item.rating}
                   </p>
@@ -58,7 +58,7 @@ const Favorites = () => {
                 <button
                   onClick={() => toggleFavorite(item)}
                   aria-label={t('common.remove', { defaultValue: 'Remove' })}
-                  className="self-center p-2.5 rounded-full text-theme-coffee/50 dark:text-theme-darkText/50 hover:text-theme-accent hover:bg-theme-accent/10 transition-colors cursor-pointer"
+                  className="self-center p-2.5 rounded-full text-theme-coffee/50 dark:text-theme-darkText/50 hover:text-theme-accent-text hover:bg-theme-accent/10 transition-colors cursor-pointer"
                 >
                   <Trash2 size={18} />
                 </button>
@@ -68,14 +68,14 @@ const Favorites = () => {
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-20 text-center border-2 border-dashed border-theme-coffee/10 dark:border-theme-darkBorder rounded-3xl px-4">
-          <div className="p-4 rounded-full bg-theme-accent/10 text-theme-accent mb-4">
+          <div className="p-4 rounded-full bg-theme-accent/10 text-theme-accent-text mb-4">
             <Bookmark size={36} className="stroke-[2]" />
           </div>
           <h3 className="text-xl font-bold text-theme-coffee dark:text-theme-darkText">{t('profile.favoritesEmpty')}</h3>
           <p className="text-xs text-theme-coffee/55 dark:text-theme-darkText/45 mt-1.5 max-w-sm leading-relaxed">
             Find your favourite shows on the homepage and tap the heart or "Add to List" to keep them here.
           </p>
-          <Link to="/" className="mt-6 flex items-center gap-2 px-5 py-2.5 bg-theme-accent hover:bg-theme-accent-light text-white font-bold text-sm rounded-full shadow-md transition-all active:scale-95">
+          <Link to="/" className="mt-6 flex items-center gap-2 px-5 py-2.5 bg-theme-accent hover:bg-theme-accent-light text-theme-onaccent font-bold text-sm rounded-full shadow-md transition-all active:scale-95">
             <PlusCircle size={15} />
             <span>Browse Cartoons</span>
           </Link>

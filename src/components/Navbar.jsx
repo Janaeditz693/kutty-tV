@@ -142,7 +142,7 @@ const Navbar = () => {
           <p className="text-xs text-theme-coffee/50 dark:text-theme-darkText/50 truncate">{currentUser.email}</p>
         </div>
       ) : (
-        <Link to="/login" onClick={() => setIsOpenProfile(false)} className={`${menuLinkClass} font-bold text-theme-accent`}>
+        <Link to="/login" onClick={() => setIsOpenProfile(false)} className={`${menuLinkClass} font-bold text-theme-accent-text`}>
           <User size={16} />
           {t('common.login')}
         </Link>
@@ -159,7 +159,7 @@ const Navbar = () => {
         <Link
           to="/admin"
           onClick={() => setIsOpenProfile(false)}
-          className="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-theme-accent hover:bg-theme-coffee/5 dark:hover:bg-white/5 border-t border-theme-coffee/10 dark:border-theme-darkBorder transition-colors"
+          className="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-theme-accent-text hover:bg-theme-coffee/5 dark:hover:bg-white/5 border-t border-theme-coffee/10 dark:border-theme-darkBorder transition-colors"
         >
           <ShieldAlert size={16} />
           {t('common.admin')}
@@ -201,7 +201,7 @@ const Navbar = () => {
     'absolute top-full mt-2.5 w-60 rounded-2xl bg-white dark:bg-theme-darkCard border border-theme-coffee/10 dark:border-theme-darkBorder shadow-2xl overflow-hidden py-1.5 z-50';
 
   const avatar = (
-    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-theme-accent to-theme-accent-light text-white font-extrabold flex items-center justify-center shadow ring-2 ring-white/60 dark:ring-white/10">
+    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-theme-accent to-theme-accent-light text-theme-onaccent font-extrabold flex items-center justify-center shadow ring-2 ring-white/60 dark:ring-white/10">
       {currentUser?.displayName ? currentUser.displayName.charAt(0).toUpperCase() : <User size={16} />}
     </div>
   );
@@ -271,7 +271,7 @@ const Navbar = () => {
                     className={({ isActive }) =>
                       `px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 ${
                         isActive
-                          ? 'bg-theme-accent text-white shadow-md shadow-rose-500/25'
+                          ? 'bg-theme-accent text-theme-onaccent shadow-md shadow-black/20'
                           : 'text-theme-coffee/70 dark:text-theme-darkText/70 hover:text-theme-coffee dark:hover:text-white hover:bg-theme-coffee/8 dark:hover:bg-white/10'
                       }`
                     }
@@ -291,7 +291,7 @@ const Navbar = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-48 xl:w-64 pl-4 pr-10 py-2 rounded-full text-sm bg-white dark:bg-white/10 text-theme-coffee dark:text-white placeholder-theme-coffee/50 dark:placeholder-white/50 border border-theme-coffee/10 dark:border-white/15 focus:outline-none focus:ring-2 focus:ring-theme-accent/60 focus:w-64 xl:focus:w-72 transition-all duration-300"
                 />
-                <button type="submit" aria-label="Search" className="absolute right-3.5 top-1/2 -translate-y-1/2 text-theme-coffee/60 dark:text-white/60 hover:text-theme-accent cursor-pointer">
+                <button type="submit" aria-label="Search" className="absolute right-3.5 top-1/2 -translate-y-1/2 text-theme-coffee/60 dark:text-white/60 hover:text-theme-accent-text cursor-pointer">
                   <Search size={16} />
                 </button>
               </form>
@@ -309,9 +309,9 @@ const Navbar = () => {
               </button>
 
               <Link to="/favorites" aria-label={t('common.favorites')} className={`relative flex p-2.5 rounded-full transition-colors ${iconBtn}`}>
-                <Heart size={18} className={favorites.length > 0 ? 'fill-theme-accent stroke-theme-accent' : ''} />
+                <Heart size={18} className={favorites.length > 0 ? 'fill-theme-accent-text stroke-theme-accent-text' : ''} />
                 {favorites.length > 0 && (
-                  <span className="absolute top-0.5 right-0 min-w-[18px] h-[18px] px-1 flex items-center justify-center text-[10px] font-extrabold text-white bg-theme-accent rounded-full">
+                  <span className="absolute top-0.5 right-0 min-w-[18px] h-[18px] px-1 flex items-center justify-center text-[10px] font-extrabold text-theme-onaccent bg-theme-accent rounded-full">
                     {favorites.length}
                   </span>
                 )}
@@ -343,7 +343,7 @@ const Navbar = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="px-4 py-2 rounded-full bg-theme-accent hover:bg-theme-accent-light text-white font-extrabold text-sm transition-all active:scale-95 shadow-md shadow-rose-500/25 flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-full bg-theme-accent hover:bg-theme-accent-light text-theme-onaccent font-extrabold text-sm transition-all active:scale-95 shadow-md shadow-black/20 flex items-center gap-1.5"
                 >
                   <User size={16} />
                   <span>{t('common.login')}</span>
@@ -365,7 +365,7 @@ const Navbar = () => {
               aria-label={tab.name}
               className={({ isActive }) =>
                 `flex flex-col items-center justify-center gap-1 transition-colors ${
-                  isActive ? 'text-theme-accent' : 'text-theme-coffee/55 dark:text-theme-darkText/60'
+                  isActive ? 'text-theme-accent-text' : 'text-theme-coffee/55 dark:text-theme-darkText/60'
                 }`
               }
             >
@@ -396,8 +396,8 @@ const Navbar = () => {
 
               <div className="flex flex-col items-center text-center gap-4">
                 {/* Coffee Header Icon */}
-                <div className="w-14 h-14 rounded-full bg-[#E11D5C]/10 flex items-center justify-center text-[#E11D5C]">
-                  <Coffee size={28} className="fill-[#E11D5C]" />
+                <div className="w-14 h-14 rounded-full bg-theme-coffee/10 flex items-center justify-center text-theme-accent-text">
+                  <Coffee size={28} className="fill-theme-accent-text" />
                 </div>
 
                 <div>
@@ -420,7 +420,7 @@ const Navbar = () => {
                           }}
                           className={`py-2 rounded-xl text-sm font-bold border transition-all duration-200 cursor-pointer ${
                             coffeeAmount === preset
-                              ? 'bg-[#E11D5C] text-white border-transparent shadow-md scale-105'
+                              ? 'bg-theme-accent text-theme-onaccent border-transparent shadow-md scale-105'
                               : 'bg-theme-coffee/5 border-theme-coffee/10 dark:bg-theme-darkBorder/50 dark:border-theme-darkBorder hover:bg-theme-coffee/10'
                           }`}
                         >
@@ -440,9 +440,9 @@ const Navbar = () => {
                           placeholder="Enter amount (1-100)"
                           value={coffeeAmount}
                           onChange={(e) => handleAmountChange(e.target.value)}
-                          className="w-full px-4 py-2.5 rounded-xl text-sm bg-theme-coffee/5 border border-theme-coffee/10 dark:bg-theme-darkBorder/50 dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none focus:ring-2 focus:ring-[#E11D5C]/40 focus:border-[#E11D5C] transition-all duration-200"
+                          className="w-full px-4 py-2.5 rounded-xl text-sm bg-theme-coffee/5 border border-theme-coffee/10 dark:bg-theme-darkBorder/50 dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none focus:ring-2 focus:ring-theme-coffee/30 focus:border-theme-accent-text transition-all duration-200"
                         />
-                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-[#E11D5C]">INR</span>
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-theme-accent-text">INR</span>
                       </div>
                       {customAmountError && (
                         <p className="text-xs text-red-500 font-medium">{customAmountError}</p>
@@ -453,7 +453,7 @@ const Navbar = () => {
                     <button
                       disabled={!!customAmountError || !coffeeAmount}
                       onClick={() => setShowCoffeeQr(true)}
-                      className="w-full mt-4 py-3 bg-[#E11D5C] hover:bg-[#F0427A] disabled:opacity-50 disabled:pointer-events-none text-white font-extrabold text-sm sm:text-base rounded-xl shadow-lg transition-all duration-200 active:scale-95 cursor-pointer"
+                      className="w-full mt-4 py-3 bg-theme-accent hover:bg-theme-accent-light disabled:opacity-50 disabled:pointer-events-none text-theme-onaccent font-extrabold text-sm sm:text-base rounded-xl shadow-lg transition-all duration-200 active:scale-95 cursor-pointer"
                     >
                       Generate UPI QR Code
                     </button>
@@ -469,7 +469,7 @@ const Navbar = () => {
                       />
                       <div className="text-center">
                         <p className="text-[10px] font-bold text-zinc-500">Scan with GPay, PhonePe, or Paytm</p>
-                        <p className="text-base font-extrabold text-[#E11D5C] mt-0.5">₹{coffeeAmount}</p>
+                        <p className="text-base font-extrabold text-theme-accent-text mt-0.5">₹{coffeeAmount}</p>
                       </div>
                     </div>
 
@@ -477,7 +477,7 @@ const Navbar = () => {
                     <div className="w-full flex flex-col gap-1.5">
                       <a
                         href="upi://pay?pa=janaeditz693@okicici&pn=JANA%20V"
-                        className="w-full py-2.5 bg-[#E11D5C] hover:bg-[#F0427A] text-white text-center font-bold text-sm rounded-xl shadow-md transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                        className="w-full py-2.5 bg-theme-accent hover:bg-theme-accent-light text-theme-onaccent text-center font-bold text-sm rounded-xl shadow-md transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                       >
                         <Coffee size={15} className="fill-white stroke-none" />
                         <span>Pay via UPI App (Mobile)</span>
@@ -498,14 +498,14 @@ const Navbar = () => {
                         3. Select **Pay to UPI ID**, paste it, and make payment.
                       </p>
                       
-                      <div className="flex items-center justify-between w-full p-2.5 rounded-xl border border-[#E11D5C]/30 bg-theme-coffee/5 dark:bg-theme-darkCard text-xs shadow-inner mt-0.5">
+                      <div className="flex items-center justify-between w-full p-2.5 rounded-xl border border-theme-coffee/30 bg-theme-coffee/5 dark:bg-theme-darkCard text-xs shadow-inner mt-0.5">
                         <div className="flex flex-col text-left">
-                          <span className="text-[9px] font-bold text-[#E11D5C] uppercase">UPI ID</span>
+                          <span className="text-[9px] font-bold text-theme-accent-text uppercase">UPI ID</span>
                           <span className="font-mono font-bold text-theme-coffee dark:text-theme-darkText select-all text-sm">janaeditz693@okicici</span>
                         </div>
                         <button
                           onClick={handleCopyUpi}
-                          className="px-3 py-1.5 rounded-lg bg-[#E11D5C]/10 hover:bg-[#E11D5C]/20 transition-colors text-[#E11D5C] cursor-pointer flex items-center justify-center border border-[#E11D5C]/20 font-extrabold gap-1 active:scale-95 text-[10px]"
+                          className="px-3 py-1.5 rounded-lg bg-theme-coffee/10 hover:bg-theme-coffee/20 transition-colors text-theme-accent-text cursor-pointer flex items-center justify-center border border-theme-coffee/20 font-extrabold gap-1 active:scale-95 text-[10px]"
                           title="Copy UPI ID"
                         >
                           {copiedUpi ? (
@@ -533,7 +533,7 @@ const Navbar = () => {
                       </button>
                       <button
                         onClick={() => setIsCoffeeModalOpen(false)}
-                        className="flex-1 py-2.5 bg-[#E11D5C] text-white text-sm font-bold rounded-xl hover:opacity-90 transition-all duration-150 cursor-pointer"
+                        className="flex-1 py-2.5 bg-theme-accent text-theme-onaccent text-sm font-bold rounded-xl hover:opacity-90 transition-all duration-150 cursor-pointer"
                       >
                         Done
                       </button>
