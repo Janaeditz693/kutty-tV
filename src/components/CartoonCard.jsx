@@ -1,81 +1,63 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Play, Heart, Star } from 'lucide-react';
+import { Heart, Star } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { optimizeImageUrl } from '../utils/image';
+import { formatRuntime } from '../utils/genre';
 
-const CartoonCard = ({ item }) => {
+// tone="dark" forces light text for use on the dark details page
+const CartoonCard = ({ item, tone }) => {
   const { t, i18n } = useTranslation();
   const { toggleFavorite, isFavorite } = useApp();
-  const navigate = useNavigate();
 
   const isFav = isFavorite(item.id);
   const isTamil = (i18n.language || 'en').startsWith('ta');
   const displayTitle = isTamil && item.titleTa ? item.titleTa : item.title;
-
-  const watchPath =
-    item.type === 'movie'
-      ? `/watch/${item.id}`
-      : `/watch/${item.id}${item.episodes?.[0]?.id ? `/${item.episodes[0].id}` : ''}`;
-
-  const stop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
   const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 
   const meta =
     item.type === 'movie'
-      ? `${Math.floor((item.duration || 0) / 3600)}h ${String(Math.round(((item.duration || 0) % 3600) / 60)).padStart(2, '0')}m`
-      : `${item.episodes?.length || 0} ${t('common.epsShort', { defaultValue: 'Eps' })}`;
+      ? (item.duration ? formatRuntime(item.duration) : '')
+      : (item.episodes?.length ? `${item.episodes.length} ${t('common.epsShort', { defaultValue: 'Eps' })}` : '');
+
+  const titleColor = tone === 'dark' ? 'text-white' : 'text-theme-coffee dark:text-theme-darkText';
+  const metaColor = tone === 'dark' ? 'text-white/55' : 'text-theme-coffee/55 dark:text-theme-darkText/55';
 
   return (
-    <motion.div
-      whileHover={isTouch ? {} : { y: -4 }}
-      transition={{ duration: 0.2, ease: 'easeOut' }}
-      className="w-full select-none"
-    >
-      <Link
-        to={`/details/${item.id}`}
-        className="block p-2 rounded-3xl bg-white dark:bg-theme-darkCard shadow-[0_6px_18px_-8px_rgba(15,27,61,0.25)] dark:shadow-none border border-transparent dark:border-theme-darkBorder hover:shadow-[0_14px_30px_-10px_rgba(31,111,235,0.35)] transition-shadow duration-300"
-      >
-        <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-theme-beige dark:bg-theme-darkBg">
+    <motion.div whileHover={isTouch ? {} : { y: -4 }} transition={{ duration: 0.2 }} className="w-full select-none">
+      <Link to={`/details/${item.id}`} className="block group">
+        <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-theme-beige dark:bg-theme-darkCard shadow-[0_8px_20px_-10px_rgba(39,24,126,0.5)] group-hover:shadow-[0_16px_30px_-10px_rgba(225,29,92,0.45)] transition-shadow duration-300">
           <img
             src={optimizeImageUrl(item.thumbnail, 'card')}
             alt={displayTitle}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
+          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+
+          <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 text-[11px] font-extrabold text-white">
+            <Star size={11} className="fill-theme-sun stroke-none" />
+            {item.rating}
+          </span>
+
           <button
-            onClick={(e) => { stop(e); toggleFavorite(item); }}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFavorite(item); }}
             aria-label={isFav ? t('common.addedToList') : t('common.addToList')}
             className={`absolute top-2 right-2 p-2 rounded-full bg-black/40 backdrop-blur-md border border-white/20 transition-colors cursor-pointer ${
-              isFav ? 'text-red-500' : 'text-white hover:text-red-400'
+              isFav ? 'text-theme-accent' : 'text-white hover:text-theme-accent-light'
             }`}
           >
             <Heart size={14} className={isFav ? 'fill-current' : ''} />
           </button>
         </div>
 
-        <div className="px-2 pt-2.5 pb-1.5">
-          <h3 className="font-bold text-sm text-theme-coffee dark:text-theme-darkText truncate">{displayTitle}</h3>
-          <div className="mt-2 flex items-center justify-between gap-2">
-            <span className="min-w-0 truncate text-xs font-bold text-theme-coffee dark:text-theme-darkText">{meta}</span>
-            <button
-              onClick={(e) => { stop(e); navigate(watchPath); }}
-              aria-label={t('common.play')}
-              className="w-8 h-8 shrink-0 rounded-full bg-theme-accent hover:bg-theme-accent-light text-white flex items-center justify-center shadow-md shadow-blue-500/30 transition-colors cursor-pointer"
-            >
-              <Play size={13} className="fill-white ml-0.5" />
-            </button>
-            <span className="inline-flex items-center gap-0.5 text-xs font-bold text-theme-coffee dark:text-theme-darkText">
-              {item.rating}
-              <Star size={12} className="fill-theme-sun stroke-none" />
-            </span>
-          </div>
+        <div className="pt-2.5 px-0.5">
+          <h3 className={`font-bold text-sm truncate ${titleColor}`}>{displayTitle}</h3>
+          <p className={`mt-0.5 text-[11px] font-semibold uppercase tracking-wide ${metaColor}`}>
+            {[item.year, meta].filter(Boolean).join(' · ')}
+          </p>
         </div>
       </Link>
     </motion.div>

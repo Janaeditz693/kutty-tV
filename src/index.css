@@ -3,29 +3,30 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Light theme: soft grey canvas, white cards, blue accent */
-  --color-theme-cream: #F2F4F8;
-  --color-theme-coffee: #0F1B3D;
-  --color-theme-accent: #1F6FEB;
-  --color-theme-beige: #E6EAF2;
-  --color-theme-coffee-light: #55627F;
-  --color-theme-accent-light: #4C8DF5;
-  --color-theme-sun: #FFB020;
-  --color-theme-navy: #0B3A9E;
+  /* Light: Ghost canvas + Persian ink */
+  --color-theme-cream: #F7F7FF;
+  --color-theme-coffee: #27187E;
+  --color-theme-accent: #E11D5C;
+  --color-theme-beige: #ECEBFA;
+  --color-theme-coffee-light: #5A4FA8;
+  --color-theme-accent-light: #F0427A;
+  --color-theme-sun: #FFC21A;
+  --color-theme-navy: #160D4F;
+  --color-theme-persian: #27187E;
 
-  /* Dark theme: deep navy */
-  --color-theme-darkBg: #061436;
-  --color-theme-darkCard: #0D2250;
-  --color-theme-darkBorder: #1C3470;
-  --color-theme-darkText: #F2F6FF;
+  /* Dark: deep Persian */
+  --color-theme-darkBg: #0E0838;
+  --color-theme-darkCard: #180F5E;
+  --color-theme-darkBorder: #2B1F86;
+  --color-theme-darkText: #F7F7FF;
 
   /* Border Radius */
   --radius-premium: 16px;
   --radius-premium-lg: 24px;
 
   /* Custom shadows */
-  --shadow-retro: 0 4px 14px rgba(15, 27, 61, 0.08);
-  --shadow-retro-hover: 0 14px 32px rgba(31, 111, 235, 0.22);
+  --shadow-retro: 0 4px 14px rgba(39, 24, 126, 0.08);
+  --shadow-retro-hover: 0 14px 32px rgba(39, 24, 126, 0.22);
   --shadow-glass: 0 4px 30px rgba(0, 0, 0, 0.1);
 
   /* Custom Animations & Keyframes */
@@ -44,23 +45,23 @@
 
 @layer base {
   :root {
-    --bg-primary: #F2F4F8;
-    --bg-secondary: #E6EAF2;
-    --text-primary: #0F1B3D;
-    --text-secondary: #55627F;
-    --border-color: #D9DFEC;
-    --accent-orange: #1F6FEB;
+    --bg-primary: #F7F7FF;
+    --bg-secondary: #ECEBFA;
+    --text-primary: #27187E;
+    --text-secondary: #5A4FA8;
+    --border-color: #DAD8F2;
+    --accent-orange: #E11D5C;
     --card-bg: #FFFFFF;
   }
 
   .dark {
-    --bg-primary: #061436;
-    --bg-secondary: #0D2250;
-    --text-primary: #F2F6FF;
-    --text-secondary: #A9B8DD;
-    --border-color: #1C3470;
-    --accent-orange: #4C8DF5;
-    --card-bg: #0D2250;
+    --bg-primary: #0E0838;
+    --bg-secondary: #180F5E;
+    --text-primary: #F7F7FF;
+    --text-secondary: #B9B3E6;
+    --border-color: #2B1F86;
+    --accent-orange: #F0427A;
+    --card-bg: #180F5E;
   }
 
   body {
@@ -89,14 +90,14 @@
 
 /* Retro Glassmorphism & Mobile GPU Optimizations */
 .glass-nav {
-  background: rgba(242, 244, 248, 0.88);
+  background: rgba(247, 247, 255, 0.9);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
-  border-bottom: 1px solid rgba(15, 27, 61, 0.08);
+  border-bottom: 1px solid rgba(39, 24, 126, 0.08);
 }
 
 .dark .glass-nav {
-  background: rgba(6, 20, 54, 0.86);
+  background: rgba(14, 8, 56, 0.9);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   border-bottom: 1px solid rgba(244, 244, 250, 0.08);
@@ -116,12 +117,12 @@
 /* Mobile Performance Rules */
 @media (max-width: 768px) {
   .glass-nav {
-    background: rgba(242, 244, 248, 0.97);
+    background: rgba(247, 247, 255, 0.97);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
   }
   .dark .glass-nav {
-    background: rgba(6, 20, 54, 0.97);
+    background: rgba(14, 8, 56, 0.97);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
   }
@@ -136,7 +137,7 @@
 
 /* ---- Redesign utilities ---- */
 .glass-nav-transparent {
-  background: linear-gradient(to bottom, rgba(6, 20, 54, 0.75), rgba(6, 20, 54, 0));
+  background: linear-gradient(to bottom, rgba(14, 8, 56, 0.75), rgba(14, 8, 56, 0));
   border-bottom: 1px solid transparent;
 }
 
@@ -152,11 +153,11 @@
   bottom: 12%;
   width: 5px;
   border-radius: 9999px;
-  background: linear-gradient(to bottom, #1F6FEB, #4C8DF5);
+  background: linear-gradient(to bottom, #27187E, #E11D5C);
 }
 
 .poster-glow:hover {
-  box-shadow: 0 16px 40px -10px rgba(31, 111, 235, 0.40);
+  box-shadow: 0 16px 40px -10px rgba(225, 29, 92, 0.35);
 }
 
 @media (prefers-reduced-motion: reduce) {
