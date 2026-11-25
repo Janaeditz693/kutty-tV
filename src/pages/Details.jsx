@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Play, Check, Star, Info, Heart } from 'lucide-react';
+import { ArrowLeft, Play, Plus, Check, Star, Share2 } from 'lucide-react';
 import { getCatalogItemById, getAllCatalogItems } from '../services/db';
 import { useApp } from '../context/AppContext';
 import { optimizeImageUrl } from '../utils/image';
@@ -18,7 +18,7 @@ const Details = () => {
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
-  const [seeAll, setSeeAll] = useState(false);
+  const [activeTab, setActiveTab] = useState('episodes');
 
   useEffect(() => {
     let active = true;
@@ -38,7 +38,7 @@ const Details = () => {
     return () => { active = false; };
   }, [showId]);
 
-  if (loading) return <div className="min-h-[70svh] bg-theme-beige dark:bg-theme-darkCard animate-pulse" />;
+  if (loading) return <div className="min-h-[70svh] bg-theme-darkCard animate-pulse" />;
 
   if (!item) {
     return (
@@ -71,113 +71,118 @@ const Details = () => {
     } catch { /* user cancelled share */ }
   };
 
-  const chip = 'px-3.5 py-1.5 rounded-full text-xs font-bold bg-theme-coffee/8 dark:bg-white/10 text-theme-coffee dark:text-white';
-  const stars = Math.round((parseFloat(item.rating) || 0) / 2);
+  const tabs = [
+    ...(!isMovie && episodes.length > 0 ? [{ key: 'episodes', label: t('common.episodes') }] : []),
+    { key: 'more', label: t('common.moreLikeThis', { defaultValue: 'More Like This' }) },
+    { key: 'details', label: t('common.details', { defaultValue: 'Details' }) },
+  ];
+  const tab = tabs.some((x) => x.key === activeTab) ? activeTab : tabs[0].key;
+  const badge = 'px-2 py-0.5 rounded-md bg-white/10 border border-white/10 text-[11px] font-bold text-white/85';
+  const meta = [item.year, isMovie ? formatRuntime(item.duration) : `${episodes.length} ${t('common.episodes')}`, item.genres?.[0]].filter(Boolean).join('  •  ');
+
+  const Action = ({ icon: Icon, label, onClick, on }) => (
+    <button onClick={onClick} className="flex flex-col items-center gap-1.5 text-xs font-semibold text-white/80 cursor-pointer min-w-16">
+      <Icon size={22} className={on ? 'text-theme-accent' : ''} />
+      {label}
+    </button>
+  );
 
   return (
-    <div className="min-h-[calc(100svh-4rem)] bg-theme-coffee dark:bg-theme-darkBg">
-      <div className="max-w-3xl mx-auto relative">
-        {/* Full-bleed image */}
-        <div className="relative h-[52svh] max-h-[560px]">
+    <div className="min-h-[calc(100svh-4rem)] bg-theme-darkBg text-theme-darkText">
+      <div className="max-w-3xl mx-auto relative pb-12">
+        {/* Backdrop */}
+        <div className="relative h-[52svh] max-h-[540px]">
           <img src={optimizeImageUrl(item.thumbnail, 'hero')} alt="" className="w-full h-full object-cover object-top" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-theme-darkBg via-theme-darkBg/30 to-black/30" />
           <button
             onClick={() => navigate(-1)}
             aria-label="Back"
-            className="absolute top-4 left-4 w-11 h-11 rounded-full bg-white text-theme-coffee shadow-lg flex items-center justify-center cursor-pointer"
+            className="absolute top-4 left-4 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center cursor-pointer"
           >
             <ArrowLeft size={20} />
           </button>
           <button
             onClick={handleShare}
-            aria-label={copied ? 'Link copied' : 'Share'}
-            className="absolute top-4 right-4 w-11 h-11 rounded-full bg-white text-theme-coffee shadow-lg flex items-center justify-center cursor-pointer"
+            className="absolute top-4 right-4 flex items-center gap-2 px-4 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-sm font-semibold cursor-pointer"
           >
-            {copied ? <Check size={20} /> : <Info size={20} />}
+            {copied ? <Check size={16} /> : <Share2 size={16} />}
+            {copied ? 'Copied' : t('common.share', { defaultValue: 'Share' })}
+          </button>
+          <button
+            onClick={() => navigate(watchPath)}
+            aria-label={t('common.watchNow')}
+            className="absolute left-1/2 -translate-x-1/2 bottom-4 w-16 h-16 rounded-full bg-theme-accent/85 backdrop-blur-md active:scale-95 flex items-center justify-center shadow-xl shadow-black/40 cursor-pointer"
+          >
+            <Play size={26} className="fill-theme-onaccent text-theme-onaccent ml-1" />
           </button>
         </div>
 
-        {/* Bottom sheet */}
-        <div className="relative -mt-10 rounded-t-[2.5rem] bg-theme-cream dark:bg-theme-darkBg text-theme-coffee dark:text-theme-darkText px-5 pt-6 pb-12 min-h-[50svh]">
-          <div className="flex items-start gap-4">
-            <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold text-theme-coffee/55 dark:text-white/55">{[item.year, item.languages?.[0]].filter(Boolean).join(' · ')}</p>
-              <h1 className="mt-1 text-3xl sm:text-4xl font-black tracking-tight leading-tight">{title}</h1>
-            </div>
-            <button
-              onClick={() => navigate(watchPath)}
-              aria-label={t('common.watchNow')}
-              className="shrink-0 w-16 h-16 rounded-full bg-theme-accent active:scale-95 flex items-center justify-center shadow-xl shadow-black/20 transition-all cursor-pointer"
-            >
-              <Play size={26} className="fill-theme-onaccent text-theme-onaccent ml-1" />
-            </button>
+        <div className="px-5">
+          <h1 className="text-3xl font-black tracking-tight">{title}</h1>
+          <p className="mt-1.5 text-sm font-semibold text-white/55">{meta}</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {item.languages?.slice(0, 2).map((l) => <span key={l} className={badge}>{l}</span>)}
+            <span className={badge}>HD</span>
+            <span className={badge}>★ {item.rating}</span>
           </div>
 
-          <div className="mt-4 flex flex-wrap gap-2">
-            <span className={chip}>{isMovie ? (formatRuntime(item.duration) || 'Movie') : `${episodes.length} ${t('common.episodes')}`}</span>
-            {item.genres?.slice(0, 2).map((g) => <span key={g} className={chip}>{g}</span>)}
-            <span className={chip}>{isMovie ? t('common.movie', { defaultValue: 'Movie' }) : t('common.show', { defaultValue: 'Show' })}</span>
+          <p className="mt-4 text-sm leading-relaxed text-white/65 line-clamp-4">{description}</p>
+
+          <div className="mt-5 flex items-center justify-around">
+            <Action icon={isFav ? Check : Plus} label={t('home.myList', { defaultValue: 'My List' })} onClick={() => toggleFavorite(item)} on={isFav} />
+            <Action icon={Star} label={`${item.rating}/10`} onClick={() => {}} />
+            <Action icon={Share2} label={t('common.share', { defaultValue: 'Share' })} onClick={handleShare} />
           </div>
 
-          <div className="mt-5 flex items-center gap-4">
-            <div>
-              <p className="text-3xl font-black leading-none">{item.rating}<span className="text-sm font-bold text-theme-coffee/50 dark:text-white/50">/10</span></p>
-              <div className="mt-1.5 flex gap-0.5">
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <Star key={n} size={14} className={n <= stars ? 'fill-theme-sun stroke-theme-sun' : 'stroke-theme-coffee/25 dark:stroke-white/25'} />
-                ))}
-              </div>
-            </div>
-            <button
-              onClick={() => toggleFavorite(item)}
-              className={`ml-auto flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-bold cursor-pointer transition-colors ${isFav ? 'bg-red-500 text-white' : 'bg-theme-coffee/8 dark:bg-white/10'}`}
-            >
-              <Heart size={16} className={isFav ? 'fill-white' : ''} />
-              {t('common.watchlist', { defaultValue: 'Watchlist' })}
-            </button>
+          {/* Tabs */}
+          <div className="mt-6 flex gap-6 border-b border-white/10">
+            {tabs.map((x) => (
+              <button
+                key={x.key}
+                onClick={() => setActiveTab(x.key)}
+                className={`pb-2.5 text-sm font-bold -mb-px border-b-2 cursor-pointer transition-colors ${tab === x.key ? 'border-theme-accent text-white' : 'border-transparent text-white/45'}`}
+              >
+                {x.label}
+              </button>
+            ))}
           </div>
 
-          <h2 className="mt-7 text-lg font-extrabold">
-            {t('common.aboutThis', { defaultValue: 'About this' })} {isMovie ? t('common.movie', { defaultValue: 'Movie' }) : t('common.show', { defaultValue: 'Show' })}
-          </h2>
-          <p className="mt-2 text-sm sm:text-base leading-relaxed text-theme-coffee/75 dark:text-white/75">{description}</p>
-
-          {!isMovie && episodes.length > 0 && (
-            <>
-              <div className="mt-7 flex items-center justify-between">
-                <h2 className="text-lg font-extrabold">{t('common.episodes')}</h2>
-                {episodes.length > 3 && (
-                  <button onClick={() => setSeeAll((v) => !v)} className="text-sm font-bold text-theme-coffee/60 dark:text-white/60 cursor-pointer">
-                    {seeAll ? 'Show less' : 'See all'}
-                  </button>
-                )}
-              </div>
-              <div className={seeAll ? 'mt-3 grid grid-cols-2 sm:grid-cols-3 gap-3' : 'mt-3 flex gap-3 overflow-x-auto no-scrollbar pb-1'}>
-                {episodes.map((ep, i) => (
-                  <Link
-                    key={ep.id}
-                    to={`/watch/${item.id}/${ep.id}`}
-                    className={`relative block ${seeAll ? '' : 'w-40 shrink-0'} aspect-[4/3] rounded-2xl overflow-hidden bg-theme-beige dark:bg-theme-darkCard`}
-                  >
+          {tab === 'episodes' && (
+            <div className="mt-4 flex flex-col gap-4">
+              {episodes.map((ep, i) => (
+                <Link key={ep.id} to={`/watch/${item.id}/${ep.id}`} className="flex items-center gap-3">
+                  <div className="relative w-36 aspect-video rounded-xl overflow-hidden bg-theme-darkCard shrink-0">
                     {ep.thumbnail && <img src={optimizeImageUrl(ep.thumbnail, 'card')} alt="" className="w-full h-full object-cover" loading="lazy" />}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                    <span className="absolute bottom-2 left-2.5 right-2.5 text-xs font-bold text-white truncate">{ep.number || i + 1}. {ep.title}</span>
-                    {ep.duration ? <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-theme-accent text-theme-onaccent text-[10px] font-extrabold">{Math.round(ep.duration / 60)} min</span> : null}
-                  </Link>
-                ))}
-              </div>
-            </>
+                    <span className="absolute inset-0 flex items-center justify-center bg-black/20">
+                      <span className="w-9 h-9 rounded-full bg-black/45 border border-white/40 flex items-center justify-center">
+                        <Play size={14} className="fill-white text-white ml-0.5" />
+                      </span>
+                    </span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-bold truncate">{ep.number || i + 1}. {ep.title}</p>
+                    {ep.duration ? <p className="text-xs text-white/50 mt-0.5">{Math.round(ep.duration / 60)}m</p> : null}
+                  </div>
+                </Link>
+              ))}
+            </div>
           )}
 
-          {related.length > 0 && (
-            <>
-              <h2 className="mt-8 text-lg font-extrabold">{t('common.moreLikeThis', { defaultValue: 'More like this' })}</h2>
-              <div className="mt-3 -mx-5 flex gap-4 overflow-x-auto no-scrollbar px-5 pb-2">
-                {related.map((r) => (
-                  <div key={r.id} className="w-36 sm:w-40 shrink-0"><CartoonCard item={r} /></div>
-                ))}
-              </div>
-            </>
+          {tab === 'more' && (
+            <div className="mt-4 grid grid-cols-3 gap-3">
+              {related.map((r) => <CartoonCard key={r.id} item={r} />)}
+            </div>
+          )}
+
+          {tab === 'details' && (
+            <dl className="mt-4 grid grid-cols-[6rem_1fr] gap-y-3 text-sm">
+              <dt className="text-white/45">About</dt><dd className="text-white/80">{description}</dd>
+              <dt className="text-white/45">Type</dt><dd>{isMovie ? 'Movie' : 'Show'}</dd>
+              <dt className="text-white/45">Year</dt><dd>{item.year}</dd>
+              <dt className="text-white/45">Genres</dt><dd>{(item.genres || []).join(', ')}</dd>
+              <dt className="text-white/45">Languages</dt><dd>{(item.languages || []).join(', ')}</dd>
+              <dt className="text-white/45">Rating</dt><dd>{item.rating}/10</dd>
+            </dl>
           )}
         </div>
       </div>

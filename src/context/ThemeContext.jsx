@@ -8,8 +8,7 @@ export const ThemeProvider = ({ children }) => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) return savedTheme;
     
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    return systemPrefersDark ? 'dark' : 'light';
+    return 'dark'; // dark plum is the default look
   });
 
   useEffect(() => {
