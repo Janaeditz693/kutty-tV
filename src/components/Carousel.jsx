@@ -47,7 +47,7 @@ const Carousel = ({ title, loading = false, wide = false, seeAllTo, id, children
           {title}
         </h2>
         {seeAllTo && (
-          <Link to={seeAllTo} className="text-xs sm:text-sm font-semibold text-theme-coffee/50 dark:text-theme-darkText/55 hover:text-theme-accent transition-colors">
+          <Link to={seeAllTo} className="text-xs sm:text-sm font-semibold text-theme-coffee/50 dark:text-theme-darkText/55 hover:text-theme-accent-text transition-colors">
             {t('common.seeAll', { defaultValue: 'See all' })}
           </Link>
         )}
@@ -60,7 +60,7 @@ const Carousel = ({ title, loading = false, wide = false, seeAllTo, id, children
         {showLeftArrow && !loading && (
           <button
             onClick={() => handleScroll('left')}
-            className="absolute left-6 top-[38%] -translate-y-1/2 z-30 p-2.5 rounded-full bg-theme-accent text-white hover:scale-110 active:scale-95 shadow-lg border border-theme-coffee/10 dark:border-theme-darkBorder transition-all duration-200 cursor-pointer hidden md:flex items-center justify-center opacity-0 group-hover/carousel:opacity-100"
+            className="absolute left-6 top-[38%] -translate-y-1/2 z-30 p-2.5 rounded-full bg-theme-accent text-theme-onaccent hover:scale-110 active:scale-95 shadow-lg border border-theme-coffee/10 dark:border-theme-darkBorder transition-all duration-200 cursor-pointer hidden md:flex items-center justify-center opacity-0 group-hover/carousel:opacity-100"
           >
             <ChevronLeft size={22} className="stroke-[2.5]" />
           </button>
@@ -90,7 +90,7 @@ const Carousel = ({ title, loading = false, wide = false, seeAllTo, id, children
         {showRightArrow && !loading && (
           <button
             onClick={() => handleScroll('right')}
-            className="absolute right-6 top-[38%] -translate-y-1/2 z-30 p-2.5 rounded-full bg-theme-accent text-white hover:scale-110 active:scale-95 shadow-lg border border-theme-coffee/10 dark:border-theme-darkBorder transition-all duration-200 cursor-pointer hidden md:flex items-center justify-center opacity-0 group-hover/carousel:opacity-100"
+            className="absolute right-6 top-[38%] -translate-y-1/2 z-30 p-2.5 rounded-full bg-theme-accent text-theme-onaccent hover:scale-110 active:scale-95 shadow-lg border border-theme-coffee/10 dark:border-theme-darkBorder transition-all duration-200 cursor-pointer hidden md:flex items-center justify-center opacity-0 group-hover/carousel:opacity-100"
           >
             <ChevronRight size={22} className="stroke-[2.5]" />
           </button>

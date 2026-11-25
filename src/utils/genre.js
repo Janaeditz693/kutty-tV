@@ -1,5 +1,5 @@
 // Stable colour for a genre chip (same genre -> same colour)
-const COLORS = ['bg-orange-500', 'bg-sky-500', 'bg-rose-500', 'bg-purple-600', 'bg-emerald-600', 'bg-amber-500'];
+const COLORS = ['bg-orange-500', 'bg-sky-600', 'bg-rose-500', 'bg-purple-600', 'bg-emerald-600', 'bg-amber-600'];
 
 export const genreColor = (genre = '') => {
   let sum = 0;

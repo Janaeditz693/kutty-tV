@@ -104,7 +104,7 @@ const Profile = () => {
                 onClick={() => handleTabChange(tab.id)}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold tracking-wide transition-all shrink-0 cursor-pointer ${
                   isActive
-                    ? 'bg-theme-accent text-theme-cream shadow-md'
+                    ? 'bg-theme-accent text-theme-onaccent shadow-md'
                     : 'text-theme-coffee/70 dark:text-theme-darkText/70 hover:bg-theme-coffee/5 dark:hover:bg-theme-darkCard'
                 }`}
               >
@@ -122,14 +122,14 @@ const Profile = () => {
           {activeTab === 'profile' && (
             <div className="flex flex-col gap-6 flex-grow">
               <div className="flex items-center gap-4 border-b border-theme-coffee/10 dark:border-theme-darkBorder pb-4">
-                <div className="w-16 h-16 rounded-xl bg-theme-accent text-theme-cream text-3xl font-extrabold flex items-center justify-center shadow-md">
+                <div className="w-16 h-16 rounded-xl bg-theme-accent text-theme-onaccent text-3xl font-extrabold flex items-center justify-center shadow-md">
                   {currentUser?.displayName ? currentUser.displayName.charAt(0).toUpperCase() : <User size={28} />}
                 </div>
                 <div>
                   <h3 className="text-lg font-extrabold text-theme-coffee dark:text-theme-darkText flex items-center gap-1.5">
                     <span>{currentUser?.displayName || 'Viewer'}</span>
                     {currentUser?.role === 'admin' && (
-                      <span className="text-[10px] bg-red-650/10 text-red-600 dark:text-theme-accent px-2 py-0.5 rounded-full font-extrabold flex items-center gap-1">
+                      <span className="text-[10px] bg-red-650/10 text-red-600 dark:text-theme-accent-text px-2 py-0.5 rounded-full font-extrabold flex items-center gap-1">
                         <ShieldCheck size={12} />
                         Admin
                       </span>
@@ -161,7 +161,7 @@ const Profile = () => {
                       <button
                         type="submit"
                         disabled={loading}
-                        className="px-4 py-2 bg-theme-accent hover:bg-theme-accent-light text-theme-cream font-bold text-xs rounded-xl shadow transition-transform active:scale-95 cursor-pointer disabled:opacity-50"
+                        className="px-4 py-2 bg-theme-accent hover:bg-theme-accent-light text-theme-onaccent font-bold text-xs rounded-xl shadow transition-transform active:scale-95 cursor-pointer disabled:opacity-50"
                       >
                         {loading ? '...' : t('common.save')}
                       </button>
@@ -185,7 +185,7 @@ const Profile = () => {
                   </div>
                   <div className="flex justify-between items-center text-xs py-1">
                     <span className="text-theme-coffee/60 dark:text-theme-darkText/50">Membership:</span>
-                    <span className="font-semibold text-theme-accent">Gold Kid Member</span>
+                    <span className="font-semibold text-theme-accent-text">Gold Kid Member</span>
                   </div>
                 </div>
               </form>
@@ -230,15 +230,15 @@ const Profile = () => {
 
                         {/* Text fields */}
                         <div className="flex-grow flex flex-col justify-center min-w-0">
-                          <h4 className="font-extrabold text-sm text-theme-coffee dark:text-theme-darkText truncate group-hover:text-theme-accent transition-colors">
+                          <h4 className="font-extrabold text-sm text-theme-coffee dark:text-theme-darkText truncate group-hover:text-theme-accent-text transition-colors">
                             {item.showTitle}
                           </h4>
                           {item.episodeNumber ? (
-                            <p className="text-[11px] text-theme-accent font-bold uppercase tracking-wider">
+                            <p className="text-[11px] text-theme-accent-text font-bold uppercase tracking-wider">
                               {t('common.episodes')} {item.episodeNumber}
                             </p>
                           ) : (
-                            <p className="text-[11px] text-theme-accent font-bold uppercase tracking-wider">
+                            <p className="text-[11px] text-theme-accent-text font-bold uppercase tracking-wider">
                               Movie
                             </p>
                           )}
@@ -291,12 +291,12 @@ const Profile = () => {
                 >
                   {theme === 'dark' ? (
                     <>
-                      <Moon size={14} className="text-theme-accent" />
+                      <Moon size={14} className="text-theme-accent-text" />
                       <span>{t('common.dark')} Theme</span>
                     </>
                   ) : (
                     <>
-                      <Sun size={14} className="text-theme-accent" />
+                      <Sun size={14} className="text-theme-accent-text" />
                       <span>{t('common.light')} Theme</span>
                     </>
                   )}
@@ -314,7 +314,7 @@ const Profile = () => {
                     onClick={() => handleLangSelect('en')}
                     className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-colors cursor-pointer ${
                       currentLang.startsWith('en')
-                        ? 'bg-theme-accent border-theme-accent text-theme-cream'
+                        ? 'bg-theme-accent border-theme-accent-text text-theme-onaccent'
                         : 'bg-theme-coffee/5 border-theme-coffee/10 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText hover:bg-theme-coffee/10'
                     }`}
                   >
@@ -324,7 +324,7 @@ const Profile = () => {
                     onClick={() => handleLangSelect('ta')}
                     className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-colors cursor-pointer ${
                       currentLang.startsWith('ta')
-                        ? 'bg-theme-accent border-theme-accent text-theme-cream'
+                        ? 'bg-theme-accent border-theme-accent-text text-theme-onaccent'
                         : 'bg-theme-coffee/5 border-theme-coffee/10 dark:bg-theme-darkBg dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText hover:bg-theme-coffee/10'
                     }`}
                   >

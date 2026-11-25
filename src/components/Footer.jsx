@@ -23,7 +23,7 @@ const Footer = () => {
           <div className="flex flex-col items-center md:items-end text-center md:text-right gap-3">
             
             <p className="text-[10px] text-theme-coffee/40 dark:text-theme-darkText/40 flex items-center gap-1.5 justify-center md:justify-end">
-              Made with <Heart size={10} className="fill-theme-accent stroke-theme-accent animate-pulse" /> for 90s & 2000s kids.
+              Made with <Heart size={10} className="fill-theme-accent-text stroke-theme-accent-text animate-pulse" /> for 90s & 2000s kids.
             </p>
           </div>
 

@@ -7,7 +7,7 @@ const Loader = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] p-8 text-center">
-      <div className="relative flex items-center justify-center w-20 h-20 bg-theme-coffee dark:bg-theme-accent text-theme-cream dark:text-theme-darkBg rounded-premium shadow-2xl animate-bounce">
+      <div className="relative flex items-center justify-center w-20 h-20 bg-theme-coffee dark:bg-theme-accent text-theme-onaccent dark:text-theme-darkBg rounded-premium shadow-2xl animate-bounce">
         {/* Antennas */}
         <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex gap-4 w-full justify-between px-2">
           <div className="w-1.5 h-4 bg-theme-coffee dark:bg-theme-accent rounded-full origin-bottom rotate-[-25deg] animate-pulse"></div>
