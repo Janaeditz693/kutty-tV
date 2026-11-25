@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { 
+  ArrowLeft,
   Play, 
   Pause, 
   SkipForward, 
@@ -36,6 +38,7 @@ const Player = ({
   const hlsRef = useRef(null);
 
   // States
+  const navigate = useNavigate();
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -398,6 +401,26 @@ const Player = ({
             playsInline
             autoPlay
           />
+
+          {/* Top bar: back arrow + title (PlayBox style) */}
+          <div
+            className={`absolute top-0 inset-x-0 z-20 flex items-center gap-3 px-4 pt-3 pb-10 bg-gradient-to-b from-black/80 to-transparent transition-opacity duration-300 ${
+              showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+          >
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (document.fullscreenElement) document.exitFullscreen?.();
+                else navigate(-1);
+              }}
+              aria-label="Back"
+              className="p-1.5 rounded-full text-white hover:bg-white/15 transition-colors cursor-pointer"
+            >
+              <ArrowLeft size={22} />
+            </button>
+            <span className="text-sm sm:text-base font-semibold text-white truncate pr-14">{title}</span>
+          </div>
 
           {/* Top-Right Quick Fullscreen button (Fades out when controls hide) */}
           <button

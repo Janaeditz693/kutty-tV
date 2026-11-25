@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Skeleton from './Skeleton';
 
-const Carousel = ({ title, loading = false, wide = false, seeAllTo, children }) => {
+const Carousel = ({ title, loading = false, wide = false, seeAllTo, id, children }) => {
   const { t } = useTranslation();
-  const itemWidth = wide ? 'w-60 sm:w-72' : 'w-44 sm:w-52 lg:w-56';
+  const itemWidth = wide ? 'w-60 sm:w-72' : 'w-36 sm:w-44 lg:w-52';
   const containerRef = useRef(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
@@ -40,7 +40,7 @@ const Carousel = ({ title, loading = false, wide = false, seeAllTo, children }) 
   };
 
   return (
-    <div className="relative w-full max-w-7xl mx-auto py-3 group/carousel">
+    <div id={id} className="relative w-full max-w-7xl mx-auto py-3 group/carousel scroll-mt-20">
       {/* Row Header Title */}
       <div className="px-4 sm:px-6 lg:px-8 mb-2 flex items-baseline justify-between">
         <h2 className="text-lg sm:text-xl font-extrabold text-theme-coffee dark:text-theme-darkText tracking-tight">

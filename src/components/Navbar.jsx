@@ -209,9 +209,9 @@ const Navbar = () => {
   const bottomTabs = [
     { name: t('common.home'), path: '/', icon: Home },
     { name: t('common.shows'), path: '/shows', icon: Tv },
-    null, // raised search button
     { name: t('common.movies'), path: '/movies', icon: Film },
     { name: t('common.favorites'), path: '/favorites', icon: Heart },
+    { name: currentUser ? t('common.profile') : t('common.login'), path: currentUser ? '/profile' : '/login', icon: User },
   ];
 
   return (
@@ -220,32 +220,40 @@ const Navbar = () => {
       <nav className="sticky top-0 z-50 w-full glass-nav">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          {/* Mobile / tablet bar: avatar | logo | coffee */}
-          <div className="lg:hidden grid grid-cols-3 items-center h-16">
-            <div className="relative justify-self-start" ref={mobileMenuRef}>
-              <button onClick={() => setIsOpenProfile(!isOpenProfile)} aria-label="Account menu" className="rounded-full cursor-pointer">
-                {avatar}
-              </button>
-              <AnimatePresence>
-                {isOpenProfile && (
-                  <motion.div {...dropdownMotion} className={`${dropdownClass} left-0`}>
-                    {renderMenuBody(true)}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <div className="justify-self-center" onClick={() => navigate('/')}>
+          {/* Mobile / tablet bar: logo | search, coffee, menu */}
+          <div className="lg:hidden flex items-center justify-between h-16">
+            <div onClick={() => navigate('/')}>
               <Logo size="md" />
             </div>
 
-            <button
-              onClick={openCoffee}
-              aria-label="Buy me a Coffee"
-              className="justify-self-end w-10 h-10 rounded-full border border-theme-coffee/15 dark:border-white/20 text-theme-coffee dark:text-white flex items-center justify-center hover:bg-theme-coffee/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
-            >
-              <Coffee size={18} />
-            </button>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => navigate('/search')}
+                aria-label={t('common.search')}
+                className="w-10 h-10 rounded-full flex items-center justify-center text-theme-coffee dark:text-white hover:bg-theme-coffee/10 dark:hover:bg-white/10 transition-colors cursor-pointer"
+              >
+                <Search size={20} />
+              </button>
+              <button
+                onClick={openCoffee}
+                aria-label="Buy me a Coffee"
+                className="w-10 h-10 rounded-full flex items-center justify-center text-theme-coffee dark:text-white hover:bg-theme-coffee/10 dark:hover:bg-white/10 transition-colors cursor-pointer"
+              >
+                <Coffee size={20} />
+              </button>
+              <div className="relative" ref={mobileMenuRef}>
+                <button onClick={() => setIsOpenProfile(!isOpenProfile)} aria-label="Account menu" className="rounded-full cursor-pointer">
+                  {avatar}
+                </button>
+                <AnimatePresence>
+                  {isOpenProfile && (
+                    <motion.div {...dropdownMotion} className={`${dropdownClass} right-0`}>
+                      {renderMenuBody(true)}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
           </div>
 
           {/* Desktop bar */}
@@ -263,7 +271,7 @@ const Navbar = () => {
                     className={({ isActive }) =>
                       `px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 ${
                         isActive
-                          ? 'bg-theme-accent text-white shadow-md shadow-blue-500/25'
+                          ? 'bg-theme-accent text-white shadow-md shadow-rose-500/25'
                           : 'text-theme-coffee/70 dark:text-theme-darkText/70 hover:text-theme-coffee dark:hover:text-white hover:bg-theme-coffee/8 dark:hover:bg-white/10'
                       }`
                     }
@@ -335,7 +343,7 @@ const Navbar = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="px-4 py-2 rounded-full bg-theme-accent hover:bg-theme-accent-light text-white font-extrabold text-sm transition-all active:scale-95 shadow-md shadow-blue-500/25 flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-full bg-theme-accent hover:bg-theme-accent-light text-white font-extrabold text-sm transition-all active:scale-95 shadow-md shadow-rose-500/25 flex items-center gap-1.5"
                 >
                   <User size={16} />
                   <span>{t('common.login')}</span>
@@ -346,41 +354,25 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile floating bottom bar with raised search */}
-      <div className="lg:hidden fixed bottom-3 inset-x-4 z-40 mx-auto max-w-md pb-[env(safe-area-inset-bottom)]">
-        <div className="grid grid-cols-5 items-center h-16 rounded-[28px] bg-white dark:bg-theme-darkCard shadow-[0_10px_30px_-8px_rgba(15,27,61,0.35)] border border-theme-coffee/5 dark:border-theme-darkBorder">
-          {bottomTabs.map((tab, i) =>
-            tab === null ? (
-              <div key="search" className="flex justify-center">
-                <button
-                  onClick={() => navigate('/search')}
-                  aria-label={t('common.search')}
-                  className="-mt-9 w-14 h-14 rounded-full bg-theme-navy text-white flex items-center justify-center shadow-lg shadow-blue-900/40 ring-[7px] ring-theme-cream dark:ring-theme-darkBg active:scale-95 transition-transform cursor-pointer"
-                >
-                  <Search size={22} />
-                </button>
-              </div>
-            ) : (
-              <NavLink
-                key={tab.path}
-                to={tab.path}
-                end={tab.path === '/'}
-                aria-label={tab.name}
-                className={({ isActive }) =>
-                  `flex flex-col items-center justify-center gap-0.5 transition-colors ${
-                    isActive ? 'text-theme-accent' : 'text-theme-coffee/45 dark:text-theme-darkText/50'
-                  }`
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    <tab.icon size={22} className={isActive ? 'fill-theme-accent/15' : ''} />
-                    <span className={`text-[10px] font-bold ${i === 2 ? '' : ''}`}>{tab.name}</span>
-                  </>
-                )}
-              </NavLink>
-            )
-          )}
+      {/* Mobile flat bottom tab bar */}
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-theme-darkBg/95 backdrop-blur-xl border-t border-theme-coffee/10 dark:border-theme-darkBorder pb-[env(safe-area-inset-bottom)]">
+        <div className="grid grid-cols-5 h-16 max-w-xl mx-auto">
+          {bottomTabs.map((tab) => (
+            <NavLink
+              key={tab.path}
+              to={tab.path}
+              end={tab.path === '/'}
+              aria-label={tab.name}
+              className={({ isActive }) =>
+                `flex flex-col items-center justify-center gap-1 transition-colors ${
+                  isActive ? 'text-theme-accent' : 'text-theme-coffee/55 dark:text-theme-darkText/60'
+                }`
+              }
+            >
+              <tab.icon size={21} />
+              <span className="text-[10px] font-bold truncate max-w-full px-1">{tab.name}</span>
+            </NavLink>
+          ))}
         </div>
       </div>
 
@@ -404,8 +396,8 @@ const Navbar = () => {
 
               <div className="flex flex-col items-center text-center gap-4">
                 {/* Coffee Header Icon */}
-                <div className="w-14 h-14 rounded-full bg-[#1F6FEB]/10 flex items-center justify-center text-[#1F6FEB]">
-                  <Coffee size={28} className="fill-[#1F6FEB]" />
+                <div className="w-14 h-14 rounded-full bg-[#E11D5C]/10 flex items-center justify-center text-[#E11D5C]">
+                  <Coffee size={28} className="fill-[#E11D5C]" />
                 </div>
 
                 <div>
@@ -428,7 +420,7 @@ const Navbar = () => {
                           }}
                           className={`py-2 rounded-xl text-sm font-bold border transition-all duration-200 cursor-pointer ${
                             coffeeAmount === preset
-                              ? 'bg-[#1F6FEB] text-white border-transparent shadow-md scale-105'
+                              ? 'bg-[#E11D5C] text-white border-transparent shadow-md scale-105'
                               : 'bg-theme-coffee/5 border-theme-coffee/10 dark:bg-theme-darkBorder/50 dark:border-theme-darkBorder hover:bg-theme-coffee/10'
                           }`}
                         >
@@ -448,9 +440,9 @@ const Navbar = () => {
                           placeholder="Enter amount (1-100)"
                           value={coffeeAmount}
                           onChange={(e) => handleAmountChange(e.target.value)}
-                          className="w-full px-4 py-2.5 rounded-xl text-sm bg-theme-coffee/5 border border-theme-coffee/10 dark:bg-theme-darkBorder/50 dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none focus:ring-2 focus:ring-[#1F6FEB]/40 focus:border-[#1F6FEB] transition-all duration-200"
+                          className="w-full px-4 py-2.5 rounded-xl text-sm bg-theme-coffee/5 border border-theme-coffee/10 dark:bg-theme-darkBorder/50 dark:border-theme-darkBorder text-theme-coffee dark:text-theme-darkText focus:outline-none focus:ring-2 focus:ring-[#E11D5C]/40 focus:border-[#E11D5C] transition-all duration-200"
                         />
-                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-[#1F6FEB]">INR</span>
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-[#E11D5C]">INR</span>
                       </div>
                       {customAmountError && (
                         <p className="text-xs text-red-500 font-medium">{customAmountError}</p>
@@ -461,7 +453,7 @@ const Navbar = () => {
                     <button
                       disabled={!!customAmountError || !coffeeAmount}
                       onClick={() => setShowCoffeeQr(true)}
-                      className="w-full mt-4 py-3 bg-[#1F6FEB] hover:bg-[#4C8DF5] disabled:opacity-50 disabled:pointer-events-none text-white font-extrabold text-sm sm:text-base rounded-xl shadow-lg transition-all duration-200 active:scale-95 cursor-pointer"
+                      className="w-full mt-4 py-3 bg-[#E11D5C] hover:bg-[#F0427A] disabled:opacity-50 disabled:pointer-events-none text-white font-extrabold text-sm sm:text-base rounded-xl shadow-lg transition-all duration-200 active:scale-95 cursor-pointer"
                     >
                       Generate UPI QR Code
                     </button>
@@ -477,7 +469,7 @@ const Navbar = () => {
                       />
                       <div className="text-center">
                         <p className="text-[10px] font-bold text-zinc-500">Scan with GPay, PhonePe, or Paytm</p>
-                        <p className="text-base font-extrabold text-[#1F6FEB] mt-0.5">₹{coffeeAmount}</p>
+                        <p className="text-base font-extrabold text-[#E11D5C] mt-0.5">₹{coffeeAmount}</p>
                       </div>
                     </div>
 
@@ -485,7 +477,7 @@ const Navbar = () => {
                     <div className="w-full flex flex-col gap-1.5">
                       <a
                         href="upi://pay?pa=janaeditz693@okicici&pn=JANA%20V"
-                        className="w-full py-2.5 bg-[#1F6FEB] hover:bg-[#4C8DF5] text-white text-center font-bold text-sm rounded-xl shadow-md transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                        className="w-full py-2.5 bg-[#E11D5C] hover:bg-[#F0427A] text-white text-center font-bold text-sm rounded-xl shadow-md transition-all duration-200 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                       >
                         <Coffee size={15} className="fill-white stroke-none" />
                         <span>Pay via UPI App (Mobile)</span>
@@ -506,14 +498,14 @@ const Navbar = () => {
                         3. Select **Pay to UPI ID**, paste it, and make payment.
                       </p>
                       
-                      <div className="flex items-center justify-between w-full p-2.5 rounded-xl border border-[#1F6FEB]/30 bg-theme-coffee/5 dark:bg-theme-darkCard text-xs shadow-inner mt-0.5">
+                      <div className="flex items-center justify-between w-full p-2.5 rounded-xl border border-[#E11D5C]/30 bg-theme-coffee/5 dark:bg-theme-darkCard text-xs shadow-inner mt-0.5">
                         <div className="flex flex-col text-left">
-                          <span className="text-[9px] font-bold text-[#1F6FEB] uppercase">UPI ID</span>
+                          <span className="text-[9px] font-bold text-[#E11D5C] uppercase">UPI ID</span>
                           <span className="font-mono font-bold text-theme-coffee dark:text-theme-darkText select-all text-sm">janaeditz693@okicici</span>
                         </div>
                         <button
                           onClick={handleCopyUpi}
-                          className="px-3 py-1.5 rounded-lg bg-[#1F6FEB]/10 hover:bg-[#1F6FEB]/20 transition-colors text-[#1F6FEB] cursor-pointer flex items-center justify-center border border-[#1F6FEB]/20 font-extrabold gap-1 active:scale-95 text-[10px]"
+                          className="px-3 py-1.5 rounded-lg bg-[#E11D5C]/10 hover:bg-[#E11D5C]/20 transition-colors text-[#E11D5C] cursor-pointer flex items-center justify-center border border-[#E11D5C]/20 font-extrabold gap-1 active:scale-95 text-[10px]"
                           title="Copy UPI ID"
                         >
                           {copiedUpi ? (
@@ -541,7 +533,7 @@ const Navbar = () => {
                       </button>
                       <button
                         onClick={() => setIsCoffeeModalOpen(false)}
-                        className="flex-1 py-2.5 bg-[#1F6FEB] text-white text-sm font-bold rounded-xl hover:opacity-90 transition-all duration-150 cursor-pointer"
+                        className="flex-1 py-2.5 bg-[#E11D5C] text-white text-sm font-bold rounded-xl hover:opacity-90 transition-all duration-150 cursor-pointer"
                       >
                         Done
                       </button>
