@@ -26,7 +26,7 @@ const CartoonCard = ({ item }) => {
   return (
     <motion.div whileHover={isTouch ? {} : { y: -4 }} transition={{ duration: 0.2 }} className="w-full select-none">
       <Link to={`/details/${item.id}`} className="block group">
-        <div className="relative aspect-[3/4] rounded-3xl overflow-hidden bg-theme-beige dark:bg-theme-darkCard shadow-[0_10px_24px_-12px_rgba(9,49,74,0.55)] transition-shadow duration-300 group-hover:shadow-[0_16px_30px_-10px_rgba(9,49,74,0.6)]">
+        <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-theme-beige dark:bg-theme-darkCard shadow-[0_10px_24px_-12px_rgba(0,0,0,0.6)] transition-shadow duration-300 group-hover:shadow-[0_16px_30px_-10px_rgba(139,92,246,0.45)]">
           <img
             src={optimizeImageUrl(item.thumbnail, 'card')}
             alt={displayTitle}

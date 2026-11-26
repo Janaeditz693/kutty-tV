@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
+import { Play, Plus, Check } from 'lucide-react';
+import { useApp } from '../context/AppContext';
 import { optimizeImageUrl } from '../utils/image';
 
-// Fan / coverflow carousel: centre card large, neighbours tilted and smaller.
+// Featured card: image, badge, title, meta, blurb, Play Now + My List
 const Hero = ({ items = [] }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const { toggleFavorite, isFavorite } = useApp();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const n = items.length;
@@ -15,77 +17,71 @@ const Hero = ({ items = [] }) => {
   useEffect(() => { setIndex(0); }, [n]);
   useEffect(() => {
     if (n <= 1 || paused) return;
-    const id = setInterval(() => setIndex((p) => (p + 1) % n), 5000);
+    const id = setInterval(() => setIndex((p) => (p + 1) % n), 6000);
     return () => clearInterval(id);
   }, [n, paused]);
 
   if (!n) return null;
-  const isTamil = (i18n.language || 'en').startsWith('ta');
   const active = index % n;
-
-  const offsetOf = (i) => {
-    let d = i - active;
-    if (d > n / 2) d -= n;
-    if (d < -n / 2) d += n;
-    return d;
-  };
+  const item = items[active];
+  const isTamil = (i18n.language || 'en').startsWith('ta');
+  const title = isTamil && item.titleTa ? item.titleTa : item.title;
+  const description = isTamil && item.descriptionTa ? item.descriptionTa : item.description;
+  const isFav = isFavorite(item.id);
+  const firstEp = item.episodes?.[0]?.id;
+  const watchPath = item.type === 'movie' || !firstEp ? `/watch/${item.id}` : `/watch/${item.id}/${firstEp}`;
+  const meta = [...(item.genres || []).slice(0, 2), item.year].filter(Boolean).join('  •  ');
 
   return (
     <section
-      className="relative w-full overflow-hidden pt-2 pb-3"
+      className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       aria-roledescription="carousel"
     >
-      <div className="relative mx-auto h-[360px] sm:h-[420px] w-full max-w-3xl">
-        {items.map((item, i) => {
-          const d = offsetOf(i);
-          if (Math.abs(d) > 2) return null;
-          const title = isTamil && item.titleTa ? item.titleTa : item.title;
-          const ep = item.type === 'movie'
-            ? t('common.movie', { defaultValue: 'Movie' })
-            : `${t('common.episode', { defaultValue: 'Episode' })} ${item.episodes?.length || 1}`;
-          const isCenter = d === 0;
-          return (
-            <motion.button
-              key={item.id}
-              type="button"
-              onClick={() => (isCenter ? navigate(`/details/${item.id}`) : setIndex(i))}
-              animate={{
-                x: `${d * 62}%`,
-                scale: isCenter ? 1 : 0.8,
-                rotate: d * 6,
-                y: Math.abs(d) * 18,
-                opacity: Math.abs(d) > 1 ? 0.5 : 1,
-              }}
-              transition={{ type: 'spring', stiffness: 220, damping: 26 }}
-              style={{ zIndex: 10 - Math.abs(d) }}
-              className="absolute left-1/2 top-0 -ml-[110px] sm:-ml-[135px] w-[220px] sm:w-[270px] h-[330px] sm:h-[390px] rounded-[2rem] overflow-hidden bg-theme-beige shadow-2xl shadow-black/30 cursor-pointer text-left"
-              aria-label={title}
+      <div
+        onClick={() => navigate(`/details/${item.id}`)}
+        className="relative overflow-hidden rounded-[1.75rem] h-[440px] sm:h-[460px] lg:h-[520px] bg-theme-darkCard border border-white/10 shadow-xl shadow-black/30 cursor-pointer text-white"
+      >
+        <img key={item.id} src={optimizeImageUrl(item.thumbnail, 'hero')} alt="" className="sm:hidden absolute inset-0 w-full h-full object-cover object-top" />
+        <img key={`${item.id}-b`} src={optimizeImageUrl(item.banner || item.thumbnail, 'hero')} alt="" className="hidden sm:block absolute inset-0 w-full h-full object-cover object-center" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#150F1C] via-[#150F1C]/55 to-transparent" />
+
+        <div className="absolute inset-x-0 bottom-0 p-5 sm:p-8 flex flex-col gap-2 sm:max-w-xl">
+          <span className="self-start px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/15 text-[11px] font-bold">
+            {item.type === 'movie' ? t('common.movie', { defaultValue: 'Movie' }) : t('home.newEpisode', { defaultValue: 'New Episode' })}
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-black tracking-tight leading-tight">{title}</h2>
+          {meta && <p className="text-xs sm:text-sm font-semibold text-white/70">{meta}</p>}
+          {description && <p className="text-sm text-white/65 line-clamp-3">{description}</p>}
+
+          <div className="mt-3 flex items-center gap-2.5">
+            <button
+              onClick={(e) => { e.stopPropagation(); navigate(watchPath); }}
+              className="flex-1 sm:flex-none sm:px-8 flex items-center justify-center gap-2 py-3 rounded-2xl bg-theme-accent/80 hover:bg-theme-accent text-theme-onaccent font-extrabold text-sm active:scale-95 transition cursor-pointer"
             >
-              <img src={optimizeImageUrl(item.thumbnail, 'hero')} alt="" className="w-full h-full object-cover" />
-              <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 to-transparent" />
-              {isCenter && (
-                <span className="absolute top-3 left-3 px-3 py-1 rounded-full bg-theme-accent text-theme-onaccent text-xs font-extrabold shadow">
-                  {ep}
-                </span>
-              )}
-              <div className="absolute inset-x-0 bottom-0 p-4">
-                <h3 className="text-white font-extrabold text-lg leading-tight line-clamp-2">{title}</h3>
-              </div>
-            </motion.button>
-          );
-        })}
+              <Play size={16} className="fill-current" />
+              {t('common.watchNow', { defaultValue: 'Play Now' })}
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); toggleFavorite(item); }}
+              className="flex-1 sm:flex-none sm:px-8 flex items-center justify-center gap-2 py-3 rounded-2xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/15 font-bold text-sm active:scale-95 transition cursor-pointer"
+            >
+              {isFav ? <Check size={16} /> : <Plus size={16} />}
+              {t('home.myList', { defaultValue: 'My List' })}
+            </button>
+          </div>
+        </div>
       </div>
 
       {n > 1 && (
-        <div className="flex items-center justify-center gap-1.5 mt-2">
+        <div className="flex items-center justify-center gap-1.5 mt-3">
           {items.map((_, i) => (
             <button
               key={i}
               onClick={() => setIndex(i)}
               aria-label={`Go to slide ${i + 1}`}
-              className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${i === active ? 'w-5 bg-theme-coffee dark:bg-theme-accent' : 'w-1.5 bg-theme-coffee/25 dark:bg-white/30'}`}
+              className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${i === active ? 'w-5 bg-theme-accent' : 'w-1.5 bg-theme-coffee/25 dark:bg-white/25'}`}
             />
           ))}
         </div>

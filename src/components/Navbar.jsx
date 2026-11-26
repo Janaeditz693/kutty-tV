@@ -16,6 +16,7 @@ import {
   Home,
   Tv,
   Film,
+  Bookmark,
   X,
   Coffee,
   Copy,
@@ -208,9 +209,8 @@ const Navbar = () => {
 
   const bottomTabs = [
     { name: t('common.home'), path: '/', icon: Home },
-    { name: t('common.shows'), path: '/shows', icon: Tv },
-    { name: t('common.movies'), path: '/movies', icon: Film },
-    { name: t('common.favorites'), path: '/favorites', icon: Heart },
+    { name: t('common.browse', { defaultValue: 'Browse' }), path: '/search', icon: Search },
+    { name: t('home.myList', { defaultValue: 'My List' }), path: '/favorites', icon: Bookmark },
     { name: currentUser ? t('common.profile') : t('common.login'), path: currentUser ? '/profile' : '/login', icon: User },
   ];
 
@@ -354,9 +354,9 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile flat bottom tab bar */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-theme-darkBg/95 backdrop-blur-xl border-t border-theme-coffee/10 dark:border-theme-darkBorder pb-[env(safe-area-inset-bottom)]">
-        <div className="grid grid-cols-5 h-16 max-w-xl mx-auto">
+      {/* Mobile bottom tab bar */}
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+        <div className="grid grid-cols-4 h-16 max-w-xl mx-auto rounded-3xl bg-white/90 dark:bg-theme-darkCard/90 backdrop-blur-xl border border-theme-coffee/10 dark:border-white/10 shadow-xl shadow-black/20">
           {bottomTabs.map((tab) => (
             <NavLink
               key={tab.path}
@@ -364,13 +364,19 @@ const Navbar = () => {
               end={tab.path === '/'}
               aria-label={tab.name}
               className={({ isActive }) =>
-                `flex flex-col items-center justify-center gap-1 transition-colors ${
-                  isActive ? 'text-theme-accent-text' : 'text-theme-coffee/55 dark:text-theme-darkText/60'
+                `flex flex-col items-center justify-center gap-0.5 transition-colors ${
+                  isActive ? 'text-theme-coffee dark:text-white' : 'text-theme-coffee/50 dark:text-white/50'
                 }`
               }
             >
-              <tab.icon size={21} />
-              <span className="text-[10px] font-bold truncate max-w-full px-1">{tab.name}</span>
+              {({ isActive }) => (
+                <>
+                  <span className={`w-10 h-8 rounded-full flex items-center justify-center transition-colors ${isActive ? 'bg-theme-accent/30' : ''}`}>
+                    <tab.icon size={20} />
+                  </span>
+                  <span className="text-[10px] font-bold truncate max-w-full px-1">{tab.name}</span>
+                </>
+              )}
             </NavLink>
           ))}
         </div>
